@@ -18,8 +18,6 @@ public class ObjInstantiater : MonoBehaviour
         public int UpkeepMonthTerm;
         public float ElectricConsum;
         public float LaborRequirement;
-        public bool isUnlock = true;
-        public int InstallDate;
     }
     public List<ObjectInfo> InfoArr = new List<ObjectInfo>();
 
@@ -35,25 +33,6 @@ public class ObjInstantiater : MonoBehaviour
     void Update()
     {
         
-    }
-
-    public void SetUnlockedObject(string Name)
-    {
-        foreach(var infoArray in InfoArr)
-        {
-            if(infoArray.Name == Name)
-            {
-                if(infoArray.isUnlock)
-                {
-                    Debug.Log(Name + " is already unlocked");
-                }
-                else
-                {
-                    infoArray.isUnlock = true;
-                    return;
-                }
-            }
-        }
     }
 
     public void InstantiateNewObject(string name)
@@ -250,24 +229,6 @@ public class ObjInstantiater : MonoBehaviour
         for(int i = 0; i < InfoArr.Count; i++)
         {
             InfoArr[i].Object = Resources.Load<GameObject>("GameSystem/InstallableObject/Object/" + InfoArr[i].Name);
-        }
-        
-        List<GameObject> TempList = new List<GameObject>();
-        foreach(var techArray in CompanyManagerCall.GetPlayerCompanyValue().GetTechValue().GetComponent<TechValue>().FacilityArray)
-        {
-            if(!techArray.isCompleted)
-            {
-                foreach(var unlockedOne in techArray.RecipeInfo.UnlockFacility)
-                {
-                    foreach(var infoArray in InfoArr)
-                    {
-                        if(unlockedOne == infoArray.Name)
-                        {
-                            infoArray.isUnlock = false;
-                        }
-                    }
-                }
-            }
         }
     }
 }

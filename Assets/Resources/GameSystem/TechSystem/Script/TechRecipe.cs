@@ -6,20 +6,23 @@ public class TechRecipe : MonoBehaviour
 {
     TechValue TechValueCall;
     CompanyManager CompanyManagerCall;
-    public class FacilityRecipe
+    public class TechInfo
     {
-        public FacilityRecipe() {}
+        public TechInfo() {}
         public string Name;
-        public int TechLevel;
         public string[] UnlockFacility;
+        public string[] UnlockActor;
+        public string UpgradeValueType;
+        public float UpgradeValueAmount;
         public int[] RequiredTech;
         public int RequiredWorkLoad;
         public int Cost;
     }
-    public List<FacilityRecipe> FacilityRecipeArray = new List<FacilityRecipe>();
+    public List<TechInfo> TechInfoList = new List<TechInfo>();
     public class ProcessActorInfo
     {
         public ProcessActorInfo() {}
+        public ProcessorRecipe ParentInfo;
         public string Name;
         public int Cost;
     }
@@ -47,19 +50,33 @@ public class TechRecipe : MonoBehaviour
 
     public bool CheckRequiredment(int techIndex)
     {
-        foreach(var tmp in FacilityRecipeArray[techIndex].RequiredTech)
+        foreach(var tmp in TechInfoList[techIndex].RequiredTech)
         {
             if(tmp == -1)
             {
                 return true;
             }
-            if(!TechValueCall.FacilityArray[tmp].isCompleted)
+            if(!TechValueCall.TechTreeList[tmp].Completed)
             {
                 return false;
             }
         }
 
         return true;
+    }
+
+    public TechInfo GetTechInfo(string Name)
+    {
+        TechInfo Result = null;
+        foreach(var Info in TechInfoList)
+        {
+            if(Info.Name == Name)
+            {
+                Result = Info;
+            }
+        }
+
+        return Result;
     }
 
     public ProcessorRecipe GetProcessorRecipe(string ProcessorName)
@@ -91,64 +108,21 @@ public class TechRecipe : MonoBehaviour
 
     void InitializingArray()
     {
-        FacilityRecipeArray = new List<FacilityRecipe>();
+        TechInfoList = new List<TechInfo>();
 
-        FacilityRecipe newRecipe = new FacilityRecipe();
+        TechInfo newRecipe = new TechInfo();
         newRecipe.Name = "FirstTech";
-        newRecipe.TechLevel = 1;
         newRecipe.UnlockFacility = new string[1];
         newRecipe.UnlockFacility[0] = "None";
+        newRecipe.UnlockActor = new string[1];
+        newRecipe.UnlockActor[0] = "None";
+        newRecipe.UpgradeValueType = "None";
+        newRecipe.UpgradeValueAmount = 0;
         newRecipe.RequiredTech = new int[1];
         newRecipe.RequiredTech[0] = -1;
         newRecipe.RequiredWorkLoad = 75;
         newRecipe.Cost = 10;
-        FacilityRecipeArray.Add(newRecipe);
-
-        newRecipe = new FacilityRecipe();
-        newRecipe.Name = "SecondTech";
-        newRecipe.TechLevel = 2;
-        newRecipe.UnlockFacility = new string[1];
-        newRecipe.UnlockFacility[0] = "None";//"Assembler1";
-        newRecipe.RequiredTech = new int[1];
-        newRecipe.RequiredTech[0] = 0;
-        newRecipe.RequiredWorkLoad = 210;
-        newRecipe.Cost = 15;
-        FacilityRecipeArray.Add(newRecipe);
-
-        newRecipe = new FacilityRecipe();
-        newRecipe.Name = "ThirdTech";
-        newRecipe.TechLevel = 2;
-        newRecipe.UnlockFacility = new string[1];
-        newRecipe.UnlockFacility[0] = "None";//"Distributor";
-        newRecipe.RequiredTech = new int[1];
-        newRecipe.RequiredTech[0] = 0;
-        newRecipe.RequiredWorkLoad = 210;
-        newRecipe.Cost = 12;
-        FacilityRecipeArray.Add(newRecipe);
-
-        newRecipe = new FacilityRecipe();
-        newRecipe.Name = "ForthTech";
-        newRecipe.TechLevel = 3;
-        newRecipe.UnlockFacility = new string[1];
-        newRecipe.UnlockFacility[0] = "None";//"QualityControlUnit";
-        // newTech.UnlockFacility[0] = "Destroyer";
-        newRecipe.RequiredTech = new int[1];
-        newRecipe.RequiredTech[0] = 1;
-        newRecipe.RequiredWorkLoad = 300;
-        newRecipe.Cost = 13;
-        FacilityRecipeArray.Add(newRecipe);
-
-        newRecipe = new FacilityRecipe();
-        newRecipe.Name = "FifthTech";
-        newRecipe.TechLevel = 4;
-        newRecipe.UnlockFacility = new string[1];
-        newRecipe.UnlockFacility[0] = "None";
-        newRecipe.RequiredTech = new int[2];
-        newRecipe.RequiredTech[0] = 2;
-        newRecipe.RequiredTech[1] = 3;
-        newRecipe.RequiredWorkLoad = 500;
-        newRecipe.Cost = 14;
-        FacilityRecipeArray.Add(newRecipe);
+        TechInfoList.Add(newRecipe);
 
         //---------------------------------------------------------------------------------
         //---------------------------------------------------------------------------------

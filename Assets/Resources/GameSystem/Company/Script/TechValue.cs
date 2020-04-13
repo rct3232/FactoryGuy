@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class TechValue : MonoBehaviour
 {
-    public class FacilityState
+    public class TechState
     {
-        public TechRecipe.FacilityRecipe RecipeInfo;
-        public bool isCompleted;
-        public bool OnResearching;
-        public bool PilotFinished;
+        public TechState() {}
+        public TechRecipe.TechInfo Info;
+        public bool Completed;
+        public bool Possible;
     }
-
+    public class ResearchState
+    {
+        public ResearchState() {}
+        public TechState TargetState;
+        public List<GameObject> LabatoryList;
+        public float GainedWorkLoad;
+    }
     public class RecipeInfo
     {
         public GoodsRecipe.Recipe Recipe;
@@ -24,7 +30,10 @@ public class TechValue : MonoBehaviour
     CompanyValue CompanyValueCall;
     TechRecipe TechRecipeCall;
     GoodsRecipe GoodsRecipeCall;
-    public List<FacilityState> FacilityArray;
+    public List<TechState> TechTreeList;
+    public List<ResearchState> ResearchStateList;
+    public List<ObjInstantiater.ObjectInfo> FacilityList;
+    public List<TechRecipe.ProcessActorInfo> ActorList;
     public List<RecipeInfo> AvailableRecipe;
 
     void Start()
@@ -41,77 +50,122 @@ public class TechValue : MonoBehaviour
     
     void Initializing()
     {
-        FacilityArray = new List<FacilityState>();
-        FacilityState newTech;
-
-        for(int i = 0; i < TechRecipeCall.FacilityRecipeArray.Count; i++)
+        TechTreeList = new List<TechState>();
+        
+        TechState newState;
+        foreach(var Info in TechRecipeCall.TechInfoList)
         {
-            newTech = new FacilityState();
-            newTech.RecipeInfo = TechRecipeCall.FacilityRecipeArray[i];
-            newTech.isCompleted = false;
-            newTech.OnResearching = false;
-            newTech.PilotFinished = false;
-            if(i == 0)
-            {
-                newTech.PilotFinished = true;    
-            }
-            FacilityArray.Add(newTech);
+            newState = new TechState();
+            newState.Info = Info;
+            newState.Completed = false;
+            newState.Possible = false;
         }
 
-        foreach(var Recipe in GoodsRecipeCall.RecipeArray)
-        {
-            if(Recipe.InputName == null)
-            {
-                AddRecipe(Recipe, null);
-            }
-            else if(Recipe.InputName.Length < 2)
-            {
-                AddRecipe(Recipe, null);
-            }
-        }
+        TechTreeList[0].Possible = true;
     }
 
-    public void CompleteResearch(TechRecipe.FacilityRecipe Recipe)
+    public void StartResearch(string Name, GameObject TargetLabatory)
     {
-        FacilityState Target = GetTechState(Recipe);
-
-        Target.isCompleted = true;
-        Target.OnResearching = false;
-
-        for(int i = 0; i < FacilityArray.Count; i++)
+        ResearchState TargetResearch = null;
+        foreach(var State in ResearchStateList)
         {
-            if(TechRecipeCall.CheckRequiredment(i))
+            if(State.TargetState.Info.Name == Name) TargetResearch = State;
+        }
+
+        if(TargetResearch == null)
+        {
+            TargetResearch = new ResearchState();
+            foreach(var TechState in TechTreeList)
             {
-                FacilityArray[i].PilotFinished = true;
+                if(TechState.Info.Name == Name)
+                {
+                    TargetResearch.TargetState = TechState;
+                }
             }
+
+            TargetResearch.GainedWorkLoad = 0;
+            TargetResearch.LabatoryList = new List<GameObject>();
         }
 
-        if(CompanyValueCall.CompanyName == CompanyManagerCall.PlayerCompanyName)
-        {
-            foreach(var tmp in Target.RecipeInfo.UnlockFacility)
-            {
-                ObjInstantiaterCall.SetUnlockedObject(tmp);
-            }
-        }
-        else
-        {
-            // Write AI code
-        }
+        TargetResearch.LabatoryList.Add(TargetLabatory);
     }
 
-    public FacilityState GetTechState(TechRecipe.FacilityRecipe Recipe)
+    public float ContributeResearchWork(string Name, float Amount)
     {
-        FacilityState Result = null;
-
-        foreach(var State in FacilityArray)
+        ResearchState TargetResearch = null;
+        foreach(var State in ResearchStateList)
         {
-            if(State.RecipeInfo == Recipe)
-            {
-                Result = State;
-            }
+            if(State.TargetState.Info.Name == Name) TargetResearch = State;
         }
+        if(TargetResearch == null)
+        {
+            Debug.Log("Cannot Find " + Name + " on ResearchStateList");
+            return -1.0f;
+        }
+
+        float Result = TargetResearch.GainedWorkLoad += Amount;
 
         return Result;
+    }
+
+    public bool CompleteResearch(string Name)
+    {
+        ResearchState TargetResearch = null;
+        foreach(var State in ResearchStateList)
+        {
+            if(State.TargetState.Info.Name == Name) TargetResearch = State;
+        }
+        if(TargetResearch == null)
+        {
+            Debug.Log("Cannot Find " + Name + " on ResearchStateList");
+            return false;
+        }
+
+        foreach(var Labatory in TargetResearch.LabatoryList)
+        {
+            LabatoryAct TargetLabatoryAct = Labatory.GetComponent<LabatoryAct>();
+
+            TargetLabatoryAct.StopResearch();
+        }
+
+        TargetResearch.TargetState.Completed = true;
+
+        foreach(var FacilityName in TargetResearch.TargetState.Info.UnlockFacility)
+        {
+            ObjInstantiater.ObjectInfo TargetFacility = ObjInstantiaterCall.GetInfoByName(FacilityName);
+            FacilityList.Add(TargetFacility);
+        }
+
+        foreach(var ActorName in TargetResearch.TargetState.Info.UnlockActor)
+        {
+            TechRecipe.ProcessActorInfo TargetActor = TechRecipeCall.GetProcessActorInfo(ActorName);
+            ActorList.Add(TargetActor);
+        }
+
+        switch(TargetResearch.TargetState.Info.UpgradeValueType)
+        {
+            case "WorkEfficiency" :
+            CompanyValueCall.GetEmployeeValue().GetComponent<EmployeeValue>().WorkEifficiency += TargetResearch.TargetState.Info.UpgradeValueAmount;
+            break;
+            case "EnergyEfficiency" :
+            CompanyValueCall.GetElectricityValue().GetComponent<ElectricityValue>().EnergyEfficiency += TargetResearch.TargetState.Info.UpgradeValueAmount;
+            break;
+            case "OrganizeEfficiency" :
+            CompanyValueCall.GetGoodsValue().GetComponent<GoodsValue>().OrganizeEfficiency += TargetResearch.TargetState.Info.UpgradeValueAmount;
+            break;
+        }
+
+        ResearchStateList.Remove(TargetResearch);
+        TargetResearch = null;
+
+        CheckPossible();
+
+        return true;
+    }
+
+    void CheckPossible()
+    {
+
     }
 
     public void AddRecipe(GoodsRecipe.Recipe Recipe, string CompanyName)

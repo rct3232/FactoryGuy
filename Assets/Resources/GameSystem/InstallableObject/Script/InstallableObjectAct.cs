@@ -131,7 +131,6 @@ public class InstallableObjectAct : MonoBehaviour
                             ChangeStructColor(new Color(0, 0, 0, 0));
                             
                             Value = CompanyValueCall.GetFacilityValue().GetComponent<FacilityValue>().AddFacilityInfo(gameObject);
-                            Info.InstallDate = TimeManagerCall.TimeValue;
                             if(Info.Type == "Belt")
                             {
                                 GameObject.Find("ObjectInstaller").GetComponent<ObjInstantiater>().InstantiateNewObject(Info.Name);

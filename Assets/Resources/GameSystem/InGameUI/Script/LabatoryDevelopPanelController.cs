@@ -486,33 +486,22 @@ public class LabatoryDevelopPanelController : MonoBehaviour
             Destroy(ItemCarrier.transform.GetChild(i).gameObject);
         }
 
-        foreach(var Object in CallObjInstantiater.InfoArr)
+        foreach(var Actor in CallTechValue.ActorList)
         {
-            if(Object.isUnlock)
+            string TargetName = Actor.ParentInfo.Name + "-" + Actor.Name;
+            bool isDuplicate = false;
+            foreach(var Item in ItemList)
             {
-                if(Object.Type == "Processor")
+                if(TargetName == Item)
                 {
-                    TechRecipe.ProcessorRecipe TargetProcessorInfo = CallTechRecipe.GetProcessorRecipe(Object.Name);
-
-                    foreach(var Actor in TargetProcessorInfo.ActorList)
-                    {
-                        string TargetName = TargetProcessorInfo.Type + "-" + Actor.Name;
-                        bool isDuplicate = false;
-                        foreach(var Item in ItemList)
-                        {
-                            if(TargetName == Item)
-                            {
-                                isDuplicate = true;
-                                break;
-                            }
-                        }
-
-                        if(!isDuplicate)
-                        {
-                            ItemList.Add(TargetName);
-                        }
-                    }
+                    isDuplicate = true;
+                    break;
                 }
+            }
+
+            if(!isDuplicate)
+            {
+                ItemList.Add(TargetName);
             }
         }
 

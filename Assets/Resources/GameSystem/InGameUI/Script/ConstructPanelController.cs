@@ -14,12 +14,14 @@ public class ConstructPanelController : MonoBehaviour
     [SerializeField]GameObject BulldozeImageObject;
     string CurrentCategory = "";
     InGameValue CallValue;
+    TechValue CallTechValue;
     ObjInstantiater CallObjInstantiater;
     
     // Start is called before the first frame update
     void Awake()
     {
         CallValue = GameObject.Find("BaseSystem").GetComponent<InGameValue>();
+        CallTechValue = GameObject.Find("CompanyManager").GetComponent<CompanyManager>().GetPlayerCompanyValue().GetTechValue().GetComponent<TechValue>();
         CallObjInstantiater = GameObject.Find("ObjectInstaller").GetComponent<ObjInstantiater>();
     }
 
@@ -71,15 +73,12 @@ public class ConstructPanelController : MonoBehaviour
                 {
                     break;
                 }
-                foreach(var Object in CallObjInstantiater.InfoArr)
+                foreach(var Object in CallTechValue.FacilityList)
                 {
-                    if(Object.isUnlock)
+                    if(Object.Type == "Warehouse" || Object.Type == "GoodsCreator" || Object.Type == "GoodsLoader" 
+                        || Object.Type == "Belt" || Object.Type == "Distributor" || Object.Type == "VerticalBelt")
                     {
-                        if(Object.Type == "Warehouse" || Object.Type == "GoodsCreator" || Object.Type == "GoodsLoader" 
-                            || Object.Type == "Belt" || Object.Type == "Distributor" || Object.Type == "VerticalBelt")
-                        {
-                            ObjectList.Add(Object.Name);
-                        }
+                        ObjectList.Add(Object.Name);
                     }
                 }
                 DisplayList(ObjectList, Type);
@@ -89,14 +88,11 @@ public class ConstructPanelController : MonoBehaviour
                 {
                     break;
                 }
-                foreach(var Object in CallObjInstantiater.InfoArr)
+                foreach(var Object in CallTechValue.FacilityList)
                 {
-                    if(Object.isUnlock)
+                    if(Object.Type == "Processor" || Object.Type == "Destroyer" || Object.Type == "QualityControlUnit")
                     {
-                        if(Object.Type == "Processor" || Object.Type == "Destroyer" || Object.Type == "QualityControlUnit")
-                        {
-                            ObjectList.Add(Object.Name);
-                        }
+                        ObjectList.Add(Object.Name);
                     }
                 }
                 DisplayList(ObjectList, Type);
@@ -106,14 +102,11 @@ public class ConstructPanelController : MonoBehaviour
                 {
                     break;
                 }
-                foreach(var Object in CallObjInstantiater.InfoArr)
+                foreach(var Object in CallTechValue.FacilityList)
                 {
-                    if(Object.isUnlock)
+                    if(Object.Type == "Labatory" || Object.Type == "EnergyStorage" || Object.Type == "EnergySupplier" || Object.Type == "DayRoom")
                     {
-                        if(Object.Type == "Labatory" || Object.Type == "EnergyStorage" || Object.Type == "EnergySupplier" || Object.Type == "DayRoom")
-                        {
-                            ObjectList.Add(Object.Name);
-                        }
+                        ObjectList.Add(Object.Name);
                     }
                 }
                 DisplayList(ObjectList, Type);

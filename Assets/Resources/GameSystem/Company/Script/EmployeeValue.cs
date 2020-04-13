@@ -39,6 +39,7 @@ public class EmployeeValue : MonoBehaviour
     List<DayRoomInfo> DayRoomList = new List<DayRoomInfo>();
     public List<EmployeeInfo> EmployeeList = new List<EmployeeInfo>();
     int CurrentIndex = 0;
+    public float WorkEifficiency;
     public float TotalLabor;
     public float RequiredLabor;
     public float ActivatedRequiredLabor;

@@ -31,6 +31,7 @@ public class GoodsValue : MonoBehaviour
     PanelController PanelControllerCall;
     Goods newGoods;
     int CurGoodsID;
+    public float OrganizeEfficiency;
     public int TotalCapacity;
     public int TEMP;
 

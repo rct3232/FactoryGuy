@@ -15,6 +15,7 @@ public class ElectricityValue : MonoBehaviour
         public FacilityValue.FacilityInfo FacilityInfo;
         public EnergyStorageAct EnergyStoreActCall;
     }
+    public float EnergyEfficiency;
     public float TotalUsage;
     public float TotalStoredAmount;
     public float TotalStorableAmount;

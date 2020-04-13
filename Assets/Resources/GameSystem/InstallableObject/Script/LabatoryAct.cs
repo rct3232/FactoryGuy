@@ -16,14 +16,8 @@ public class LabatoryAct : MonoBehaviour
 
     TechRecipe TechRecipeCall;
     TechValue TechValueCall;
-    public class ResearchingTech
-    {
-        public string Type;
-        public TechRecipe.FacilityRecipe TargetFacility;
-        public TechRecipe.ProcessActorInfo TargetTech;
-        public int GainedWorkLoad;
-    }
-    public ResearchingTech CurrentResearchingTech;
+    public string CurrentResearchingTech;
+    TechRecipe.TechInfo TargetTechInfo;
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -89,7 +83,23 @@ public class LabatoryAct : MonoBehaviour
     {
         if(CurrentResearchingTech != null)
         {
-            
+            ObjectActCall.IsWorking = true;
+
+            if(TimeManagerCall.TimeValue % TimeManagerCall.Hour < TimeManagerCall.PlaySpeed)
+            {
+                if(TargetTechInfo != null)
+                {
+                    if(TechValueCall.ContributeResearchWork(CurrentResearchingTech, ResearchPower) >= TargetTechInfo.RequiredWorkLoad)
+                    {
+                        CompleteResearch();
+                    }
+                }
+                else
+                {
+                    if(ResearchPower > ResearchPowerLimit) ResearchPower = ResearchPowerLimit;
+                    else if(ResearchPower < ResearchPowerLimit) ResearchPower += Budget * 0.001f;
+                }
+            }
         }
         else if(CurrentDevelopingProduct != null)
         {
@@ -132,71 +142,26 @@ public class LabatoryAct : MonoBehaviour
 
     public bool StartResearch(string Type, int Index)
     {
-        if(Type == "Facility")
+        CurrentResearchingTech = Type;
+        if(Type != "ResearchPowerUpgrade")
         {
-            TechValue.FacilityState TargetValue = TechValueCall.GetTechState(TechRecipeCall.FacilityRecipeArray[Index]);
-            if(TargetValue.isCompleted || !TargetValue.PilotFinished) return false;
-
-            CurrentResearchingTech = new ResearchingTech();
-
-            CurrentResearchingTech.Type = Type;
-            CurrentResearchingTech.TargetFacility = TechRecipeCall.FacilityRecipeArray[Index];
-            CurrentResearchingTech.TargetTech = null;
-            CurrentResearchingTech.GainedWorkLoad = 0;
-
-            Budget = CurrentResearchingTech.TargetFacility.Cost;
-            TargetValue.OnResearching = true;
-
-            return true;
+            TargetTechInfo =  TechRecipeCall.GetTechInfo(CurrentResearchingTech);
         }
-        else if(Type == "Tech")
-        {
-            
-        }
-        else if(Type == "ResearchPower")
-        {
-            if(ResearchPower < ResearchPowerLimit)
-            {
-                CurrentResearchingTech = new ResearchingTech();
-
-                CurrentResearchingTech.Type = Type;
-                CurrentResearchingTech.TargetFacility = null;
-                CurrentResearchingTech.TargetTech = null;
-                CurrentResearchingTech.GainedWorkLoad = 0;
-
-                return true;
-            }
-        }
-
-        return false;
+        return true;
     }
 
     void CompleteResearch()
     {
         // NotificationManagerCall.SetNews("Research for " + ResearchingTech.Name + " is completed");
 
-        TechValueCall.CompleteResearch(CurrentResearchingTech.TargetFacility);
-        CurrentResearchingTech = null;
+        TechValueCall.CompleteResearch(CurrentResearchingTech);
+        StopResearch();
     }
 
-    public void CancelResearch()
+    public void StopResearch()
     {
-        Debug.Log("Research Cancel");
-
-        if(CurrentResearchingTech.Type == "Facility")
-        {
-            TechValueCall.GetTechState(CurrentResearchingTech.TargetFacility).OnResearching = false;
-        }
-        else if(CurrentResearchingTech.Type == "Tech")
-        {
-            
-        }
-        else if(CurrentResearchingTech.Type == "ResearchPower")
-        {
-            ResearchPower = CurrentResearchingTech.GainedWorkLoad;
-        }
-
         CurrentResearchingTech = null;
+        TargetTechInfo = null;
     }
 
     ///////////////////////////////////////////////////////////////////////////
