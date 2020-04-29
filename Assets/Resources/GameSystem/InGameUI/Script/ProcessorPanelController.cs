@@ -226,14 +226,16 @@ public class ProcessorPanelController : MonoBehaviour
     void DisplayCategoryList()
     {
         List<string> CategoryList = new List<string>();
-        TechRecipe.ProcessorRecipe TargetProcessorInfo = CallTechRecipe.GetProcessorRecipe(CallInstallableObjectAct.Info.Name);
+        TechRecipe.ProcessorInfo TargetProcessorInfo = CallTechRecipe.GetProcessorRecipe(CallInstallableObjectAct.Info.Name);
 
-        foreach(var Actor in TargetProcessorInfo.ActorList)
+        foreach(var ActorName in TargetProcessorInfo.ActorList)
         {
+            if(!CallTechValue.GetActorPossible(ActorName)) continue;
+
             bool isDuplicate = false;
             foreach(var Item in CategoryList)
             {
-                if(Actor.Name == Item)
+                if(ActorName == Item)
                 {
                     isDuplicate = true;
                     break;
@@ -242,7 +244,7 @@ public class ProcessorPanelController : MonoBehaviour
 
             if(!isDuplicate)
             {
-                CategoryList.Add(Actor.Name);
+                CategoryList.Add(ActorName);
             }
         }
 
@@ -278,7 +280,7 @@ public class ProcessorPanelController : MonoBehaviour
 
     void DisplayItemList(string Category)
     {
-        TechRecipe.ProcessorRecipe TargetProcessorInfo = CallTechRecipe.GetProcessorRecipe(CallInstallableObjectAct.Info.Name);
+        TechRecipe.ProcessorInfo TargetProcessorInfo = CallTechRecipe.GetProcessorRecipe(CallInstallableObjectAct.Info.Name);
         List<TechValue.RecipeInfo> ItemList = new List<TechValue.RecipeInfo>();
         int RowLimit = 0;
 

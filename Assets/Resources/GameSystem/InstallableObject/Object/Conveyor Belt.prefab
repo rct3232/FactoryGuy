@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 152212235550939709}
-  m_Layer: 15
+  m_Layer: 0
   m_Name: Belts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 7923656275614732358}
   - component: {fileID: 4681484876693557429}
   m_Layer: 15
-  m_Name: Belt1
+  m_Name: Conveyor Belt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -183,6 +183,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -207,6 +208,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &7923656275614732358
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -302,7 +304,7 @@ GameObject:
   - component: {fileID: 8539702337591146395}
   - component: {fileID: 3057424428647892741}
   - component: {fileID: 8889248039720517737}
-  m_Layer: 15
+  m_Layer: 14
   m_Name: ObjectDetector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -346,6 +348,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -370,6 +373,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &8539702337591146395
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -411,7 +415,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fecb569845bb8144db3cc1a9fcfaaf9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TargetLayerNum: 0
+  TargetLayerNum: 15
   DetectedObject: {fileID: 0}
   DoNotCallStay: 0
 --- !u!1 &8471815695829474069
@@ -577,6 +581,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2542354918311045391, guid: dc643d4af20ec4c4392f60663178cfbd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2542354918311045396, guid: dc643d4af20ec4c4392f60663178cfbd,
         type: 3}

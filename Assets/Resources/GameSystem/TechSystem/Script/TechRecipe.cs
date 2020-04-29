@@ -15,27 +15,40 @@ public class TechRecipe : MonoBehaviour
         public string UpgradeValueType;
         public float UpgradeValueAmount;
         public int[] RequiredTech;
+        public int RequiredValue;
         public int RequiredWorkLoad;
-        public int Cost;
     }
     public List<TechInfo> TechInfoList = new List<TechInfo>();
-    public class ProcessActorInfo
+    public class FacilityInfo
     {
-        public ProcessActorInfo() {}
-        public ProcessorRecipe ParentInfo;
+        public FacilityInfo() {}
+        public GameObject Object;
         public string Name;
-        public int Cost;
+        public string Type;
+        public int Price;
+        public int UpkeepPrice;
+        public int UpkeepMonthTerm;
+        public float ElectricConsum;
+        public float LaborRequirement;
     }
-    public class ProcessorRecipe
+    public List<FacilityInfo> FacilityList = new List<FacilityInfo>();
+    public class ProcessorInfo
     {
-        public ProcessorRecipe() {}
+        public ProcessorInfo() {}
         public string Type;
         public string Name;
         public float PerformanceSpeed;
         public float PerformanceQuality;
-        public List<ProcessActorInfo> ActorList;
+        public string[] ActorList;
     }
-    public List<ProcessorRecipe> ProcessorArray = new List<ProcessorRecipe>();
+    public List<ProcessorInfo> ProcessorList = new List<ProcessorInfo>();
+    public class ProcessActorInfo
+    {
+        public ProcessActorInfo() {}
+        public string Name;
+        public int Cost;
+    }
+    public List<ProcessActorInfo> ActorList = new List<ProcessActorInfo>();
 
     void Awake()
     {
@@ -79,13 +92,25 @@ public class TechRecipe : MonoBehaviour
         return Result;
     }
 
-    public ProcessorRecipe GetProcessorRecipe(string ProcessorName)
+    public FacilityInfo GetFacilityInfo(string Name)
     {
-        ProcessorRecipe Result = null;
+        FacilityInfo Result = null;
 
-        foreach(var Processor in ProcessorArray)
+        foreach(var Facility in FacilityList)
         {
-            if(Processor.Name == ProcessorName) Result = Processor;
+            if(Facility.Name == Name) Result = Facility;
+        }
+
+        return Result;
+    }
+
+    public ProcessorInfo GetProcessorRecipe(string Name)
+    {
+        ProcessorInfo Result = null;
+
+        foreach(var Processor in ProcessorList)
+        {
+            if(Processor.Name == Name) Result = Processor;
         }
 
         return Result;
@@ -95,12 +120,9 @@ public class TechRecipe : MonoBehaviour
     {
         ProcessActorInfo Result = null;
 
-        foreach(var Processor in ProcessorArray)
+        foreach(var Actor in ActorList)
         {
-            foreach(var Actor in Processor.ActorList)
-            {
-                if(Actor.Name == Name) Result = Actor;
-            }
+            if(Actor.Name == Name) Result = Actor;
         }
 
         return Result;
@@ -108,49 +130,84 @@ public class TechRecipe : MonoBehaviour
 
     void InitializingArray()
     {
+        string[] FieldName;
+        List<string[]> DataList;
+
         TechInfoList = new List<TechInfo>();
+        FieldName = new string[] {"Name", "UnlockFacility", "UnlockActor", "UpgradeType", "UpgradeAmount", "RequiredIndex", "RequiredValue", "WorkLoad"};
+        DataList = new List<string[]>();
 
-        TechInfo newRecipe = new TechInfo();
-        newRecipe.Name = "FirstTech";
-        newRecipe.UnlockFacility = new string[1];
-        newRecipe.UnlockFacility[0] = "None";
-        newRecipe.UnlockActor = new string[1];
-        newRecipe.UnlockActor[0] = "None";
-        newRecipe.UpgradeValueType = "None";
-        newRecipe.UpgradeValueAmount = 0;
-        newRecipe.RequiredTech = new int[1];
-        newRecipe.RequiredTech[0] = -1;
-        newRecipe.RequiredWorkLoad = 75;
-        newRecipe.Cost = 10;
-        TechInfoList.Add(newRecipe);
+        xmlReader.xmlReaderAccess.ReadXml("Data/Tech/XML/TechInfo", "TechInfo/Tech", FieldName, DataList);
 
-        //---------------------------------------------------------------------------------
-        //---------------------------------------------------------------------------------
+        foreach(string[] Data in DataList)
+        {
+            TechInfo newRecipe = new TechInfo();
+            newRecipe.Name = Data[0];
+            newRecipe.UnlockFacility = Data[1].Split(',');
+            newRecipe.UnlockActor = Data[2].Split(',');
+            newRecipe.UpgradeValueType = Data[3];
+            newRecipe.UpgradeValueAmount = System.Convert.ToSingle(Data[4]);
+            string[] RequiredIndex = Data[5].Split(',');
+            newRecipe.RequiredTech = new int[RequiredIndex.Length];
+            for(int i = 0; i < RequiredIndex.Length; i++) newRecipe.RequiredTech[i] = System.Convert.ToInt32(RequiredIndex[i]);
+            newRecipe.RequiredValue = System.Convert.ToInt32(Data[6]);
+            newRecipe.RequiredWorkLoad = System.Convert.ToInt32(Data[7]);
 
-        ProcessorArray = new List<ProcessorRecipe>();
+            TechInfoList.Add(newRecipe);
+        }
 
-        ProcessorRecipe newProcessor = new ProcessorRecipe();
-        newProcessor.Type = "Processor";
-        newProcessor.Name = "Processor1";
-        newProcessor.PerformanceQuality = 0.5f;
-        newProcessor.PerformanceSpeed = 1f;
-        newProcessor.ActorList = new List<ProcessActorInfo>();
-        ProcessorArray.Add(newProcessor);
+        FacilityList = new List<FacilityInfo>();
+        FieldName = new string[] {"Type", "Name", "Price", "UpkeepPrice", "UpkeepMonthTerm", "ElectricConsum", "LaborRequirement"};
+        DataList = new List<string[]>();
 
-        newProcessor = new ProcessorRecipe();
-        newProcessor.Type = "Assembler";
-        newProcessor.Name = "Assembler1";
-        newProcessor.PerformanceQuality = 0.5f;
-        newProcessor.PerformanceSpeed = 1f;
-        newProcessor.ActorList = new List<ProcessActorInfo>();
-        ProcessorArray.Add(newProcessor);
+        xmlReader.xmlReaderAccess.ReadXml("Data/Tech/XML/FacilityInfo", "FacilityInfo/Facility", FieldName, DataList);
 
-        //---------------------------------------------------------------------------------
+        foreach(string[] Data in DataList)
+        {
+            FacilityInfo newFacility =  new FacilityInfo();
+            newFacility.Type = Data[0];
+            newFacility.Name = Data[1];
+            newFacility.Price = System.Convert.ToInt32(Data[2]);
+            newFacility.UpkeepPrice = System.Convert.ToInt32(Data[3]);
+            newFacility.UpkeepMonthTerm = System.Convert.ToInt32(Data[4]);
+            newFacility.ElectricConsum = System.Convert.ToSingle(Data[5]);
+            newFacility.LaborRequirement = System.Convert.ToSingle(Data[6]);
+            newFacility.Object = Resources.Load<GameObject>("GameSystem/InstallableObject/Object/" + newFacility.Name);
 
-        ProcessActorInfo newActor = new ProcessActorInfo();
-        newActor.Name = "Dummy";
-        newActor.Cost = 20;
-        foreach(var Processor in ProcessorArray) if(Processor.Name == "Processor1") Processor.ActorList.Add(newActor);
-        foreach(var Processor in ProcessorArray) if(Processor.Name == "Assembler1") Processor.ActorList.Add(newActor);
+            FacilityList.Add(newFacility);
+        }
+
+        ProcessorList = new List<ProcessorInfo>();
+        FieldName = new string[] {"Type", "Name", "PerformanceQuality", "PerformanceSpeed", "ActorList"};
+        DataList = new List<string[]>();
+
+        xmlReader.xmlReaderAccess.ReadXml("Data/Tech/XML/ProcessorInfo", "ProcessorInfo/Processor", FieldName, DataList);
+
+        foreach(string[] Data in DataList)
+        {
+            ProcessorInfo newProcessor = new ProcessorInfo();
+            newProcessor.Type = Data[0];
+            newProcessor.Name = Data[1];
+            newProcessor.PerformanceQuality = System.Convert.ToSingle(Data[2]);
+            newProcessor.PerformanceSpeed = System.Convert.ToSingle(Data[3]);
+            newProcessor.ActorList = Data[4].Split(',');
+            
+            ProcessorList.Add(newProcessor);
+        }
+
+        ActorList = new List<ProcessActorInfo>();
+        FieldName = new string[] {"Name", "Cost"};
+        DataList = new List<string[]>();
+
+        xmlReader.xmlReaderAccess.ReadXml("Data/Tech/XML/ActorInfo", "ActorInfo/Actor", FieldName, DataList);
+
+        foreach(string[] Data in DataList)
+        {
+            ProcessActorInfo newActor = new ProcessActorInfo();
+            newActor.Name = Data[0];
+            newActor.Cost = System.Convert.ToInt32(Data[1]);
+
+            ActorList.Add(newActor);
+        }
     }
 }

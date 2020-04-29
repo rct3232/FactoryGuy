@@ -7,6 +7,7 @@ public class VerticlaBeltAct : MonoBehaviour
     public GameObject Mover;
     public GameObject PrevBelt;
     public GameObject PrevBeltDetector;
+    public bool isInitialized = false;
     GameObject TargetGoods;
     InstallableObjectAct ObjectActCall;
     BeltAct BeltActCall;
@@ -16,85 +17,28 @@ public class VerticlaBeltAct : MonoBehaviour
     void Start()
     {
         ObjectActCall = gameObject.GetComponent<InstallableObjectAct>();
-        BeltActCall = Mover.GetComponent<BeltAct>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(ObjectActCall.isInstall)
+        if(ObjectActCall.isInstall && isInitialized)
         {
             ObjectActCall.IsWorking = true;
 
             MovingGoods();
         }
-        else
-        {
-            GetPrevBelt();
-            if (PrevBelt == null)
-            {
-                ObjectActCall.CanInstall = false;
-            }
-            else
-            {
-                ObjectActCall.CanInstall = true;
-            }
-        }
+        else ObjectActCall.IsWorking = false;
     }
 
-    void GetPrevBelt()
+    public void Initializing()
     {
-        if (PrevBelt != PrevBeltDetector.GetComponent<ObjectAttachmentDetector>().DetectedObject)
-        {
-            if (PrevBeltDetector.GetComponent<ObjectAttachmentDetector>().DetectedObject != null)
-            {
-                if(PrevBeltDetector.GetComponent<ObjectAttachmentDetector>().DetectedObject.transform.parent.parent.gameObject.GetComponent<InstallableObjectAct>().StructObject.layer == 23)
-                {
-                    if(PrevBelt != null)
-                    {
-                        PrevBeltActCall.NextBelt = null;
-                        PrevBeltActCall.BeltDetector = PrevBelt.transform.GetChild(0).gameObject;
-                        PrevBeltActCall.DetectingEnd();
-                    }
+        if(Mover == null || PrevBelt == null) return;
 
-                    PrevBelt = PrevBeltDetector.GetComponent<ObjectAttachmentDetector>().DetectedObject;
+        BeltActCall = Mover.GetComponent<BeltAct>();
+        PrevBeltActCall = PrevBelt.GetComponent<BeltAct>();
 
-                    if(PrevBelt.GetComponent<BeltAct>().NextBelt == null)
-                    {
-                        PrevBeltActCall = PrevBelt.GetComponent<BeltAct>();
-                        PrevBeltActCall.NextBelt = Mover;
-                        PrevBeltActCall.BeltDetector = null;
-                    }
-                    else
-                    {
-                        PrevBelt = null;
-                    }
-                }
-                else
-                {
-                    if(PrevBelt != null)
-                    {
-                        PrevBeltActCall.NextBelt = null;
-                        PrevBeltActCall.BeltDetector = PrevBelt.transform.GetChild(0).gameObject;
-                        PrevBeltActCall.DetectingEnd();
-                    }
-
-                    PrevBelt = null;
-                }
-                
-            }
-            else
-            {
-                if(PrevBelt != null)
-                {
-                    PrevBeltActCall.NextBelt = null;
-                    PrevBeltActCall.BeltDetector = PrevBelt.transform.GetChild(0).gameObject;
-                    PrevBeltActCall.DetectingEnd();
-                }
-
-                PrevBelt = null;
-            }
-        }
+        isInitialized = true;
     }
 
     void MovingGoods()
@@ -125,7 +69,11 @@ public class VerticlaBeltAct : MonoBehaviour
 
     public bool DeleteObject()
     {
-        Mover.GetComponent<BeltAct>().DeteleBelt();
+        if(Mover != null && PrevBelt != null)
+        {
+            Mover.GetComponent<BeltAct>().ChangePrevBelt(null);
+            PrevBelt.GetComponent<BeltAct>().ChangeNextBelt(null);   
+        }
         return true;
     }
 }

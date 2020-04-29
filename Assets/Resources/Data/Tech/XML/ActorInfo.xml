@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<ActorInfo>
+    <Actor>
+        <Name>Pulp processer</Name>
+        <Cost>50</Cost>
+    </Actor>
+    <Actor>
+        <Name>Panel processer</Name>
+        <Cost>80</Cost>
+    </Actor>
+    <Actor>
+        <Name>Press machine</Name>
+        <Cost>200</Cost>
+    </Actor>
+    <Actor>
+        <Name>Box packer</Name>
+        <Cost>20</Cost>
+    </Actor>
+    <Actor>
+        <Name>Housing molder</Name>
+        <Cost>80</Cost>
+    </Actor>
+    <Actor>
+        <Name>Magnetic analyzer</Name>
+        <Cost>100</Cost>
+    </Actor>
+    <Actor>
+        <Name>Wire extractor</Name>
+        <Cost>90</Cost>
+    </Actor>
+    <Actor>
+        <Name>Silicon mixer</Name>
+        <Cost>120</Cost>
+    </Actor>
+    <Actor>
+        <Name>Semiconductor processor</Name>
+        <Cost>150</Cost>
+    </Actor>
+    <Actor>
+        <Name>Circuit assembler</Name>
+        <Cost>100</Cost>
+    </Actor>
+    <Actor>
+        <Name>Circuit engraver</Name>
+        <Cost>130</Cost>
+    </Actor>
+    <Actor>
+        <Name>Part attacher</Name>
+        <Cost>90</Cost>
+    </Actor>
+    <Actor>
+        <Name>Electron assembler</Name>
+        <Cost>180</Cost>
+    </Actor>
+    <Actor>
+        <Name>Electron controller</Name>
+        <Cost>210</Cost>
+    </Actor>
+    <Actor>
+        <Name>Chemical sprayer</Name>
+        <Cost>180</Cost>
+    </Actor>
+    <Actor>
+        <Name>Quantum manipulator</Name>
+        <Cost>500</Cost>
+    </Actor>
+</ActorInfo>

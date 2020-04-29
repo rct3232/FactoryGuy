@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InstallableObjectAct : MonoBehaviour
 {
-    public ObjInstantiater.ObjectInfo Info;
+    public TechRecipe.FacilityInfo Info;
     public FacilityValue.FacilityInfo Value;
     public bool isInstall;
     public bool isBelt;
@@ -20,7 +20,7 @@ public class InstallableObjectAct : MonoBehaviour
     public bool CanInstall;
     public GameObject StructObject;
     public GameObject ObjectDetector;
-    public int HeightLevel;
+    public int HeightLevel = 0;
     public float WorkSpeed;
     public bool IsWorking;
     List<GameObject> WholeStructObject = new List<GameObject>();
@@ -39,7 +39,6 @@ public class InstallableObjectAct : MonoBehaviour
         EconomyValueCall = GameObject.Find("CompanyManager").GetComponent<CompanyManager>().GetPlayerCompanyValue().GetEconomyValue().GetComponent<EconomyValue>();
         NotificationManagerCall = GameObject.Find("NotificationManager").GetComponent<NotificationManager>();
         CompanyValueCall = GameObject.Find("CompanyManager").GetComponent<CompanyManager>().GetPlayerCompanyValue();
-        HeightLevel = 0;
         WorkSpeed = 1f;
         IsWorking = false;
         
@@ -100,62 +99,55 @@ public class InstallableObjectAct : MonoBehaviour
             {
                 ValueCall.AttachedOnMouse = gameObject;
             }
-            if (Input.GetKeyDown(KeyCode.Delete))
-            {
-                Destroy(this.gameObject);
-                return;
-            }
-            if(Input.GetKeyDown(KeyCode.R))
-            {
-                this.gameObject.transform.Rotate(new Vector3(0, 90, 0));
-            }
-            if (ClickCheckerCall.target != null)
-            {
-                if (ClickCheckerCall.target.layer == 9)
-                {
-                    //Debug.Log("You Hovering " + ClickCheckerCall.target.name);
-                    this.gameObject.transform.position = ClickCheckerCall.target.transform.position + new Vector3(0,(1 + HeightLevel * 2),0);
-                    if (CanInstall && ObjectDetector.GetComponent<ObjectAttachmentDetector>().DetectedObject == null &&
-                        GroupActivationCall.CheckActivatedGroup(ClickCheckerCall.target) &&
-                        GroupActivationCall.CheckInGroup(ClickCheckerCall.target, ObjectDetector.transform.localScale, transform.eulerAngles) &&
-                        EconomyValueCall.Balance >= Info.Price)
-                    {
-                        ChangeStructColor(new Color(0.5f, 0.5f, 1f));
-                        NotificationManagerCall.SetNote("$ " + Info.Price, new Color(1f,0.2f,0.2f));
 
-                        if (Input.GetMouseButtonDown(0))
-                        {
-                            ValueCall.AttachedOnMouse = null;
-                            isInstall = true;
-                            transform.parent = GameObject.Find("InstalledObject").transform;
-                            ChangeStructColor(new Color(0, 0, 0, 0));
-                            
-                            Value = CompanyValueCall.GetFacilityValue().GetComponent<FacilityValue>().AddFacilityInfo(gameObject);
-                            if(Info.Type == "Belt")
-                            {
-                                GameObject.Find("ObjectInstaller").GetComponent<ObjInstantiater>().InstantiateNewObject(Info.Name);
-                            }
-                        }
-                    }
-                    else
+            if(Info.Type != "Belt" && Info.Type != "VerticalBelt")
+            {
+                if (Input.GetKeyDown(KeyCode.Delete))
+                {
+                    Destroy(this.gameObject);
+                    return;
+                }
+                if(Input.GetKeyDown(KeyCode.R))
+                {
+                    this.gameObject.transform.Rotate(new Vector3(0, 90, 0));
+                }
+
+                if (ClickCheckerCall.target != null)
+                {
+                    if (ClickCheckerCall.target.layer == 9)
                     {
-                        ChangeStructColor(new Color(1f, 0.5f, 0.5f));
-                        if(!GroupActivationCall.CheckActivatedGroup(ClickCheckerCall.target) ||
-                        !GroupActivationCall.CheckInGroup(ClickCheckerCall.target, ObjectDetector.transform.localScale, transform.eulerAngles))
+                        //Debug.Log("You Hovering " + ClickCheckerCall.target.name);
+                        this.gameObject.transform.position = ClickCheckerCall.target.transform.position + new Vector3(0,(1 + HeightLevel * 2),0);
+                        if (InstallConditionCheck())
                         {
-                            NotificationManagerCall.SetNote("You cannot place here! Out of your factory.", new Color(1f,0.2f,0.2f));
-                        }
-                        else if(ObjectDetector.GetComponent<ObjectAttachmentDetector>().DetectedObject != null)
-                        {
-                            NotificationManagerCall.SetNote("You cannot place here! Something is already here.", new Color(1f,0.2f,0.2f));
-                        }
-                        else if(EconomyValueCall.Balance < Info.Price)
-                        {
-                            NotificationManagerCall.SetNote("You cannot place here! Not enough money.", new Color(1f,0.2f,0.2f));
+                            ChangeStructColor(new Color(0.5f, 0.5f, 1f));
+                            NotificationManagerCall.SetNote("$ " + Info.Price, new Color(1f,0.2f,0.2f));
+
+                            if (Input.GetMouseButtonDown(0))
+                            {
+                                Installation();
+                            }
                         }
                         else
                         {
-                            NotificationManagerCall.SetNote("You cannot place here! Wrong direction.", new Color(1f,0.2f,0.2f));
+                            ChangeStructColor(new Color(1f, 0.5f, 0.5f));
+                            if(!GroupActivationCall.CheckActivatedGroup(ClickCheckerCall.target) ||
+                            !GroupActivationCall.CheckInGroup(ClickCheckerCall.target, ObjectDetector.transform.localScale, transform.eulerAngles))
+                            {
+                                NotificationManagerCall.SetNote("You cannot place here! Out of your factory.", new Color(1f,0.2f,0.2f));
+                            }
+                            else if(ObjectDetector.GetComponent<ObjectAttachmentDetector>().DetectedObject != null)
+                            {
+                                NotificationManagerCall.SetNote("You cannot place here! Something is already here.", new Color(1f,0.2f,0.2f));
+                            }
+                            else if(EconomyValueCall.Balance < Info.Price)
+                            {
+                                NotificationManagerCall.SetNote("You cannot place here! Not enough money.", new Color(1f,0.2f,0.2f));
+                            }
+                            else
+                            {
+                                NotificationManagerCall.SetNote("You cannot place here! Wrong direction.", new Color(1f,0.2f,0.2f));
+                            }
                         }
                     }
                 }
@@ -199,6 +191,42 @@ public class InstallableObjectAct : MonoBehaviour
         }
     }
 
+    public bool InstallConditionCheck()
+    {
+        if (CanInstall && ObjectDetector.GetComponent<ObjectAttachmentDetector>().DetectedObject == null &&
+            GroupActivationCall.CheckActivatedGroup(ClickCheckerCall.target) &&
+            GroupActivationCall.CheckInGroup(ClickCheckerCall.target, ObjectDetector.transform.localScale, transform.eulerAngles) &&
+            EconomyValueCall.Balance >= Info.Price) return true;
+        else return false;
+    }
+    
+    public bool Installation()
+    {
+        if(isInstall) return false;
+
+        gameObject.name = "#" + (CompanyValueCall.GetFacilityValue().GetComponent<FacilityValue>().InstalledFacilityAmount + 1).ToString() + " " + Info.Type;
+
+        ValueCall.AttachedOnMouse = null;
+        isInstall = true;
+        transform.parent = GameObject.Find("InstalledObject").transform;
+        ChangeStructColor(new Color(0,0,0,0));
+        
+        Value = CompanyValueCall.GetFacilityValue().GetComponent<FacilityValue>().AddFacilityInfo(gameObject);
+
+        if(Info.Type != "Belt" && Info.Type != "VerticalBelt") GameObject.Find("ObjectInstaller").GetComponent<ObjInstantiater>().InstantiateNewObject(Info.Name);
+
+        return true;
+    }
+
+    public BeltAct GetBeltAct()
+    {
+        BeltAct Result = null;
+
+        if(Info.Type == "Belt") Result = transform.GetChild(1).GetChild(0).gameObject.GetComponent<BeltAct>();
+
+        return Result;
+    }
+
     void CheckWorkSpeed()
     {
         float SuppliedElectricRatio = 0f;
@@ -234,7 +262,7 @@ public class InstallableObjectAct : MonoBehaviour
         PanelControllerCall.DisplayFloatingPanel("ObjectInfoPanel", gameObject);
     }
 
-    void ChangeStructColor(Color color)
+    public void ChangeStructColor(Color color)
     {
         WholeStructObject.Clear();
         GetWholeStructObject();

@@ -17,6 +17,7 @@ public class TechValue : MonoBehaviour
         public TechState TargetState;
         public List<GameObject> LabatoryList;
         public float GainedWorkLoad;
+        public int StartTime;
     }
     public class RecipeInfo
     {
@@ -25,24 +26,26 @@ public class TechValue : MonoBehaviour
         public string Owner;
     }
 
-    ObjInstantiater ObjInstantiaterCall;
     CompanyManager CompanyManagerCall;
     CompanyValue CompanyValueCall;
+    TimeManager TimeManangerCall;
     TechRecipe TechRecipeCall;
     GoodsRecipe GoodsRecipeCall;
+    PanelController PanelControllerCall;
     public List<TechState> TechTreeList;
     public List<ResearchState> ResearchStateList;
-    public List<ObjInstantiater.ObjectInfo> FacilityList;
+    public List<TechRecipe.FacilityInfo> FacilityList;
     public List<TechRecipe.ProcessActorInfo> ActorList;
     public List<RecipeInfo> AvailableRecipe;
 
     void Start()
     {
-        ObjInstantiaterCall = GameObject.Find("ObjectInstaller").GetComponent<ObjInstantiater>();
         CompanyManagerCall = GameObject.Find("CompanyManager").GetComponent<CompanyManager>();
         CompanyValueCall = transform.parent.gameObject.GetComponent<CompanyValue>();
+        TimeManangerCall = GameObject.Find("TimeManager").GetComponent<TimeManager>();
         TechRecipeCall = GameObject.Find("BaseSystem").GetComponent<TechRecipe>();
         GoodsRecipeCall = GameObject.Find("BaseSystem").GetComponent<GoodsRecipe>();
+        PanelControllerCall = GameObject.Find("Canvas").GetComponent<PanelController>();
         AvailableRecipe = new List<RecipeInfo>();
 
         Initializing();
@@ -51,6 +54,9 @@ public class TechValue : MonoBehaviour
     void Initializing()
     {
         TechTreeList = new List<TechState>();
+        FacilityList = new List<TechRecipe.FacilityInfo>();
+        ActorList = new List<TechRecipe.ProcessActorInfo>();
+        ResearchStateList = new List<ResearchState>();
         
         TechState newState;
         foreach(var Info in TechRecipeCall.TechInfoList)
@@ -59,18 +65,22 @@ public class TechValue : MonoBehaviour
             newState.Info = Info;
             newState.Completed = false;
             newState.Possible = false;
-        }
 
-        TechTreeList[0].Possible = true;
+            TechTreeList.Add(newState);
+        }
+        
+        ResearchState FirstResearch = new ResearchState();
+        FirstResearch.LabatoryList = new List<GameObject>();
+        FirstResearch.TargetState = TechTreeList[0];
+        ResearchStateList.Add(FirstResearch);
+        CompleteResearch(FirstResearch);
+
+        CheckTechPossible();
     }
 
     public void StartResearch(string Name, GameObject TargetLabatory)
     {
-        ResearchState TargetResearch = null;
-        foreach(var State in ResearchStateList)
-        {
-            if(State.TargetState.Info.Name == Name) TargetResearch = State;
-        }
+        ResearchState TargetResearch = GetResearchState(Name);
 
         if(TargetResearch == null)
         {
@@ -85,42 +95,43 @@ public class TechValue : MonoBehaviour
 
             TargetResearch.GainedWorkLoad = 0;
             TargetResearch.LabatoryList = new List<GameObject>();
+
+            TargetResearch.StartTime = TimeManangerCall.TimeValue;
         }
 
         TargetResearch.LabatoryList.Add(TargetLabatory);
     }
 
-    public float ContributeResearchWork(string Name, float Amount)
+    public void ContributeResearchWork(string Name, float Amount)
     {
-        ResearchState TargetResearch = null;
-        foreach(var State in ResearchStateList)
-        {
-            if(State.TargetState.Info.Name == Name) TargetResearch = State;
-        }
+        ResearchState TargetResearch = GetResearchState(Name);
         if(TargetResearch == null)
         {
             Debug.Log("Cannot Find " + Name + " on ResearchStateList");
-            return -1.0f;
+            return;
         }
 
-        float Result = TargetResearch.GainedWorkLoad += Amount;
+        TargetResearch.GainedWorkLoad += Amount;
 
-        return Result;
+        if(TargetResearch.GainedWorkLoad >= TargetResearch.TargetState.Info.RequiredWorkLoad) CompleteResearch(TargetResearch);
+
+        if(CompanyValueCall.CompanyName == CompanyManagerCall.PlayerCompanyName)
+        {
+            if(PanelControllerCall.CurrentSidePanel != null)
+            {
+                if(PanelControllerCall.CurrentSidePanel.name == "LabatoryResearchPanel")
+                {
+                    if(PanelControllerCall.CurrentSidePanel.GetComponent<LabatoryResearchPanelController>().TargetObject == gameObject)
+                    {
+                        PanelControllerCall.CurrentSidePanel.GetComponent<LabatoryResearchPanelController>().UpdateProgressInfo();
+                    }
+                }
+            }
+        }
     }
 
-    public bool CompleteResearch(string Name)
+    public bool CompleteResearch(ResearchState TargetResearch)
     {
-        ResearchState TargetResearch = null;
-        foreach(var State in ResearchStateList)
-        {
-            if(State.TargetState.Info.Name == Name) TargetResearch = State;
-        }
-        if(TargetResearch == null)
-        {
-            Debug.Log("Cannot Find " + Name + " on ResearchStateList");
-            return false;
-        }
-
         foreach(var Labatory in TargetResearch.LabatoryList)
         {
             LabatoryAct TargetLabatoryAct = Labatory.GetComponent<LabatoryAct>();
@@ -132,40 +143,103 @@ public class TechValue : MonoBehaviour
 
         foreach(var FacilityName in TargetResearch.TargetState.Info.UnlockFacility)
         {
-            ObjInstantiater.ObjectInfo TargetFacility = ObjInstantiaterCall.GetInfoByName(FacilityName);
+            if(FacilityName == "None") break;
+            TechRecipe.FacilityInfo TargetFacility = TechRecipeCall.GetFacilityInfo(FacilityName);
             FacilityList.Add(TargetFacility);
         }
 
         foreach(var ActorName in TargetResearch.TargetState.Info.UnlockActor)
         {
+            if(ActorName == "None") break;
             TechRecipe.ProcessActorInfo TargetActor = TechRecipeCall.GetProcessActorInfo(ActorName);
             ActorList.Add(TargetActor);
         }
 
         switch(TargetResearch.TargetState.Info.UpgradeValueType)
         {
-            case "WorkEfficiency" :
-            CompanyValueCall.GetEmployeeValue().GetComponent<EmployeeValue>().WorkEifficiency += TargetResearch.TargetState.Info.UpgradeValueAmount;
+            case "Work" :
+            CompanyValueCall.GetEmployeeValue().GetComponent<EmployeeValue>().WorkEifficiency = TargetResearch.TargetState.Info.UpgradeValueAmount;
             break;
-            case "EnergyEfficiency" :
-            CompanyValueCall.GetElectricityValue().GetComponent<ElectricityValue>().EnergyEfficiency += TargetResearch.TargetState.Info.UpgradeValueAmount;
+            case "Energy" :
+            CompanyValueCall.GetElectricityValue().GetComponent<ElectricityValue>().EnergyEfficiency = TargetResearch.TargetState.Info.UpgradeValueAmount;
             break;
-            case "OrganizeEfficiency" :
-            CompanyValueCall.GetGoodsValue().GetComponent<GoodsValue>().OrganizeEfficiency += TargetResearch.TargetState.Info.UpgradeValueAmount;
+            case "Organize" :
+            CompanyValueCall.GetGoodsValue().GetComponent<GoodsValue>().OrganizeEfficiency = TargetResearch.TargetState.Info.UpgradeValueAmount;
             break;
         }
+
+        TargetResearch.TargetState.Completed = true;
 
         ResearchStateList.Remove(TargetResearch);
         TargetResearch = null;
 
-        CheckPossible();
+        CheckTechPossible();
 
         return true;
     }
 
-    void CheckPossible()
+    public bool RemoveResearchLabatory(string Name, GameObject TargetLabatory)
     {
+        ResearchState TargetResearch = GetResearchState(Name);
 
+        TargetResearch.LabatoryList.Remove(TargetLabatory);
+
+        if(TargetResearch.LabatoryList.Count <= 0)
+        {
+            ResearchStateList.Remove(TargetResearch);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    void CheckTechPossible()
+    {
+        foreach(var State in TechTreeList)
+        {
+            if(State.Possible) continue;
+
+            bool Possible = true;
+            foreach(var TechIndex in State.Info.RequiredTech)
+            {
+                if(TechIndex == -1) break;
+                if(!TechTreeList[TechIndex].Completed) Possible = false;
+            }
+
+            State.Possible = Possible;
+        }
+    }
+
+    public bool GetTechPossible(string Name)
+    {
+        foreach(var State in TechTreeList)
+        {
+            if(State.Info.Name == Name && State.Possible && !State.Completed) return true;
+        }
+
+        return false;
+    }
+
+    public ResearchState GetResearchState(string Name)
+    {
+        foreach(var State in ResearchStateList)
+        {
+            if(State.TargetState.Info.Name == Name) return State;
+        }
+
+        return null;
+    }
+
+    public bool GetActorPossible(string Name)
+    {
+        foreach(var Actor in ActorList)
+        {
+            if(Actor.Name == Name) return true;
+        }
+
+        return false;
     }
 
     public void AddRecipe(GoodsRecipe.Recipe Recipe, string CompanyName)

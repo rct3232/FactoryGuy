@@ -16,18 +16,40 @@ public class LabatoryResearchPanelController : MonoBehaviour
     [SerializeField]GameObject ListPanel;
     [SerializeField]GameObject TechTreeScrollPanel;
     [SerializeField]GameObject TechTreeScrollCarrier;
-    string CurrentResearchType = "";
+    GameObject TitleImageObject, NameTextObject, ResultObjectFirstRowPanel, ResultObjectSecondRowPanel, ResultValuePanel,
+    ProgressBarImageObject, ProgressPercentageTextObject, PassedTimeTextObject, RemainTimeTextObject, CompletedPointTextObject, GainingPointTextObject, RemainPointTextObject,
+    ConfirmButtonObject, ConfirmButtonTextObject;
     string CurrnetResearchName = "";
-    GameObject TargetObject;
-    LabatoryAct CallLabatoryAct;
+    public GameObject TargetObject;
+    TimeManager CallTimeManager;
     TechValue CallTechValue;
     TechRecipe CallTechRecipe;
+    LabatoryAct CallTargetLabatoryAct;
     float[] TechTreeSizeRatio = new float[2];
 
     // Start is called before the first frame update
     void Awake()
     {
-        
+        CallTimeManager = GameObject.Find("TimeManager").GetComponent<TimeManager>();
+        CallTechValue = GameObject.Find("CompanyManager").GetComponent<CompanyManager>().GetPlayerCompanyValue().GetTechValue().GetComponent<TechValue>();
+        CallTechRecipe = GameObject.Find("BaseSystem").GetComponent<TechRecipe>();
+
+        TitleImageObject = BasicInfoPanel.transform.GetChild(1).GetChild(0).gameObject;
+        NameTextObject = BasicInfoPanel.transform.GetChild(3).GetChild(0).GetChild(1).gameObject;
+        ResultObjectFirstRowPanel = BasicInfoPanel.transform.GetChild(3).GetChild(1).GetChild(1).gameObject;
+        ResultObjectSecondRowPanel = BasicInfoPanel.transform.GetChild(3).GetChild(2).GetChild(1).gameObject;
+        ResultValuePanel = ResultObjectFirstRowPanel = BasicInfoPanel.transform.GetChild(3).GetChild(3).GetChild(1).gameObject;
+
+        ProgressBarImageObject = ProgressInfoPanel.transform.GetChild(1).GetChild(0).GetChild(0).gameObject;
+        ProgressPercentageTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(0).GetChild(1).gameObject;
+        PassedTimeTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(0).GetChild(0).gameObject;
+        RemainTimeTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(0).GetChild(1).gameObject;
+        CompletedPointTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(1).GetChild(0).GetChild(0).gameObject;
+        GainingPointTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(1).GetChild(0).GetChild(1).gameObject;
+        RemainPointTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(1).GetChild(0).GetChild(2).gameObject;
+
+        ConfirmButtonObject = ConfirmPanel.transform.GetChild(1).gameObject;
+        ConfirmButtonTextObject = ConfirmButtonObject.transform.GetChild(0).gameObject;
     }
 
     public void Scaling()
@@ -107,12 +129,7 @@ public class LabatoryResearchPanelController : MonoBehaviour
         TechTreeScrollCarrier.transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta = TechTreeSize * TopValue.TopValueSingleton.UIScale;
     }
 
-    void GetTargetObject()
-    {
-
-    }
-
-    public void Initializing()
+    void TechTreeInitializing(bool OnlyStateRefresh)
     {
         GameObject TechTreeObject = GameObject.Instantiate(TechTreePrefab, TechTreeScrollCarrier.transform);
 
@@ -121,6 +138,56 @@ public class LabatoryResearchPanelController : MonoBehaviour
         TechTreeObject.transform.SetSiblingIndex(1);
 
         TechTreeSizing();
+
+        int TechIndex = 0;
+        for(int i = 0; i < TechTreeObject.transform.childCount; i++)
+        {
+            if(i % 2 == 1) continue;
+
+            for(int j = 0; j < TechTreeObject.transform.GetChild(i).childCount; j++)
+            {
+                if(j % 2 == 1) continue;
+
+                GameObject Target = TechTreeObject.transform.GetChild(i).GetChild(j).gameObject;
+
+                if(!Target.GetComponent<Button>().IsActive()) continue;
+
+                if(!OnlyStateRefresh)
+                {
+                    // Target.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/InGameUI/Sprite/TechTreeTitleImage_" + CurrnetResearchName);
+                    Target.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Image>().color = new Color(1f,1f,1f,1f);
+
+                    // Add Result Object code here
+
+                    Target.transform.GetChild(2).gameObject.GetComponent<Text>().text = CallTechRecipe.TechInfoList[TechIndex].Name;
+
+                    Target.GetComponent<Button>().onClick.AddListener(delegate{TechTreeButtonSelect(Target);});
+                }
+
+                Target.GetComponent<Button>().interactable = CallTechValue.GetTechPossible(CallTechRecipe.TechInfoList[TechIndex].Name);
+
+                TechIndex++;
+            }
+        }
+    }
+
+    void GetTargetObject()
+    {
+        TargetObject = CallPanelController.CurrentFloatingPanel.GetComponent<ObjectInfoPanelController>().TargetObject;
+        CallTargetLabatoryAct = TargetObject.GetComponent<LabatoryAct>();
+    }
+
+    public void Initializing()
+    {
+        TechTreeInitializing(false);
+        GetTargetObject();
+
+        if(CallTargetLabatoryAct.CurrentResearchingTech != null)
+        {
+            CurrnetResearchName = CallTargetLabatoryAct.CurrentResearchingTech;
+        }
+
+        DisplayResearchInfo();
     }
 
     // Update is called once per frame
@@ -129,29 +196,136 @@ public class LabatoryResearchPanelController : MonoBehaviour
         
     }
 
+    public void TechTreeButtonSelect(GameObject Target)
+    {
+        CurrnetResearchName = Target.transform.GetChild(2).gameObject.GetComponent<Text>().text;
+
+        DisplayResearchInfo();
+    }
+
     void DisplayResearchInfo()
     {
+        ClearInfoPanel();
 
-    }
+        if(CurrnetResearchName != "")
+        {
+            // TitleImageObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/InGameUI/Sprite/TechTreeTitleImage_" + CurrnetResearchName);
+            TitleImageObject.GetComponent<Image>().color = new Color(1f,1f,1f,1f);
+            NameTextObject.GetComponent<Text>().text = CurrnetResearchName;
+            ConfirmButtonObject.GetComponent<Button>().interactable = true;
 
-    void RefreshProgressInfo()
-    {
+            if(CurrnetResearchName == CallTargetLabatoryAct.CurrentResearchingTech)
+            {
+                // ProgressBarImageObject.GetComponent<Image>().fillAmount = 
 
-    }
+                ConfirmButtonTextObject.GetComponent<Text>().text = "Cancel";
+                ConfirmButtonObject.GetComponent<Image>().color = new Color(1f,0.2f,0.2f,1f);
+            }
+            else
+            {
+                if(CallTargetLabatoryAct.CurrentResearchingTech != null)
+                {
+                    ConfirmButtonTextObject.GetComponent<Text>().text = "Change";
+                    ConfirmButtonObject.GetComponent<Image>().color = new Color(1f,0.5f,0.2f,1f);
+                }
+                else
+                {
+                    if(CallTechValue.GetTechPossible(CurrnetResearchName))
+                    {
+                        ConfirmButtonTextObject.GetComponent<Text>().text = "Start";
+                    }
+                    else
+                    {
+                        ConfirmButtonTextObject.GetComponent<Text>().text = "Completed";
+                        ConfirmButtonObject.GetComponent<Button>().interactable = false;
+                    }
+                    ConfirmButtonObject.GetComponent<Image>().color = new Color(1f,1f,1f,1f);
+                }
+            }
 
-    void ClearInfoPanel()
-    {
-
-    }
-
-    public void MainFunctionButtonSelect(string SelectedType)
-    {
-
+            UpdateProgressInfo();
+        }
     }
 
     public void ConfirmButtonSelect()
     {
+        string ButtonText = ConfirmButtonTextObject.GetComponent<Text>().text;
+        if(ButtonText == "Start")
+        {
+            CallTargetLabatoryAct.StartResearch(CurrnetResearchName);
+        }
+        else if(ButtonText == "Change")
+        {
+            CallTargetLabatoryAct.StopResearch();
+            CallTargetLabatoryAct.StartResearch(CurrnetResearchName);
+        }
+        else if(ButtonText == "Cancel")
+        {
+            CallTargetLabatoryAct.StopResearch();
+        }
 
+        DisplayResearchInfo();
+    }
+
+    public void UpdateProgressInfo()
+    {
+        TechValue.ResearchState TargetResearchState = CallTechValue.GetResearchState(CurrnetResearchName);
+        if(TargetResearchState == null)
+        {
+            ProgressPanelClear();
+            return;
+        }
+
+        float CompletePercentage = Mathf.CeilToInt(TargetResearchState.GainedWorkLoad / (float)TargetResearchState.TargetState.Info.RequiredWorkLoad * 100f) * 0.01f;
+        float CurrentGainingPoint = 0f;
+
+        foreach(var Labatory in TargetResearchState.LabatoryList)
+        {
+            LabatoryAct TargetLabatoryAct = Labatory.GetComponent<LabatoryAct>();
+
+            CurrentGainingPoint += TargetLabatoryAct.ResearchPower;
+        }
+
+        ProgressBarImageObject.GetComponent<Image>().fillAmount = CompletePercentage;
+        if(CompletePercentage >= 1)
+        {
+            DisplayResearchInfo();
+        }
+        else
+        {
+            ProgressPercentageTextObject.GetComponent<Text>().text = (CompletePercentage * 100).ToString() + " %";
+        }
+
+        PassedTimeTextObject.GetComponent<Text>().text = CallTimeManager.GetPeriodString(CallTimeManager.TimeValue - TargetResearchState.StartTime, "Short");
+        RemainTimeTextObject.GetComponent<Text>().text = " / " +
+            CallTimeManager.GetPeriodString((CallTimeManager.TimeValue - TargetResearchState.StartTime) + (Mathf.CeilToInt(((float)TargetResearchState.TargetState.Info.RequiredWorkLoad - TargetResearchState.GainedWorkLoad) / CurrentGainingPoint) * CallTimeManager.Hour), "Short");
+
+        CompletedPointTextObject.GetComponent<Text>().text = (Mathf.CeilToInt(TargetResearchState.GainedWorkLoad)).ToString();
+        GainingPointTextObject.GetComponent<Text>().text = "(+"+(Mathf.CeilToInt(CurrentGainingPoint)).ToString() + ")";
+        RemainPointTextObject.GetComponent<Text>().text = " / " + TargetResearchState.TargetState.Info.RequiredWorkLoad.ToString();
+    }
+
+    void ClearInfoPanel()
+    {
+        TitleImageObject.GetComponent<Image>().sprite = null;
+        TitleImageObject.GetComponent<Image>().color = new Color(1f,1f,1f,0f);
+        NameTextObject.GetComponent<Text>().text = "";
+        ProgressBarImageObject.GetComponent<Image>().fillAmount = 0f;
+        
+        ProgressPanelClear();
+
+        ConfirmButtonTextObject.GetComponent<Text>().text = "Start";
+        ConfirmButtonObject.GetComponent<Button>().interactable = false;
+    }
+
+    void ProgressPanelClear()
+    {
+        ProgressPercentageTextObject.GetComponent<Text>().text = "";
+        PassedTimeTextObject.GetComponent<Text>().text = "00:00";
+        RemainTimeTextObject.GetComponent<Text>().text = " / 00:00";
+        GainingPointTextObject.GetComponent<Text>().text = "0";
+        GainingPointTextObject.GetComponent<Text>().text = "(+0)";
+        RemainPointTextObject.GetComponent<Text>().text = " / 0";
     }
 
     public void ClosePanel()

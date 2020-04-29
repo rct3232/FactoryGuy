@@ -206,6 +206,67 @@ public class GroupActivation : MonoBehaviour
         return false;
     }
 
+    public int[] GetTilePos(GameObject Tile)
+    {
+        int[] Result = new int[2] {-1, -1};
+        int GroupIndexX = 0, GroupIndexY = 0;
+        int TileIndexX = 0, TileIndexY = 0;
+        
+        GameObject SelectedGroup = Tile.transform.parent.parent.gameObject;
+
+        for(int i = 0; i < TopValue.TopValueSingleton.MapSize; i++)
+        {
+            for(int j = 0; j < TopValue.TopValueSingleton.MapSize; j++)
+            {
+                if(SelectedGroup == SelectedGroup.transform.parent.GetChild((i * TopValue.TopValueSingleton.MapSize) + j).gameObject)
+                {
+                    GroupIndexX = i;
+                    GroupIndexY = j;
+                }
+            }
+        }
+
+        for(int i = 0; i < 10; i++)
+        {
+            for(int j = 0; j < 10; j++)
+            {
+                if(Tile == SelectedGroup.transform.GetChild(0).GetChild(i * 10 + j).gameObject)
+                {
+                    TileIndexX = i;
+                    TileIndexY = j;
+                }
+            }
+        }
+
+        Result[0] = GroupIndexX * 10 + TileIndexX;
+        Result[1] = GroupIndexY * 10 + TileIndexY;
+
+        return Result;
+    }
+
+    public Vector3 GetTilePhysicsPos(int[] TilePos)
+    {
+        Vector3 Result = new Vector3(0,0,0);
+        GameObject Tile = GetTile(TilePos);
+        
+        if(Tile != null) Result = Tile.transform.position;
+
+        return Result;
+    }
+
+    public GameObject GetTile(int[] TilePos)
+    {
+        int[] GroupIndex = new int[2];
+        int[] TileIndex = new int[2];
+
+        GroupIndex[0] = Mathf.FloorToInt(TilePos[0] / 10);
+        GroupIndex[1] = Mathf.FloorToInt(TilePos[1] / 10);
+        TilePos[0] = TilePos[0] % 10;
+        TilePos[1] = TilePos[1] % 10;
+
+        return TileGroupContainer.transform.GetChild(GroupIndex[0] * TopValue.TopValueSingleton.MapSize + GroupIndex[1]).GetChild(0).GetChild(TilePos[0] * 10 + TilePos[1]).gameObject;
+    }
+
     public bool CheckInGroup(GameObject Tile, Vector3 Size, Vector3 EulerAngel)
     {
         bool result = true;

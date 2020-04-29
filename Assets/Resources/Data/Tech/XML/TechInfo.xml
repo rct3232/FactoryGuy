@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<TechInfo>
+    <Tech>
+        <Name>Hand Made</Name>
+        <UnlockFacility>Storage Room,Labatory,Storage Door,Conveyor Belt,Elevator,Processing machine</UnlockFacility>
+        <UnlockActor>Pulp processer,Panel processer</UnlockActor>
+        <UpgradeType>None</UpgradeType>
+        <UpgradeAmount>0</UpgradeAmount>
+        <RequiredIndex>-1</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>0</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Ready for sale</Name>
+        <UnlockFacility>Packing machine</UnlockFacility>
+        <UnlockActor>Box packer</UnlockActor>
+        <UpgradeType>None</UpgradeType>
+        <UpgradeAmount>0</UpgradeAmount>
+        <RequiredIndex>0</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>100</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Engineer</Name>
+        <UnlockFacility>Manufacturing machine,Assembly machine</UnlockFacility>
+        <UnlockActor>Magnetic analyzer,Wire extractor,Circuit assembler</UnlockActor>
+        <UpgradeType>None</UpgradeType>
+        <UpgradeAmount>0</UpgradeAmount>
+        <RequiredIndex>0</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>100</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Skillful hand</Name>
+        <UnlockFacility>Divider</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>Work</UpgradeType>
+        <UpgradeAmount>1.5</UpgradeAmount>
+        <RequiredIndex>0</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>200</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Please! Help me</Name>
+        <UnlockFacility>None</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>Loan</UpgradeType>
+        <UpgradeAmount>0.3</UpgradeAmount>
+        <RequiredIndex>1</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>100</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Stand alone</Name>
+        <UnlockFacility>None</UnlockFacility>
+        <UnlockActor>Housing molder</UnlockActor>
+        <UpgradeType>None</UpgradeType>
+        <UpgradeAmount>0</UpgradeAmount>
+        <RequiredIndex>1</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>200</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Tightwad</Name>
+        <UnlockFacility>Battery shelf</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>Energy</UpgradeType>
+        <UpgradeAmount>1.2</UpgradeAmount>
+        <RequiredIndex>3</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>300</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Organizing</Name>
+        <UnlockFacility>Elevator</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>Origanize</UpgradeType>
+        <UpgradeAmount>0.7</UpgradeAmount>
+        <RequiredIndex>3</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>300</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Trust me</Name>
+        <UnlockFacility>None</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>Loan</UpgradeType>
+        <UpgradeAmount>0.1</UpgradeAmount>
+        <RequiredIndex>4</RequiredIndex>
+        <RequiredValue>50</RequiredValue>
+        <WorkLoad>150</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Debut</Name>
+        <UnlockFacility>None</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>Advertise</UpgradeType>
+        <UpgradeAmount>1</UpgradeAmount>
+        <RequiredIndex>5</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>600</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Electrician</Name>
+        <UnlockFacility>Quality Checker</UnlockFacility>
+        <UnlockActor>Circuit assembler,Part attacher,Silicon mixer</UnlockActor>
+        <UpgradeType>None</UpgradeType>
+        <UpgradeAmount>0</UpgradeAmount>
+        <RequiredIndex>2,6</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>500</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>High-Voltage warning</Name>
+        <UnlockFacility>Transformer</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>None</UpgradeType>
+        <UpgradeAmount>0</UpgradeAmount>
+        <RequiredIndex>6</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>450</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Master</Name>
+        <UnlockFacility>None</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>Work</UpgradeType>
+        <UpgradeAmount>1.8</UpgradeAmount>
+        <RequiredIndex>3</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>600</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Enough space</Name>
+        <UnlockFacility>Warehouse</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>None</UpgradeType>
+        <UpgradeAmount>0</UpgradeAmount>
+        <RequiredIndex>7</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>500</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Break time</Name>
+        <UnlockFacility>Day room</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>None</UpgradeType>
+        <UpgradeAmount>0</UpgradeAmount>
+        <RequiredIndex>7</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>450</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>World star</Name>
+        <UnlockFacility>None</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>Advertise</UpgradeType>
+        <UpgradeAmount>1.5</UpgradeAmount>
+        <RequiredIndex>9</RequiredIndex>
+        <RequiredValue>150</RequiredValue>
+        <WorkLoad>1400</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Circuit designer</Name>
+        <UnlockFacility>Precision assembly machine</UnlockFacility>
+        <UnlockActor>Electron assembler,Circuit engraver</UnlockActor>
+        <UpgradeType>None</UpgradeType>
+        <UpgradeAmount>0</UpgradeAmount>
+        <RequiredIndex>10</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>1200</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Logitics hub</Name>
+        <UnlockFacility>Logitics center</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>Origanize</UpgradeType>
+        <UpgradeAmount>0.3</UpgradeAmount>
+        <RequiredIndex>12,13</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>1700</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Welfare</Name>
+        <UnlockFacility>Lounge</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>None</UpgradeType>
+        <UpgradeAmount>0</UpgradeAmount>
+        <RequiredIndex>14</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>1300</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Blue-chip stock</Name>
+        <UnlockFacility>None</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>Loan</UpgradeType>
+        <UpgradeAmount>0.05</UpgradeAmount>
+        <RequiredIndex>8,15</RequiredIndex>
+        <RequiredValue>400</RequiredValue>
+        <WorkLoad>9500</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Heavy industry</Name>
+        <UnlockFacility>Destroyer</UnlockFacility>
+        <UnlockActor>Press machine,Chemical sprayer</UnlockActor>
+        <UpgradeType>None</UpgradeType>
+        <UpgradeAmount>0</UpgradeAmount>
+        <RequiredIndex>11,16</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>6000</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Prepare of crisis</Name>
+        <UnlockFacility>UPS room</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>None</UpgradeType>
+        <UpgradeAmount>0</UpgradeAmount>
+        <RequiredIndex>11</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>8000</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Dream job</Name>
+        <UnlockFacility>None</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>Work</UpgradeType>
+        <UpgradeAmount>2.5</UpgradeAmount>
+        <RequiredIndex>11,18</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>9000</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Miniaturization</Name>
+        <UnlockFacility>Precision process machine</UnlockFacility>
+        <UnlockActor>Semiconductor processor,Electron controller</UnlockActor>
+        <UpgradeType>None</UpgradeType>
+        <UpgradeAmount>0</UpgradeAmount>
+        <RequiredIndex>16,21</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>25000</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Riches</Name>
+        <UnlockFacility>Substation</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>Energy</UpgradeType>
+        <UpgradeAmount>0.5</UpgradeAmount>
+        <RequiredIndex>21,22</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>30000</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Overflowing power</Name>
+        <UnlockFacility>Energy amplifier</UnlockFacility>
+        <UnlockActor>None</UnlockActor>
+        <UpgradeType>None</UpgradeType>
+        <UpgradeAmount>0</UpgradeAmount>
+        <RequiredIndex>24</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>100000</WorkLoad>
+    </Tech>
+    <Tech>
+        <Name>Quantum world</Name>
+        <UnlockFacility>Quantum generator</UnlockFacility>
+        <UnlockActor>Quantum manipulator</UnlockActor>
+        <UpgradeType>None</UpgradeType>
+        <UpgradeAmount>0</UpgradeAmount>
+        <RequiredIndex>23,25</RequiredIndex>
+        <RequiredValue>0</RequiredValue>
+        <WorkLoad>400000</WorkLoad>
+    </Tech>
+</TechInfo>

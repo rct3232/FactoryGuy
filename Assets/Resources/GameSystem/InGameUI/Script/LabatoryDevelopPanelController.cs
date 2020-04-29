@@ -39,7 +39,7 @@ public class LabatoryDevelopPanelController : MonoBehaviour
     ObjInstantiater CallObjInstantiater;
     GameObject FirstItemImageObject, SecondItemImageObject, ProcessorImageObject, FirstItemNameTextObject, SecondItemNameTextObject, ProcessorNameTextObject, ResultItemImageObject,
     ResultItemTypeTextObject, ResultItemNameInputFieldObject, ExpectedCostTextObject, MaterialPointTextObject, TechPointTextObject, LookPointTextObject, TotalPointTextObject, PackagedImageObject,
-    ProgressBarObject, ProgressPercentageTextObject, PassedTimeTextObject, RemainTimeTextObject, CompletedPointTextObject, GainPointTextObject, RemainPointTextObject, MainFunctionButton;
+    ProgressBarObject, ProgressPercentageTextObject, PassedTimeTextObject, RemainTimeTextObject, CompletedPointTextObject, GainingPointTextObject, RemainPointTextObject, MainFunctionButton;
     List<GameObject> OverViewPanels;
     List<GameObject> SelectModePanels;
 
@@ -93,7 +93,7 @@ public class LabatoryDevelopPanelController : MonoBehaviour
         PassedTimeTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(0).GetChild(0).GetChild(0).gameObject;
         RemainTimeTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(0).GetChild(0).GetChild(1).gameObject;
         CompletedPointTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(1).GetChild(0).GetChild(0).gameObject;
-        GainPointTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(1).GetChild(0).GetChild(1).gameObject;
+        GainingPointTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(1).GetChild(0).GetChild(1).gameObject;
         RemainPointTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(1).GetChild(0).GetChild(2).gameObject;
         MainFunctionButton = ConfirmPanel.transform.GetChild(1).gameObject;
     }
@@ -486,22 +486,29 @@ public class LabatoryDevelopPanelController : MonoBehaviour
             Destroy(ItemCarrier.transform.GetChild(i).gameObject);
         }
 
-        foreach(var Actor in CallTechValue.ActorList)
+        foreach(var Facility in CallTechValue.FacilityList)
         {
-            string TargetName = Actor.ParentInfo.Name + "-" + Actor.Name;
-            bool isDuplicate = false;
-            foreach(var Item in ItemList)
-            {
-                if(TargetName == Item)
-                {
-                    isDuplicate = true;
-                    break;
-                }
-            }
+            if(Facility.Type != "Processor" && Facility.Type == "Assembler") continue;
 
-            if(!isDuplicate)
+            foreach(var ActorName in CallTechRecipe.GetProcessorRecipe(Facility.Name).ActorList)
             {
-                ItemList.Add(TargetName);
+                if(!CallTechValue.GetActorPossible(ActorName)) continue;
+
+                string TargetName = Facility.Name + "-" + ActorName;
+                bool isDuplicate = false;
+                foreach(var Item in ItemList)
+                {
+                    if(TargetName == Item)
+                    {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+
+                if(!isDuplicate)
+                {
+                    ItemList.Add(TargetName);
+                }
             }
         }
 
@@ -764,8 +771,8 @@ public class LabatoryDevelopPanelController : MonoBehaviour
 
         PassedTimeTextObject.GetComponent<Text>().text = "00:00";
         RemainTimeTextObject.GetComponent<Text>().text = " / 00:00";
-        CompletedPointTextObject.GetComponent<Text>().text = "0";
-        GainPointTextObject.GetComponent<Text>().text = "(+0)";
+        GainingPointTextObject.GetComponent<Text>().text = "0";
+        GainingPointTextObject.GetComponent<Text>().text = "(+0)";
         RemainPointTextObject.GetComponent<Text>().text = " / 0";
     }
 
@@ -813,7 +820,7 @@ public class LabatoryDevelopPanelController : MonoBehaviour
     {
         LabatoryAct.DevelopingProduct TargetInfo = CallTargetLabatoryAct.CurrentDevelopingProduct;
         float CompletePercentage = Mathf.CeilToInt(TargetInfo.CompletedPoint / (float)TargetInfo.ObjectInfo.RequiredPoint * 100f) * 0.01f;
-        float CurrentGainPoint = CallTargetLabatoryAct.ResearchPower / TargetInfo.ObjectInfo.RequiredResearchPower;
+        float CurrentGainingPoint = CallTargetLabatoryAct.ResearchPower / TargetInfo.ObjectInfo.RequiredResearchPower;
 
         ProgressBarObject.GetComponent<Image>().fillAmount = CompletePercentage;
         if(CompletePercentage >= 1f)
@@ -828,10 +835,10 @@ public class LabatoryDevelopPanelController : MonoBehaviour
         }
 
         PassedTimeTextObject.GetComponent<Text>().text = CallTimeManager.GetPeriodString(CallTimeManager.TimeValue - TargetInfo.StartTime, "Short");
-        RemainTimeTextObject.GetComponent<Text>().text = " / " + CallTimeManager.GetPeriodString((CallTimeManager.TimeValue - TargetInfo.StartTime) + (Mathf.CeilToInt(((float)TargetInfo.ObjectInfo.RequiredPoint - TargetInfo.CompletedPoint) / CurrentGainPoint) * CallTimeManager.Hour), "Short");
+        RemainTimeTextObject.GetComponent<Text>().text = " / " + CallTimeManager.GetPeriodString((CallTimeManager.TimeValue - TargetInfo.StartTime) + (Mathf.CeilToInt(((float)TargetInfo.ObjectInfo.RequiredPoint - TargetInfo.CompletedPoint) / CurrentGainingPoint) * CallTimeManager.Hour), "Short");
 
         CompletedPointTextObject.GetComponent<Text>().text = (Mathf.CeilToInt(TargetInfo.CompletedPoint)).ToString();
-        GainPointTextObject.GetComponent<Text>().text = "(+"+(Mathf.CeilToInt(CurrentGainPoint)).ToString() + ")";
+        GainingPointTextObject.GetComponent<Text>().text = "(+"+(Mathf.CeilToInt(CurrentGainingPoint)).ToString() + ")";
         RemainPointTextObject.GetComponent<Text>().text = " / " + TargetInfo.ObjectInfo.RequiredPoint.ToString();
     }
 

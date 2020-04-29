@@ -209,7 +209,7 @@ public class EmployeeValue : MonoBehaviour
             if(Info.ObjectActCall.Info.LaborRequirement > 0)
             {
                 RequiredLabor += Info.ObjectActCall.Info.LaborRequirement;
-                RotatingEmployee();
+                RotateTimer = RotateTimeLimit;
             }
         }
 
@@ -254,8 +254,7 @@ public class EmployeeValue : MonoBehaviour
                 LaborInfoList.Remove(Target);
             }
 
-            if(Target.Info.ObjectActCall.Info.LaborRequirement != 0)
-                RotatingEmployee();
+            if(Target.Info.ObjectActCall.Info.LaborRequirement != 0) RotateTimer = RotateTimeLimit;
         }
 
         if(CompanyValueCall.CompanyName == CompanyManagerCall.PlayerCompanyName) PanelControllerCall.UpdateFactoryInfo("Employee", TotalLabor, RequiredLabor);

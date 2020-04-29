@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<ProcessorInfo>
+    <Processor>
+        <Type>Processor</Type>
+        <Name>Processing machine</Name>
+        <PerformanceQuality>0.5</PerformanceQuality>
+        <PerformanceSpeed>1</PerformanceSpeed>
+        <ActorList>Pulp processer,Panel processer,Press machine</ActorList>
+    </Processor>
+    <Processor>
+        <Type>Assembler</Type>
+        <Name>Packing machine</Name>
+        <PerformanceQuality>0.5</PerformanceQuality>
+        <PerformanceSpeed>0.8</PerformanceSpeed>
+        <ActorList>Box packer,Housing molder</ActorList>
+    </Processor>
+    <Processor>
+        <Type>Processor</Type>
+        <Name>Manufacturing machine</Name>
+        <PerformanceQuality>0.7</PerformanceQuality>
+        <PerformanceSpeed>0.8</PerformanceSpeed>
+        <ActorList>Magnetic analyzer,Wire extractor,Silicon mixer</ActorList>
+    </Processor>
+    <Processor>
+        <Type>Processor</Type>
+        <Name>Precision process machine</Name>
+        <PerformanceQuality>0.9</PerformanceQuality>
+        <PerformanceSpeed>0.6</PerformanceSpeed>
+        <ActorList>Semiconductor processor,Panel processer,Press machine</ActorList>
+    </Processor>
+    <Processor>
+        <Type>Assembler</Type>
+        <Name>Assembly machine</Name>
+        <PerformanceQuality>0.7</PerformanceQuality>
+        <PerformanceSpeed>0.7</PerformanceSpeed>
+        <ActorList>Circuit assembler,Circuit engraver,Part attacher</ActorList>
+    </Processor>
+    <Processor>
+        <Type>Assembler</Type>
+        <Name>Precision assembly machine</Name>
+        <PerformanceQuality>0.9</PerformanceQuality>
+        <PerformanceSpeed>0.5</PerformanceSpeed>
+        <ActorList>Electron assembler,Electron controller,Chemical sprayer</ActorList>
+    </Processor>
+    <Processor>
+        <Type>Assembler</Type>
+        <Name>Quantum generator</Name>
+        <PerformanceQuality>1</PerformanceQuality>
+        <PerformanceSpeed>0.3</PerformanceSpeed>
+        <ActorList>Quantum manipulator</ActorList>
+    </Processor>
+</ProcessorInfo>

@@ -75,8 +75,7 @@ public class ConstructPanelController : MonoBehaviour
                 }
                 foreach(var Object in CallTechValue.FacilityList)
                 {
-                    if(Object.Type == "Warehouse" || Object.Type == "GoodsCreator" || Object.Type == "GoodsLoader" 
-                        || Object.Type == "Belt" || Object.Type == "Distributor" || Object.Type == "VerticalBelt")
+                    if(Object.Type == "Storage" || Object.Type == "Door" || Object.Type == "Belt" || Object.Type == "Divider")
                     {
                         ObjectList.Add(Object.Name);
                     }
@@ -90,7 +89,7 @@ public class ConstructPanelController : MonoBehaviour
                 }
                 foreach(var Object in CallTechValue.FacilityList)
                 {
-                    if(Object.Type == "Processor" || Object.Type == "Destroyer" || Object.Type == "QualityControlUnit")
+                    if(Object.Type == "Processor" || Object.Type == "Destroyer" || Object.Type == "QualityChecker")
                     {
                         ObjectList.Add(Object.Name);
                     }

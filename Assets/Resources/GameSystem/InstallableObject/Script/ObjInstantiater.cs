@@ -5,28 +5,23 @@ using UnityEngine;
 public class ObjInstantiater : MonoBehaviour
 {
     CompanyManager CompanyManagerCall;
+    CompanyValue CompanyValueCall;
+    TechValue TechValueCall;
     InGameValue ValueCall;
     GameObject newObject;
-    public class ObjectInfo
-    {
-        public ObjectInfo() {}
-        public GameObject Object;
-        public string Name;
-        public string Type;
-        public int Price;
-        public int UpkeepPrice;
-        public int UpkeepMonthTerm;
-        public float ElectricConsum;
-        public float LaborRequirement;
-    }
-    public List<ObjectInfo> InfoArr = new List<ObjectInfo>();
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         CompanyManagerCall = GameObject.Find("CompanyManager").GetComponent<CompanyManager>();
+        CompanyValueCall = CompanyManagerCall.GetPlayerCompanyValue();
+        TechValueCall = CompanyValueCall.GetTechValue().GetComponent<TechValue>();
         ValueCall = GameObject.Find("BaseSystem").GetComponent<InGameValue>();
-        ObjectInitializing();
+    }
+
+    void Start()
+    {
+        
     }
 
     // Update is called once per frame
@@ -35,200 +30,26 @@ public class ObjInstantiater : MonoBehaviour
         
     }
 
-    public void InstantiateNewObject(string name)
+    public GameObject InstantiateNewObject(string name)
     {
         if (ValueCall.AttachedOnMouse != null)
         {
             Destroy(ValueCall.AttachedOnMouse);
         }
-        foreach(var infoArray in InfoArr)
+        foreach(var Facility in TechValueCall.FacilityList)
         {
-            if (infoArray.Name == name)
+            if (Facility.Name == name)
             {
-                newObject = GameObject.Instantiate(infoArray.Object, transform);
+                newObject = GameObject.Instantiate(Facility.Object, transform);
                 ValueCall.AttachedOnMouse = newObject;
-                newObject.transform.name = "#" + CompanyManagerCall.GetPlayerCompanyValue().GetFacilityValue().GetComponent<FacilityValue>().InstalledFacilityAmount + 1.ToString() 
-                    + " " + infoArray.Type;
+                newObject.transform.name = "New " + Facility.Type;
                 newObject.transform.parent = this.transform;
-                newObject.GetComponent<InstallableObjectAct>().Info = infoArray;
-                break;
-            }
-        }
-    }
+                newObject.GetComponent<InstallableObjectAct>().Info = Facility;
 
-    public ObjectInfo GetInfoByName(string Name)
-    {
-        ObjectInfo result = null;
-
-        foreach(var Info in InfoArr)
-        {
-            if(Info.Name == Name)
-            {
-                result = Info;
-                break;
+                return newObject;
             }
         }
 
         return null;
-    }
-
-    void ObjectInitializing()
-    {
-        ObjectInfo NewObject;
-
-        NewObject = new ObjectInfo();
-        NewObject.Name = "Warehouse";
-        NewObject.Type = "Warehouse";
-        NewObject.Price = 50;
-        NewObject.UpkeepPrice = 5;
-        NewObject.ElectricConsum = 0.5f;
-        NewObject.LaborRequirement = 1f;
-        NewObject.UpkeepMonthTerm = 1;
-        InfoArr.Add(NewObject);
-
-        NewObject = new ObjectInfo();
-        NewObject.Name = "Labatory";
-        NewObject.Type = "Labatory";
-        NewObject.Price = 200;
-        NewObject.UpkeepPrice = 10;
-        NewObject.ElectricConsum = 3f;
-        NewObject.LaborRequirement = 2f;
-        NewObject.UpkeepMonthTerm = 1;
-        InfoArr.Add(NewObject);
-
-        NewObject = new ObjectInfo();
-        NewObject.Name = "GoodsCreator";
-        NewObject.Type = "GoodsCreator";
-        NewObject.Price = 20;
-        NewObject.UpkeepPrice = 2;
-        NewObject.ElectricConsum = 1f;
-        NewObject.LaborRequirement = 0f;
-        NewObject.UpkeepMonthTerm = 1;
-        InfoArr.Add(NewObject);
-
-        NewObject = new ObjectInfo();
-        NewObject.Name = "GoodsLoader";
-        NewObject.Type = "GoodsLoader";
-        NewObject.Price = 20;
-        NewObject.UpkeepPrice = 2;
-        NewObject.ElectricConsum = 1f;
-        NewObject.LaborRequirement = 0f;
-        NewObject.UpkeepMonthTerm = 1;
-        InfoArr.Add(NewObject);
-
-        NewObject = new ObjectInfo();
-        NewObject.Name = "Belt1";
-        NewObject.Type = "Belt";
-        NewObject.Price = 10;
-        NewObject.UpkeepPrice = 1;
-        NewObject.ElectricConsum = 0.5f;
-        NewObject.LaborRequirement = 0f;
-        NewObject.UpkeepMonthTerm = 1;
-        InfoArr.Add(NewObject);
-
-        NewObject = new ObjectInfo();
-        NewObject.Name = "Processor1";
-        NewObject.Type = "Processor";
-        NewObject.Price = 50;
-        NewObject.UpkeepPrice = 3;
-        NewObject.ElectricConsum = 1.5f;
-        NewObject.LaborRequirement = 1f;
-        NewObject.UpkeepMonthTerm = 1;
-        InfoArr.Add(NewObject);
-
-        NewObject = new ObjectInfo();
-        NewObject.Name = "Assembler1";
-        NewObject.Type = "Processor";
-        NewObject.Price = 80;
-        NewObject.UpkeepPrice = 4;
-        NewObject.ElectricConsum = 1.7f;
-        NewObject.LaborRequirement = 1f;
-        NewObject.UpkeepMonthTerm = 1;
-        InfoArr.Add(NewObject);
-
-        NewObject = new ObjectInfo();
-        NewObject.Name = "Distributor";
-        NewObject.Type = "Distributor";
-        NewObject.Price = 70;
-        NewObject.UpkeepPrice = 3;
-        NewObject.ElectricConsum = 1.5f;
-        NewObject.LaborRequirement = 1f;
-        NewObject.UpkeepMonthTerm = 1;
-        InfoArr.Add(NewObject);
-        
-        NewObject = new ObjectInfo();
-        NewObject.Name = "Destroyer";
-        NewObject.Type = "Destroyer";
-        NewObject.Price = 30;
-        NewObject.UpkeepPrice = 4;
-        NewObject.ElectricConsum = 3f;
-        NewObject.LaborRequirement = 1f;
-        NewObject.UpkeepMonthTerm = 1;
-        InfoArr.Add(NewObject);
-
-        NewObject = new ObjectInfo();
-        NewObject.Name = "QualityControlUnit";
-        NewObject.Type = "QualityControlUnit";
-        NewObject.Price = 100;
-        NewObject.UpkeepPrice = 2;
-        NewObject.ElectricConsum = 2f;
-        NewObject.LaborRequirement = 0f;
-        NewObject.UpkeepMonthTerm = 1;
-        InfoArr.Add(NewObject);
-
-        NewObject = new ObjectInfo();
-        NewObject.Name = "VerticalBelt1_Up";
-        NewObject.Type = "VerticalBelt";
-        NewObject.Price = 20;
-        NewObject.UpkeepPrice = 2;
-        NewObject.ElectricConsum = 0.7f;
-        NewObject.LaborRequirement = 0f;
-        NewObject.UpkeepMonthTerm = 1;
-        InfoArr.Add(NewObject);
-
-        NewObject = new ObjectInfo();
-        NewObject.Name = "VerticalBelt1_Down";
-        NewObject.Type = "VerticalBelt";
-        NewObject.Price = 20;
-        NewObject.UpkeepPrice = 2;
-        NewObject.ElectricConsum = 0.7f;
-        NewObject.LaborRequirement = 0f;
-        NewObject.UpkeepMonthTerm = 1;
-        InfoArr.Add(NewObject);
-
-        NewObject = new ObjectInfo();
-        NewObject.Name = "SmallEnergyStorage";
-        NewObject.Type = "EnergyStorage";
-        NewObject.Price = 150;
-        NewObject.UpkeepPrice = 10;
-        NewObject.ElectricConsum = 0f;
-        NewObject.LaborRequirement = 2f;
-        NewObject.UpkeepMonthTerm = 1;
-        InfoArr.Add(NewObject);
-
-        NewObject = new ObjectInfo();
-        NewObject.Name = "SmallEnergySupplier";
-        NewObject.Type = "EnergySupplier";
-        NewObject.Price = 50;
-        NewObject.UpkeepPrice = 20;
-        NewObject.ElectricConsum = 0f;
-        NewObject.LaborRequirement = 1f;
-        NewObject.UpkeepMonthTerm = 1;
-        InfoArr.Add(NewObject);
-
-        NewObject = new ObjectInfo();
-        NewObject.Name = "SmallDayRoom";
-        NewObject.Type = "DayRoom";
-        NewObject.Price = 150;
-        NewObject.UpkeepPrice = 10;
-        NewObject.ElectricConsum = 0.2f;
-        NewObject.LaborRequirement = 0f;
-        NewObject.UpkeepMonthTerm = 1;
-        InfoArr.Add(NewObject);
-
-        for(int i = 0; i < InfoArr.Count; i++)
-        {
-            InfoArr[i].Object = Resources.Load<GameObject>("GameSystem/InstallableObject/Object/" + InfoArr[i].Name);
-        }
     }
 }

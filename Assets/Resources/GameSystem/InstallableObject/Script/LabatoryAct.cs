@@ -17,7 +17,6 @@ public class LabatoryAct : MonoBehaviour
     TechRecipe TechRecipeCall;
     TechValue TechValueCall;
     public string CurrentResearchingTech;
-    TechRecipe.TechInfo TargetTechInfo;
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -87,12 +86,9 @@ public class LabatoryAct : MonoBehaviour
 
             if(TimeManagerCall.TimeValue % TimeManagerCall.Hour < TimeManagerCall.PlaySpeed)
             {
-                if(TargetTechInfo != null)
+                if(CurrentResearchingTech != "ResearchPowerUpgrade")
                 {
-                    if(TechValueCall.ContributeResearchWork(CurrentResearchingTech, ResearchPower) >= TargetTechInfo.RequiredWorkLoad)
-                    {
-                        CompleteResearch();
-                    }
+                    TechValueCall.ContributeResearchWork(CurrentResearchingTech, ResearchPower);
                 }
                 else
                 {
@@ -130,7 +126,6 @@ public class LabatoryAct : MonoBehaviour
                             }
                         }
                     }
-                    
                 }
             }
         }
@@ -140,28 +135,23 @@ public class LabatoryAct : MonoBehaviour
         }
     }
 
-    public bool StartResearch(string Type, int Index)
+    public void StartResearch(string Name)
     {
-        CurrentResearchingTech = Type;
-        if(Type != "ResearchPowerUpgrade")
+        CurrentResearchingTech = Name;
+        if(Name != "ResearchPowerUpgrade")
         {
-            TargetTechInfo =  TechRecipeCall.GetTechInfo(CurrentResearchingTech);
+            TechValueCall.StartResearch(CurrentResearchingTech, gameObject);
         }
-        return true;
-    }
-
-    void CompleteResearch()
-    {
-        // NotificationManagerCall.SetNews("Research for " + ResearchingTech.Name + " is completed");
-
-        TechValueCall.CompleteResearch(CurrentResearchingTech);
-        StopResearch();
     }
 
     public void StopResearch()
     {
+        if(CurrentResearchingTech != "ResearchPowerUpgrade")
+        {
+            TechValueCall.RemoveResearchLabatory(CurrentResearchingTech, gameObject);
+        }
+
         CurrentResearchingTech = null;
-        TargetTechInfo = null;
     }
 
     ///////////////////////////////////////////////////////////////////////////

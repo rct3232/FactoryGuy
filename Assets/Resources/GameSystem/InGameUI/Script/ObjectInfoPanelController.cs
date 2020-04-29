@@ -16,7 +16,7 @@ public class ObjectInfoPanelController : MonoBehaviour
     public GameObject TargetObject;
     TimeManager CallTimeManager;
     public Vector2 PanelPosition;
-    public ObjInstantiater.ObjectInfo TargetInfo;
+    public TechRecipe.FacilityInfo TargetInfo;
 
     void Awake()
     {
