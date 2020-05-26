@@ -5,10 +5,14 @@ using UnityEngine;
 public class BeltAct : MonoBehaviour
 {
     public InstallableObjectAct ObjectActCall;
+    public GameObject ParentObject;
     public bool isEnd;
     Vector3[] GoodsVelocity;
     public List<GameObject> BeltInstallList = new List<GameObject>();
+    public List<GameObject> ActivatedBeltList = new List<GameObject>();
     public GameObject VerticalBelt = null;
+    public GameObject DoorBelt = null;
+    public GameObject DoorObject = null;
     public int[] BeltInstallFirstPos = new int[2];
     public int DirectionSign = 0;
     public int Amount = 0;
@@ -18,7 +22,7 @@ public class BeltAct : MonoBehaviour
     public GameObject GoodsOnExit;
     public GameObject NextBelt;
     public GameObject PrevBelt;
-    public GameObject ModuleDetector;
+    public GameObject ModuleObject;
     GameObject DetectedObject;
     GameObject FrontDetector;
     List<GameObject> RearDetector = new List<GameObject>();
@@ -26,8 +30,6 @@ public class BeltAct : MonoBehaviour
     public bool NeedStop = false;
     public bool isStop = false;
     public bool isDummyBelt = false;
-    public int BeltIndex;
-    public int NextBeltDirection;
     public float BeltSpeed;
     public bool ModuleCondtion;
     GameObject BaseSystem;
@@ -39,7 +41,6 @@ public class BeltAct : MonoBehaviour
     ObjInstantiater ObjInstantiaterCall;
     GameObject StructCarrier;
     GameObject ObjectInstaller;
-    public GameObject ParentObject;
 
     // Start is called before the first frame update
     void Awake()
@@ -58,25 +59,16 @@ public class BeltAct : MonoBehaviour
         ParentObject = transform.parent.parent.gameObject;
         ObjectActCall = ParentObject.GetComponent<InstallableObjectAct>();
         int Detectorindex = 0;
-        ModuleDetector = transform.GetChild(Detectorindex++).gameObject;
         FrontDetector = transform.GetChild(Detectorindex++).gameObject;
         for(int i = 0; Detectorindex < transform.childCount; i++)
         {
             RearDetector.Add(transform.GetChild(Detectorindex++).gameObject);
         }
-        for(int i = 0; i < transform.parent.childCount; i++)
-        {
-            if(transform.parent.GetChild(i).gameObject == gameObject)
-            {
-                BeltIndex = i;
-            }
-        }
 
         CheckDirection();
 
-        if(!isDummyBelt) StructCarrier = ParentObject.transform.GetChild(0).GetChild(0).GetChild(BeltIndex).gameObject;
+        if(!isDummyBelt) StructCarrier = ParentObject.transform.GetChild(0).GetChild(0).GetChild(0).gameObject;
 
-        NextBeltDirection = -1;
         GoodsVelocity = new Vector3[4];
         float CurrentBeltSpeed = (float)TimeManagerCall.PlaySpeed * ObjectActCall.WorkSpeed * BeltSpeed;
         for (int i = 0; i< 4; i++)
@@ -108,7 +100,7 @@ public class BeltAct : MonoBehaviour
     {
         if(!ObjectActCall.isInstall)
         {
-            if(!InstallStandBy) BeltInstall();
+            if(!InstallStandBy && !isDummyBelt) BeltInstall();
         }
     }
 
@@ -122,7 +114,7 @@ public class BeltAct : MonoBehaviour
 
             if(GoodsOnBelt != null)
             {
-                if(GoodsValueCall.CheckMovingState(int.Parse(GoodsOnBelt.name)) == 1)
+                if(GoodsValueCall.CheckMovingState(System.Convert.ToInt32(GoodsOnBelt.name)) == 1)
                 {
                     if(PrevBelt != null)
                     {
@@ -258,24 +250,27 @@ public class BeltAct : MonoBehaviour
                     {
                         if(DetectedObject.GetComponent<InstallableObjectAct>().Info.Type == "Belt")
                         {
-                            ObjectActCall.ChangeStructColor(new Color(0.5f, 0.5f, 1f));
+                            DetectedObject.GetComponent<InstallableObjectAct>().ChangeStructColor(new Color(0.5f, 1f, 0.5f));
                             ObjectActCall.CanInstall = true;
+                            ParentObject.transform.GetChild(0).gameObject.SetActive(false);
                             if(Input.GetMouseButtonDown(0))
                             {
-                                BeltInstallFirstPos = GroupActivationCall.GetTilePos(ClickCheckerCall.target);
-                                BeltInstallList.Add(DetectedObject);
-                                InstallStandBy = true;
-
-                                InGameValueCall.AttachedOnMouse = null;
-                                GameObject NextBelt = ObjInstantiaterCall.InstantiateNewObject(ObjectActCall.Info.Name);
-                                BeltAct NextBeltAct = NextBelt.GetComponent<InstallableObjectAct>().GetBeltAct();
-                                NextBelt.transform.rotation = ParentObject.transform.rotation;
-                                NextBelt.GetComponent<InstallableObjectAct>().HeightLevel = ObjectActCall.HeightLevel;
-                                NextBeltAct.BeltDirection = BeltDirection;
-                                NextBeltAct.BeltInstallList = BeltInstallList;
-                                NextBeltAct.BeltInstallFirstPos = BeltInstallFirstPos;
+                                StartBeltInstall(DetectedObject);
 
                                 ObjectActCall.ObjectDelete();
+
+                                return;
+                            }
+                        }
+                        else if(DetectedObject.GetComponent<InstallableObjectAct>().Info.Type == "Storage")
+                        {
+                            ObjectActCall.ChangeStructColor(new Color(0.5f, 0.5f, 1f));
+                            ObjectActCall.CanInstall = true;
+                            ParentObject.transform.GetChild(0).gameObject.SetActive(true);
+                            if(Input.GetMouseButtonDown(0))
+                            {
+                                DoorBelt = ParentObject;
+                                StartBeltInstall(ParentObject);
 
                                 return;
                             }
@@ -298,20 +293,10 @@ public class BeltAct : MonoBehaviour
                 {
                     ObjectActCall.ChangeStructColor(new Color(0.5f, 0.5f, 1f));
                     ObjectActCall.CanInstall = true;
+                    ParentObject.transform.GetChild(0).gameObject.SetActive(true);
                     if(Input.GetMouseButtonDown(0))
                     {
-                        BeltInstallFirstPos = GroupActivationCall.GetTilePos(ClickCheckerCall.target);
-                        BeltInstallList.Add(ParentObject);
-                        InstallStandBy = true;
-
-                        InGameValueCall.AttachedOnMouse = null;
-                        GameObject NextBelt = ObjInstantiaterCall.InstantiateNewObject(ObjectActCall.Info.Name);
-                        BeltAct NextBeltAct = NextBelt.GetComponent<InstallableObjectAct>().GetBeltAct();
-                        NextBelt.transform.rotation = ParentObject.transform.rotation;
-                        NextBelt.GetComponent<InstallableObjectAct>().HeightLevel = ObjectActCall.HeightLevel;
-                        NextBeltAct.BeltDirection = BeltDirection;
-                        NextBeltAct.BeltInstallList = BeltInstallList;
-                        NextBeltAct.BeltInstallFirstPos = BeltInstallFirstPos;
+                        StartBeltInstall(ParentObject);
 
                         return;
                     }
@@ -331,27 +316,6 @@ public class BeltAct : MonoBehaviour
             ObjectActCall.ChangeStructColor(new Color(1f, 0.5f, 0.5f));
             ObjectActCall.CanInstall = false;
         }
-
-        GameObject ContactBelt = ParentObject;
-        if(DetectedObject != null)
-        {
-            if(DetectedObject.GetComponent<InstallableObjectAct>() != null)
-            {
-                InstallableObjectAct TargetObjectAct = DetectedObject.GetComponent<InstallableObjectAct>();
-                if(TargetObjectAct.Info.Type == "Belt")
-                {
-                    ContactBelt = DetectedObject;
-                }
-            }
-        }
-
-        List<GameObject> ActivatedBeltList = new List<GameObject>();
-        for(int i = 0; i < BeltInstallList.Count - 1; i++)
-        {
-            if(BeltInstallList[i].activeSelf) ActivatedBeltList.Add(BeltInstallList[i]);
-        }
-        ActivatedBeltList.Add(ContactBelt);
-
 
         if(ActivatedBeltList.Count > 0)
         {
@@ -374,13 +338,21 @@ public class BeltAct : MonoBehaviour
                 }
             }
 
-            for(int i = 0; i < ObjectInstaller.transform.childCount; i++)
+            bool FirstDoorCondition = InstallDoor(ActivatedBeltList[0]);
+            bool LastDoorCondition = InstallDoor(ParentObject);
+
+            if(!FirstDoorCondition || !LastDoorCondition) ObjectActCall.CanInstall = false;
+
+            for(int i = 0; i < ActivatedBeltList.Count; i++)
             {
-                GameObject TargetObject = ObjectInstaller.transform.GetChild(i).gameObject;
-                if(TargetObject.GetComponent<InstallableObjectAct>().isInstall) continue;
+                GameObject TargetObject = ActivatedBeltList[i];
 
                 InstallableObjectAct TargetObjectAct = TargetObject.GetComponent<InstallableObjectAct>();
-                if(ObjectActCall.CanInstall) TargetObjectAct.ChangeStructColor(new Color(0.5f, 0.5f, 1f));
+                if(ObjectActCall.CanInstall)
+                {
+                    if(TargetObjectAct.isInstall) TargetObjectAct.ChangeStructColor(new Color(0.5f, 1f, 0.5f));
+                    else TargetObjectAct.ChangeStructColor(new Color(0.5f, 0.5f, 1f));
+                }
                 else TargetObjectAct.ChangeStructColor(new Color(1f, 0.5f, 0.5f));
             }
         }
@@ -400,6 +372,25 @@ public class BeltAct : MonoBehaviour
         }
         
         return false;
+    }
+
+    void StartBeltInstall(GameObject StartBelt)
+    {
+        BeltInstallFirstPos = GroupActivationCall.GetTilePos(ClickCheckerCall.target);
+        BeltInstallList.Add(StartBelt);
+        InstallStandBy = true;
+
+        InGameValueCall.AttachedOnMouse = null;
+        GameObject NextBelt = ObjInstantiaterCall.InstantiateNewObject(ObjectActCall.Info.Name);
+        BeltAct NextBeltAct = NextBelt.GetComponent<InstallableObjectAct>().GetBeltAct();
+        NextBelt.transform.rotation = ParentObject.transform.rotation;
+        NextBelt.GetComponent<InstallableObjectAct>().HeightLevel = ObjectActCall.HeightLevel;
+        NextBeltAct.BeltDirection = BeltDirection;
+        NextBeltAct.BeltInstallList = BeltInstallList;
+        NextBeltAct.BeltInstallFirstPos = BeltInstallFirstPos;
+        NextBeltAct.ActivatedBeltList = ActivatedBeltList;
+        NextBeltAct.DoorBelt = null;
+        NextBeltAct.DoorObject = null;
     }
 
     void AppendInstallList()
@@ -442,7 +433,12 @@ public class BeltAct : MonoBehaviour
         if(Distance > 0) PositionSign = 1;
         else PositionSign = -1;
 
+        if(Axis == "x") NewBeltPos = new int[2] {BeltInstallFirstPos[0] + (Amount * PositionSign), BeltInstallFirstPos[1]};
+        else NewBeltPos = new int[2] {BeltInstallFirstPos[0], BeltInstallFirstPos[1] + (Amount * PositionSign)};
+        ParentObject.transform.position = GroupActivationCall.GetTilePhysicsPos(NewBeltPos) + new Vector3(0,(1 + ObjectActCall.HeightLevel * 2),0);
+
         GameObject ContactBelt = ParentObject;
+        DoorBelt = null;
         if(DetectedObject != null && DetectedObject != BeltInstallList[0])
         {
             if(DetectedObject.GetComponent<InstallableObjectAct>() != null)
@@ -452,12 +448,21 @@ public class BeltAct : MonoBehaviour
                 {
                     ContactBelt = DetectedObject;
                 }
+                else if(TargetObjectAct.Info.Type == "Storage")
+                {
+                    if(Amount + VerticalDistance > 0) DoorBelt = ContactBelt;
+                }
+                else
+                {
+                    ObjectActCall.CanInstall = false;
+                }
             }
         }
 
         if(ContactBelt == ParentObject)
         {
-            ParentObject.transform.GetChild(0).gameObject.SetActive(true);
+            if(DoorObject != null) ParentObject.transform.GetChild(0).gameObject.SetActive(false);
+            else ParentObject.transform.GetChild(0).gameObject.SetActive(true);
         }
         else
         {
@@ -491,9 +496,9 @@ public class BeltAct : MonoBehaviour
             if(i != 0 && i != BeltInstallList.Count - 1) BeltInstallList[i].SetActive(false);
         }
 
-        if(Axis == "x") NewBeltPos = new int[2] {BeltInstallFirstPos[0] + (Amount * PositionSign), BeltInstallFirstPos[1]};
-        else NewBeltPos = new int[2] {BeltInstallFirstPos[0], BeltInstallFirstPos[1] + (Amount * PositionSign)};
-        ParentObject.transform.position = GroupActivationCall.GetTilePhysicsPos(NewBeltPos) + new Vector3(0,(1 + ObjectActCall.HeightLevel * 2),0);
+        ActivatedBeltList.Clear();
+        ActivatedBeltList.Add(BeltInstallList[0]);
+        ActivatedBeltList.Add(ContactBelt);
 
         if(Amount + VerticalDistance == 0)
         {
@@ -501,9 +506,6 @@ public class BeltAct : MonoBehaviour
 
             return;
         }
-
-        List<GameObject> ActivatedBeltList = new List<GameObject>();
-        ActivatedBeltList.Add(BeltInstallList[0]);
 
         for(int i = 1; i < Amount + VerticalDistance; i++)
         {
@@ -535,21 +537,19 @@ public class BeltAct : MonoBehaviour
             TargetBeltAct.BeltInstallList = BeltInstallList;
             TargetBeltAct.BeltInstallFirstPos = BeltInstallFirstPos;
 
-            ActivatedBeltList.Add(TargetBelt);
+            ActivatedBeltList.Insert(ActivatedBeltList.Count - 1, TargetBelt);
         }
-
-        ActivatedBeltList.Add(ContactBelt);
 
         BeltAct FirstBeltAct, LastBeltAct;
         if(DirectionSign == 1)
         {
-            FirstBeltAct = BeltInstallList[0].GetComponent<InstallableObjectAct>().GetBeltAct();
-            LastBeltAct = ContactBelt.GetComponent<InstallableObjectAct>().GetBeltAct();
+            FirstBeltAct = ActivatedBeltList[0].GetComponent<InstallableObjectAct>().GetBeltAct();
+            LastBeltAct = ActivatedBeltList[ActivatedBeltList.Count - 1].GetComponent<InstallableObjectAct>().GetBeltAct();
         }
         else
         {
-            FirstBeltAct = ContactBelt.GetComponent<InstallableObjectAct>().GetBeltAct();
-            LastBeltAct = BeltInstallList[0].GetComponent<InstallableObjectAct>().GetBeltAct();
+            FirstBeltAct = ActivatedBeltList[ActivatedBeltList.Count - 1].GetComponent<InstallableObjectAct>().GetBeltAct();
+            LastBeltAct = ActivatedBeltList[0].GetComponent<InstallableObjectAct>().GetBeltAct();
         }
 
         if(FirstBeltAct.ObjectActCall.isInstall)
@@ -568,6 +568,13 @@ public class BeltAct : MonoBehaviour
                     ObjectActCall.CanInstall = false;
                 }
             }
+            if(FirstBeltAct.ModuleObject != null)
+            {
+                if(FirstBeltAct.BeltDirection != BeltDirection)
+                {
+                    ObjectActCall.CanInstall = false;
+                }
+            }
         }
         if(LastBeltAct.ObjectActCall.isInstall)
         {
@@ -581,6 +588,13 @@ public class BeltAct : MonoBehaviour
             if(LastBeltAct.NextBelt != null)
             {
                 if(Mathf.Abs(LastBeltAct.BeltDirection - LastBeltAct.NextBelt.GetComponent<BeltAct>().BeltDirection) == 2)
+                {
+                    ObjectActCall.CanInstall = false;
+                }
+            }
+            if(LastBeltAct.ModuleObject != null)
+            {
+                if(LastBeltAct.BeltDirection != BeltDirection)
                 {
                     ObjectActCall.CanInstall = false;
                 }
@@ -616,20 +630,159 @@ public class BeltAct : MonoBehaviour
         InGameValueCall.AttachedOnMouse = ParentObject;
     }
 
+    bool InstallDoor(GameObject TargetBelt)
+    {
+        BeltAct TargetBeltAct = TargetBelt.GetComponent<InstallableObjectAct>().GetBeltAct();
+
+        if(!ObjectActCall.CanInstall)
+        {
+            if(TargetBeltAct.DoorObject != null)
+            {
+                TargetBeltAct.DoorObject.GetComponent<InstallableObjectAct>().ObjectDelete();
+                TargetBeltAct.DoorObject = null;
+                TargetBelt.transform.GetChild(0).gameObject.SetActive(true);
+            }
+
+            return false;
+        }
+        if(TargetBeltAct.DoorBelt != null)
+        {
+            if(Amount < 1)
+            {
+                if(TargetBeltAct.DoorObject != null)
+                {
+                    TargetBeltAct.DoorObject.GetComponent<InstallableObjectAct>().ObjectDelete();
+                    TargetBeltAct.DoorObject = null;
+                    TargetBelt.transform.GetChild(0).gameObject.SetActive(true);
+                }
+
+                return false;
+            }
+
+            if(Amount == 1)
+            {
+                if(ActivatedBeltList[0].GetComponent<InstallableObjectAct>().GetBeltAct().DoorBelt != null && DoorBelt != null)
+                {
+                    if(TargetBeltAct.DoorObject != null)
+                    {
+                        TargetBeltAct.DoorObject.GetComponent<InstallableObjectAct>().ObjectDelete();
+                        TargetBeltAct.DoorObject = null;
+                    }
+                    TargetBelt.transform.GetChild(0).gameObject.SetActive(true);
+
+                    return false;
+                }
+            }
+        
+            if(TargetBeltAct.DoorObject != null)
+            {
+                string Mode = "";
+
+                if(DirectionSign == 1)
+                {
+                    if(TargetBeltAct.DoorBelt == ActivatedBeltList[0]) Mode = "Ejector";
+                    else Mode = "Loader";
+                }
+                else
+                {
+                    if(TargetBeltAct.DoorBelt == ActivatedBeltList[0]) Mode = "Loader";
+                    else  Mode = "Ejector";
+                }
+
+                if(TargetBeltAct.DoorObject.GetComponent<DoorAct>().DoorMode != Mode)
+                {
+                    TargetBeltAct.DoorObject.GetComponent<InstallableObjectAct>().ObjectDelete();
+                    TargetBeltAct.DoorObject = null;
+                }
+            }
+
+            if(TargetBeltAct.DoorObject == null)
+            {
+                InGameValueCall.AttachedOnMouse = null;
+                TargetBeltAct.DoorObject = ObjInstantiaterCall.InstantiateNewObject(ObjectActCall.Info.Name + " Door");
+                InGameValueCall.AttachedOnMouse = ParentObject;
+
+                if(TargetBeltAct.DoorObject == null) return false;
+                
+                float yRotationValue = TargetBelt.transform.rotation.eulerAngles.y;
+                int PositionBeltIndex = 0;
+
+                if(DirectionSign == 1)
+                {
+                    if(TargetBeltAct.DoorBelt == ActivatedBeltList[0])
+                    {
+                        TargetBeltAct.DoorObject.GetComponent<DoorAct>().DoorMode = "Ejector";
+                        TargetBeltAct.DoorObject.GetComponent<DoorAct>().DummyBelt.GetComponent<BeltAct>().isEnd = false;
+
+                        PositionBeltIndex = 1;
+                    }
+                    else
+                    {
+                        TargetBeltAct.DoorObject.GetComponent<DoorAct>().DoorMode = "Loader";
+                        TargetBeltAct.DoorObject.GetComponent<DoorAct>().DummyBelt.GetComponent<BeltAct>().isEnd = true;
+
+                        PositionBeltIndex = ActivatedBeltList.Count - 2;
+                        yRotationValue = (180f + TargetBelt.transform.rotation.eulerAngles.y) % 360f;
+                    }
+                }
+                else
+                {
+                    if(TargetBeltAct.DoorBelt == ActivatedBeltList[0])
+                    {
+                        TargetBeltAct.DoorObject.GetComponent<DoorAct>().DoorMode = "Loader";
+                        TargetBeltAct.DoorObject.GetComponent<DoorAct>().DummyBelt.GetComponent<BeltAct>().isEnd = true;
+
+                        PositionBeltIndex = 1;
+                        yRotationValue = (180f + TargetBelt.transform.rotation.eulerAngles.y) % 360f;
+                    }
+                    else
+                    {
+                        TargetBeltAct.DoorObject.GetComponent<DoorAct>().DoorMode = "Ejector";
+                        TargetBeltAct.DoorObject.GetComponent<DoorAct>().DummyBelt.GetComponent<BeltAct>().isEnd = false;
+
+                        PositionBeltIndex = ActivatedBeltList.Count - 2;
+                    }
+                }
+
+                TargetBeltAct.DoorObject.transform.position = ActivatedBeltList[PositionBeltIndex].transform.position;
+                TargetBeltAct.DoorObject.transform.rotation = Quaternion.Euler(0, yRotationValue, 0);
+
+                TargetBelt.transform.GetChild(0).gameObject.SetActive(false);
+            }
+
+            return true;
+        }
+        else
+        {
+            if(TargetBeltAct.DoorObject != null)
+            {
+                TargetBeltAct.DoorObject.GetComponent<InstallableObjectAct>().ObjectDelete();
+                TargetBeltAct.DoorObject = null;
+                TargetBeltAct.DoorBelt = null;
+
+                TargetBelt.transform.GetChild(0).gameObject.SetActive(true);
+            }
+
+            return true;
+        }
+    }
+
     bool InstallVerticalBelt()
     {
         if(BeltInstallList.Count <= 0) return true;
 
+        if(ActivatedBeltList[0].GetComponent<InstallableObjectAct>().GetBeltAct().DoorBelt != null || ActivatedBeltList[ActivatedBeltList.Count - 1].GetComponent<InstallableObjectAct>().GetBeltAct().DoorBelt != null) return false;
+
         if(VerticalBelt == null)
         {
             InGameValueCall.AttachedOnMouse = null;
-            VerticalBelt = ObjInstantiaterCall.InstantiateNewObject("Elevator");
+            VerticalBelt = ObjInstantiaterCall.InstantiateNewObject(ObjectActCall.Info.Name + " Elevator");
             InGameValueCall.AttachedOnMouse = ParentObject;
 
             if(VerticalBelt == null) return false;
             
-            VerticalBelt.transform.position = BeltInstallList[0].transform.position + new Vector3(0,ObjectActCall.HeightLevel * -2,0);
-            VerticalBelt.transform.rotation = BeltInstallList[0].transform.rotation;
+            VerticalBelt.transform.position = ActivatedBeltList[0].transform.position + new Vector3(0,ObjectActCall.HeightLevel * -2,0);
+            VerticalBelt.transform.rotation = ActivatedBeltList[0].transform.rotation;
 
             return true;
         }
@@ -653,6 +806,8 @@ public class BeltAct : MonoBehaviour
 
             if(!TargetBeltAct.ObjectActCall.isInstall)
             {
+                if(TargetBeltAct.DoorObject != null) TargetBeltAct.DoorObject.GetComponent<InstallableObjectAct>().ObjectDelete();
+
                 Target.SetActive(true);
                 Target.GetComponent<InstallableObjectAct>().ObjectDelete();
             }
@@ -689,6 +844,7 @@ public class BeltAct : MonoBehaviour
 
         BeltInstallList = new List<GameObject>();
         BeltInstallFirstPos = new int[2];
+        ActivatedBeltList = new List<GameObject>();
         
         InGameValueCall.AttachedOnMouse = ParentObject;
 
@@ -696,6 +852,13 @@ public class BeltAct : MonoBehaviour
         {
             VerticalBelt.GetComponent<InstallableObjectAct>().ObjectDelete();
             VerticalBelt = null;
+        }
+
+        if(DoorObject != null)
+        {
+            DoorObject.GetComponent<InstallableObjectAct>().ObjectDelete();
+            DoorObject = null;
+            DoorBelt = null;
         }
     }
 
@@ -709,82 +872,72 @@ public class BeltAct : MonoBehaviour
             return;
         }
 
-        GameObject ContactBelt = ParentObject;
-        if(DetectedObject != null)
-        {
-            if(DetectedObject.GetComponent<InstallableObjectAct>() != null)
-            {
-                InstallableObjectAct TargetObjectAct = DetectedObject.GetComponent<InstallableObjectAct>();
-                if(TargetObjectAct.Info.Type == "Belt")
-                {
-                    ContactBelt = DetectedObject;
-                }
-            }
-        }
-
-        if(ContactBelt != ParentObject && Amount == 0)
+        if(ActivatedBeltList[ActivatedBeltList.Count - 1] != ParentObject && Amount + VerticalDistance == 0)
         {
             ResetInstallList();
             return;
         }
 
+        InstallableObjectAct FirstObjectAct = ActivatedBeltList[0].GetComponent<InstallableObjectAct>();
+        InstallableObjectAct LastObjectAct = ActivatedBeltList[ActivatedBeltList.Count - 1].GetComponent<InstallableObjectAct>();
+        BeltAct FirstBeltAct = FirstObjectAct.GetBeltAct();
+        BeltAct LastBeltAct = LastObjectAct.GetBeltAct();
+
         if(Amount + VerticalDistance != 0)
         {
-            List<GameObject> ActivatedBeltList = new List<GameObject>();
-            for(int i = 0; i < BeltInstallList.Count - 1; i++)
-            {
-                if(BeltInstallList[i].activeSelf) ActivatedBeltList.Add(BeltInstallList[i]);
-            }
-            ActivatedBeltList.Add(ContactBelt);
-
             for(int i = 0; i < ActivatedBeltList.Count - 1; i++)
             {
+                InstallableObjectAct TargetObjectAct = ActivatedBeltList[i].GetComponent<InstallableObjectAct>();
+                InstallableObjectAct TargetNextObjectAct = ActivatedBeltList[i + 1].GetComponent<InstallableObjectAct>();
+                BeltAct TargetBeltAct = TargetObjectAct.GetBeltAct();
+                BeltAct TargetNextBeltAct = TargetNextObjectAct.GetBeltAct();
+
                 if(DirectionSign == 1)
                 {
-                    ActivatedBeltList[i].GetComponent<InstallableObjectAct>().GetBeltAct().ChangeNextBelt(ActivatedBeltList[i + 1].GetComponent<InstallableObjectAct>().GetBeltAct().gameObject);
-                    ActivatedBeltList[i].GetComponent<InstallableObjectAct>().GetBeltAct().isEnd = false;
-                    ActivatedBeltList[i + 1].GetComponent<InstallableObjectAct>().GetBeltAct().ChangePrevBelt(ActivatedBeltList[i].GetComponent<InstallableObjectAct>().GetBeltAct().gameObject);
+                    TargetBeltAct.ChangeNextBelt(TargetNextBeltAct.gameObject);
+                    TargetBeltAct.isEnd = false;
+                    TargetNextBeltAct.ChangePrevBelt(TargetBeltAct.gameObject);
                 }
                 else
                 {
-                    ActivatedBeltList[i].GetComponent<InstallableObjectAct>().GetBeltAct().ChangePrevBelt(ActivatedBeltList[i + 1].GetComponent<InstallableObjectAct>().GetBeltAct().gameObject);
-                    ActivatedBeltList[i + 1].GetComponent<InstallableObjectAct>().GetBeltAct().ChangeNextBelt(ActivatedBeltList[i].GetComponent<InstallableObjectAct>().GetBeltAct().gameObject);
-                    ActivatedBeltList[i + 1].GetComponent<InstallableObjectAct>().GetBeltAct().isEnd = false;
+                    TargetBeltAct.ChangePrevBelt(TargetNextBeltAct.gameObject);
+                    TargetNextBeltAct.ChangeNextBelt(TargetBeltAct.gameObject);
+                    TargetNextBeltAct.isEnd = false;
                 }
 
-                if(ActivatedBeltList[i].GetComponent<InstallableObjectAct>().isInstall) continue;
+                if(TargetObjectAct.isInstall) continue;
                 
-                ActivatedBeltList[i].GetComponent<InstallableObjectAct>().Installation();
-                ActivatedBeltList[i].GetComponent<InstallableObjectAct>().IsWorking = true;
-                ActivatedBeltList[i].GetComponent<InstallableObjectAct>().GetBeltAct().InstallStandBy = false;
+                TargetObjectAct.Installation();
+                TargetObjectAct.IsWorking = true;
+                TargetBeltAct.InstallStandBy = false;
             }
         }
-        else BeltInstallList[0].GetComponent<InstallableObjectAct>().ObjectDelete();
+        else FirstObjectAct.ObjectDelete();
         
-        ContactBelt.GetComponent<InstallableObjectAct>().GetBeltAct().InstallStandBy = false;
-        ContactBelt.GetComponent<InstallableObjectAct>().IsWorking = true;
-        ContactBelt.GetComponent<InstallableObjectAct>().Installation();
+        LastBeltAct.InstallStandBy = false;
+        LastObjectAct.IsWorking = true;
+        LastObjectAct.Installation();
 
         if(DirectionSign == 1)
         {
-            if(ContactBelt.GetComponent<InstallableObjectAct>().GetBeltAct().NextBelt == null)
+            if(LastBeltAct.NextBelt == null)
             {
-                ContactBelt.GetComponent<InstallableObjectAct>().GetBeltAct().ChangeNextBelt(null);
+                LastBeltAct.ChangeNextBelt(null);
             }
             else
             {
-                ContactBelt.GetComponent<InstallableObjectAct>().GetBeltAct().isEnd = false;
+                LastBeltAct.isEnd = false;
             }
         }
         else
         {
-            if(BeltInstallList[0].GetComponent<InstallableObjectAct>().GetBeltAct().NextBelt == null)
+            if(FirstBeltAct.NextBelt == null)
             {
-                BeltInstallList[0].GetComponent<InstallableObjectAct>().GetBeltAct().ChangeNextBelt(null);
+                FirstBeltAct.ChangeNextBelt(null);
             }
             else
             {
-                BeltInstallList[0].GetComponent<InstallableObjectAct>().GetBeltAct().isEnd = false;
+                FirstBeltAct.isEnd = false;
             }
         }
 
@@ -792,42 +945,63 @@ public class BeltAct : MonoBehaviour
         {
             if(DirectionSign == 1)
             {
-                BeltInstallList[0].GetComponent<InstallableObjectAct>().GetBeltAct().VerticalBelt = VerticalBelt;
-                BeltInstallList[0].GetComponent<InstallableObjectAct>().GetBeltAct().NextBelt.GetComponent<BeltAct>().VerticalBelt = VerticalBelt;
+                FirstBeltAct.VerticalBelt = VerticalBelt;
+                FirstBeltAct.NextBelt.GetComponent<BeltAct>().VerticalBelt = VerticalBelt;
 
-                VerticalBelt.GetComponent<VerticlaBeltAct>().PrevBelt = BeltInstallList[0].GetComponent<InstallableObjectAct>().GetBeltAct().gameObject;
-                VerticalBelt.GetComponent<VerticlaBeltAct>().Mover = BeltInstallList[0].GetComponent<InstallableObjectAct>().GetBeltAct().NextBelt;
+                VerticalBelt.GetComponent<VerticlaBeltAct>().PrevBelt = FirstBeltAct.gameObject;
+                VerticalBelt.GetComponent<VerticlaBeltAct>().Mover = FirstBeltAct.NextBelt;
             }
             else
             {
-                BeltInstallList[0].GetComponent<InstallableObjectAct>().GetBeltAct().VerticalBelt = VerticalBelt;
-                BeltInstallList[0].GetComponent<InstallableObjectAct>().GetBeltAct().PrevBelt.GetComponent<BeltAct>().VerticalBelt = VerticalBelt;
+                FirstBeltAct.VerticalBelt = VerticalBelt;
+                FirstBeltAct.PrevBelt.GetComponent<BeltAct>().VerticalBelt = VerticalBelt;
 
-                VerticalBelt.GetComponent<VerticlaBeltAct>().PrevBelt = BeltInstallList[0].GetComponent<InstallableObjectAct>().GetBeltAct().PrevBelt;
-                VerticalBelt.GetComponent<VerticlaBeltAct>().Mover = BeltInstallList[0].GetComponent<InstallableObjectAct>().GetBeltAct().gameObject;
+                VerticalBelt.GetComponent<VerticlaBeltAct>().PrevBelt = FirstBeltAct.PrevBelt;
+                VerticalBelt.GetComponent<VerticlaBeltAct>().Mover = FirstBeltAct.gameObject;
             }
 
             VerticalBelt.GetComponent<InstallableObjectAct>().Installation();
             VerticalBelt.GetComponent<VerticlaBeltAct>().Initializing();
             VerticalBelt = null;
         }
-        
-        BeltInstallList = new List<GameObject>();
-        BeltInstallFirstPos = new int[2];
+
+        if(FirstBeltAct.DoorObject != null)
+        {
+            FirstBeltAct.DoorObject.GetComponent<DoorAct>().Mover = ActivatedBeltList[1].GetComponent<InstallableObjectAct>().GetBeltAct().gameObject;
+            FirstBeltAct.DoorObject.GetComponent<DoorAct>().Initializing();
+
+            FirstObjectAct.ObjectDelete();
+        }
+        if(DoorObject != null)
+        {
+            DoorObject.GetComponent<DoorAct>().Mover = ActivatedBeltList[ActivatedBeltList.Count - 2].GetComponent<InstallableObjectAct>().GetBeltAct().gameObject;
+            DoorObject.GetComponent<DoorAct>().Initializing();
+        }
         
         GameObject NewBelt;
-        if(ContactBelt == ParentObject) NewBelt = ObjInstantiaterCall.InstantiateNewObject(ObjectActCall.Info.Name);
+        if(ActivatedBeltList[ActivatedBeltList.Count - 1] == ParentObject) NewBelt = ObjInstantiaterCall.InstantiateNewObject(ObjectActCall.Info.Name);
         else NewBelt = ParentObject;
-
+        
         NewBelt.transform.GetChild(0).gameObject.SetActive(true);
         NewBelt.transform.rotation = ParentObject.transform.rotation;
         NewBelt.GetComponent<InstallableObjectAct>().HeightLevel = ObjectActCall.HeightLevel;
         NewBelt.GetComponent<InstallableObjectAct>().GetBeltAct().CheckDirection();
+
+        InGameValueCall.AttachedOnMouse = NewBelt;
+        
+        BeltInstallList = new List<GameObject>();
+        BeltInstallFirstPos = new int[2];
+        ActivatedBeltList = new List<GameObject>();
     }
 
     public void ChangePrevBelt(GameObject TargetBelt)
     {
         PrevBelt = TargetBelt;
+        
+        if(isDummyBelt)
+        {
+            return;
+        }
         
         if(PrevBelt == null && NextBelt != null)
         {
@@ -841,6 +1015,11 @@ public class BeltAct : MonoBehaviour
     public void ChangeNextBelt(GameObject TargetBelt)
     {
         NextBelt = TargetBelt;
+
+        if(isDummyBelt)
+        {
+            return;
+        }
 
         if(NextBelt == null)
         {
@@ -899,12 +1078,10 @@ public class BeltAct : MonoBehaviour
                 {
                     Destroy(StructCarrier.transform.GetChild(0).GetChild(0).gameObject);
                     GameObject BeltStruct = GameObject.Instantiate(Resources.Load<GameObject>("GameSystem/InstallableObject/Struct/Belt_Straight"), StructCarrier.transform.GetChild(0));
+                    BeltStruct.name = "Belt_Straight";
                     BeltStruct.transform.localScale = new Vector3(50f, 50f, 7.5f);
                     BeltStruct.transform.localPosition = new Vector3(0, -0.5f, 0);
-                    if(ObjectActCall.StructObject.layer == 23)
-                    {
-                        ObjectActCall.StructObject = BeltStruct;
-                    }
+                    ObjectActCall.StructObject = BeltStruct;
                 }
             }
             else
@@ -917,15 +1094,12 @@ public class BeltAct : MonoBehaviour
                         {
                             Destroy(StructCarrier.transform.GetChild(0).GetChild(0).gameObject);
                             GameObject BeltStruct = GameObject.Instantiate(Resources.Load<GameObject>("GameSystem/InstallableObject/Struct/Belt_Bended_Right"), StructCarrier.transform.GetChild(0));
+                            BeltStruct.name = "Belt_Bended_Right";
                             BeltStruct.transform.localScale = new Vector3(50f, 50f, 7.5f);
                             BeltStruct.transform.localPosition = new Vector3(0, -0.5f, 0);
                             BeltStruct.transform.Rotate(0,0,180);
-                            if(ObjectActCall.StructObject.layer == 23)
-                            {
-                                ObjectActCall.StructObject = BeltStruct;
-                            }
+                            ObjectActCall.StructObject = BeltStruct;
                         }
-                        
                     }
                     else if(PrevBeltDirection - BeltDirection == 3 || PrevBeltDirection - BeltDirection == -1)
                     {
@@ -933,13 +1107,11 @@ public class BeltAct : MonoBehaviour
                         {
                             Destroy(StructCarrier.transform.GetChild(0).GetChild(0).gameObject);
                             GameObject BeltStruct = GameObject.Instantiate(Resources.Load<GameObject>("GameSystem/InstallableObject/Struct/Belt_Bended_Left"), StructCarrier.transform.GetChild(0));
+                            BeltStruct.name = "Belt_Bended_Left";
                             BeltStruct.transform.localScale = new Vector3(50f, 50f, 7.5f);
                             BeltStruct.transform.localPosition = new Vector3(0, -0.5f, 0);
                             BeltStruct.transform.Rotate(0,0,180);
-                            if(ObjectActCall.StructObject.layer == 23)
-                            {
-                                ObjectActCall.StructObject = BeltStruct;
-                            }
+                            ObjectActCall.StructObject = BeltStruct;
                         }
                     }
                 }
@@ -949,13 +1121,11 @@ public class BeltAct : MonoBehaviour
                     {
                         Destroy(StructCarrier.transform.GetChild(0).GetChild(0).gameObject);
                         GameObject BeltStruct = GameObject.Instantiate(Resources.Load<GameObject>("GameSystem/InstallableObject/Struct/Belt_Straight"), StructCarrier.transform.GetChild(0));
+                        BeltStruct.name = "Belt_Straight";
                         BeltStruct.transform.localScale = new Vector3(50f, 50f, 7.5f);
                         BeltStruct.transform.localPosition = new Vector3(0, -0.5f, 0);
                         BeltStruct.transform.Rotate(0,0,180);
-                        if(ObjectActCall.StructObject.layer == 23)
-                        {
-                            ObjectActCall.StructObject = BeltStruct;
-                        }
+                        ObjectActCall.StructObject = BeltStruct;
                     }
                 }
             }
@@ -1072,8 +1242,7 @@ public class BeltAct : MonoBehaviour
                     }
                     
                 }
-                // If Goods isnt moving now
-                else
+                else // If Goods isnt moving now
                 {
                     GoodsOnBelt.GetComponent<Rigidbody>().velocity = GoodsVelocity[BeltDirection];
                     GoodsValueCall.ChangeMovingState(int.Parse(GoodsOnBelt.name), true);
@@ -1149,11 +1318,11 @@ public class BeltAct : MonoBehaviour
     {
         if(NextBelt != null)
         {
-            NextBelt.GetComponent<BeltAct>().ChangePrevBelt(null);
+            if(NextBelt.GetComponent<BeltAct>().PrevBelt == gameObject) NextBelt.GetComponent<BeltAct>().ChangePrevBelt(null);
         }
         if(PrevBelt != null)
         {
-            PrevBelt.GetComponent<BeltAct>().ChangeNextBelt(null);
+            if(PrevBelt.GetComponent<BeltAct>().NextBelt == gameObject) PrevBelt.GetComponent<BeltAct>().ChangeNextBelt(null);
         }
         if(GoodsOnBelt != null)
         {
@@ -1163,6 +1332,10 @@ public class BeltAct : MonoBehaviour
         if(VerticalBelt != null)
         {
             VerticalBelt.GetComponent<InstallableObjectAct>().ObjectDelete();
+        }
+        if(ModuleObject != null)
+        {
+            ModuleObject.GetComponent<InstallableObjectAct>().ObjectDelete();
         }
 
         return true;

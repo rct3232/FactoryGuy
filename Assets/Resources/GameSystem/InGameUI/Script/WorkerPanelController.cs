@@ -7,15 +7,15 @@ public class WorkerPanelController : MonoBehaviour
 {
     public PanelController CallPanelController;
     public bool isInitialized = false;
-    [SerializeField]GameObject SearchPanel;
-    [SerializeField]GameObject FunctionPanel;
-    [SerializeField]GameObject InfoPanel;
-    [SerializeField]GameObject FatiguePanel;
-    [SerializeField]GameObject ExperiencePanel;
-    [SerializeField]GameObject FunctionButtonPanel;
-    [SerializeField]GameObject ListPanel;
-    [SerializeField]GameObject ItemListPanel;
-    [SerializeField]GameObject ItemCarrier;
+    public GameObject SearchPanel;
+    public GameObject FunctionPanel;
+    public GameObject InfoPanel;
+    public GameObject FatiguePanel;
+    public GameObject ExperiencePanel;
+    public GameObject FunctionButtonPanel;
+    public GameObject ListPanel;
+    public GameObject ItemListPanel;
+    public GameObject ItemCarrier;
     public int CurrentWorkerIndex = -1;
     EmployeeValue CallEmployeeValue;
     GameObject WorkerImageObject, NameTextObject, AgeTextObject, PayTextObject, AbilityTextObject, FatigueGraphBar, ExperienceGraphBar, PromoteButton, FireButton;

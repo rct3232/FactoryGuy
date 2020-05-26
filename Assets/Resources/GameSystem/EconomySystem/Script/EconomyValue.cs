@@ -30,8 +30,8 @@ public class EconomyValue : MonoBehaviour
             TimeValue = Time;
 
             SellList = new List<History>();
-            SubsidyList = new List<History>();
-            RoyaltyList = new List<History>();
+            MilestoneList = new List<History>();
+            LoanList = new List<History>();
 
             BuyList = new List<History>();
             InstallList = new List<History>();
@@ -41,8 +41,8 @@ public class EconomyValue : MonoBehaviour
             RealEstateList = new List<History>();
 
             SellSub = 0;
-            SubsidySub = 0;
-            RoyaltySub = 0;
+            MilestoneSub = 0;
+            LoanSub = 0;
 
             BuySub = 0;
             InstallSub = 0;
@@ -55,8 +55,8 @@ public class EconomyValue : MonoBehaviour
         }
         public int TimeValue;
         public List<History> SellList;
-        public List<History> SubsidyList;
-        public List<History> RoyaltyList;
+        public List<History> MilestoneList;
+        public List<History> LoanList;
 
         public List<History> BuyList;
         public List<History> InstallList;
@@ -66,8 +66,8 @@ public class EconomyValue : MonoBehaviour
         public List<History> RealEstateList;
 
         public int SellSub;
-        public int SubsidySub;
-        public int RoyaltySub;
+        public int MilestoneSub;
+        public int LoanSub;
         
         public int BuySub;
         public int InstallSub;
@@ -148,8 +148,8 @@ public class EconomyValue : MonoBehaviour
         if(Month <= CurrentHistoryIndex)
         {
             ResultList.AddRange(HistoryList[Month].SellList);
-            ResultList.AddRange(HistoryList[Month].SubsidyList);
-            ResultList.AddRange(HistoryList[Month].RoyaltyList);
+            ResultList.AddRange(HistoryList[Month].MilestoneList);
+            ResultList.AddRange(HistoryList[Month].LoanList);
 
             ResultList.AddRange(HistoryList[Month].BuyList);
             ResultList.AddRange(HistoryList[Month].InstallList);
@@ -171,8 +171,8 @@ public class EconomyValue : MonoBehaviour
         if(Month <= CurrentHistoryIndex)
         {
             ResultList.AddRange(HistoryList[Month].SellList);
-            ResultList.AddRange(HistoryList[Month].SubsidyList);
-            ResultList.AddRange(HistoryList[Month].RoyaltyList);
+            ResultList.AddRange(HistoryList[Month].MilestoneList);
+            ResultList.AddRange(HistoryList[Month].LoanList);
         }
 
         return ResultList;
@@ -206,8 +206,8 @@ public class EconomyValue : MonoBehaviour
             switch(Category)
             {
                 case "Sell" : return HistoryList[Month].SellList;
-                case "Subsidy" : return HistoryList[Month].SubsidyList;
-                case "Royalty" : return HistoryList[Month].RoyaltyList;
+                case "Milestone" : return HistoryList[Month].MilestoneList;
+                case "Loan" : return HistoryList[Month].LoanList;
                 case "Buy" : return HistoryList[Month].BuyList;
                 case "Install" : return HistoryList[Month].InstallList;
                 case "Upkeep" : return HistoryList[Month].UpkeepList;
@@ -229,8 +229,8 @@ public class EconomyValue : MonoBehaviour
         if(Month <= CurrentHistoryIndex)
         {
             Result += GetHistorySubByCategory(Month, "Sell");
-            Result += GetHistorySubByCategory(Month, "Subsidy");
-            Result += GetHistorySubByCategory(Month, "Royalty");
+            Result += GetHistorySubByCategory(Month, "Milestone");
+            Result += GetHistorySubByCategory(Month, "Loan");
 
             Result += GetHistorySubByCategory(Month, "Buy");
             Result += GetHistorySubByCategory(Month, "Install");
@@ -252,8 +252,8 @@ public class EconomyValue : MonoBehaviour
         if(Month <= CurrentHistoryIndex)
         {
             Result += GetHistorySubByCategory(Month, "Sell");
-            Result += GetHistorySubByCategory(Month, "Subsidy");
-            Result += GetHistorySubByCategory(Month, "Royalty");
+            Result += GetHistorySubByCategory(Month, "Milestone");
+            Result += GetHistorySubByCategory(Month, "Loan");
         }
         
         return Result;
@@ -287,8 +287,8 @@ public class EconomyValue : MonoBehaviour
             switch(Category)
             {
                 case "Sell" : return HistoryList[Month].SellSub;
-                case "Subsidy" : return HistoryList[Month].SubsidySub;
-                case "Royalty" : return HistoryList[Month].RoyaltySub;
+                case "Milestone" : return HistoryList[Month].MilestoneSub;
+                case "Loan" : return HistoryList[Month].LoanSub;
                 case "Buy" : return HistoryList[Month].BuySub;
                 case "Install" : return HistoryList[Month].InstallSub;
                 case "Upkeep" : return HistoryList[Month].UpkeepSub;
@@ -324,14 +324,12 @@ public class EconomyValue : MonoBehaviour
         NewHistory.DebugDetail = DebugDetail;
         NewHistory.Amount = Amount;
         NewHistory.ResultBalance = Balance;
-
-        GetHistoryByCategory(CurrentHistoryIndex, Category).Add(NewHistory);
         
         switch(Category)
         {
             case "Sell" : HistoryList[CurrentHistoryIndex].SellList.Add(NewHistory); HistoryList[CurrentHistoryIndex].SellSub += Amount; break;
-            case "Subsidy" : HistoryList[CurrentHistoryIndex].SubsidyList.Add(NewHistory); HistoryList[CurrentHistoryIndex].SubsidySub += Amount; break;
-            case "Royalty" : HistoryList[CurrentHistoryIndex].RoyaltyList.Add(NewHistory); HistoryList[CurrentHistoryIndex].RoyaltySub += Amount; break;
+            case "Milestone" : HistoryList[CurrentHistoryIndex].MilestoneList.Add(NewHistory); HistoryList[CurrentHistoryIndex].MilestoneSub += Amount; break;
+            case "Loan" : HistoryList[CurrentHistoryIndex].LoanList.Add(NewHistory); HistoryList[CurrentHistoryIndex].LoanSub += Amount; break;
             case "Buy" : HistoryList[CurrentHistoryIndex].BuyList.Add(NewHistory); HistoryList[CurrentHistoryIndex].BuySub += Amount; break;
             case "Install" : HistoryList[CurrentHistoryIndex].InstallList.Add(NewHistory); HistoryList[CurrentHistoryIndex].InstallSub += Amount; break;
             case "Upkeep" : HistoryList[CurrentHistoryIndex].UpkeepList.Add(NewHistory); HistoryList[CurrentHistoryIndex].UpkeepSub += Amount; break;
@@ -354,11 +352,11 @@ public class EconomyValue : MonoBehaviour
         AddHistory(TimeManagerCall.TimeValue, PersistHistoryArray[Index].Category, PersistHistoryArray[Index].Detail, PersistHistoryArray[Index].DebugDetail, PersistHistoryArray[Index].Amount);
     }
 
-    public void AddPersistHistory(int Date, int Term, string Category, string Detail, string DebugDetail, int Amount)
+    public void AddPersistHistory(int FirstEnforceDate, int Term, string Category, string Detail, string DebugDetail, int Amount)
     {
         PersistHistory NewPersistHistory = new PersistHistory();
 
-        NewPersistHistory.NextEnforceDate = Date;
+        NewPersistHistory.NextEnforceDate = FirstEnforceDate;
         NewPersistHistory.EnforceTerm = Term;
         NewPersistHistory.Category = Category;
         NewPersistHistory.Detail = Detail;
@@ -426,9 +424,9 @@ public class EconomyValue : MonoBehaviour
         }
     }
 
-    public void DeletePersistHistory(string Detail)
+    public void DeletePersistHistory(string DebugDetailForSearch)
     {
-        int Index = FindHistoryIndex(Detail);
+        int Index = FindHistoryIndex(DebugDetailForSearch);
 
         if(Index != -1)
         {

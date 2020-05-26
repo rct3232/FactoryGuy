@@ -7,12 +7,12 @@ public class ProcessingPanelController : MonoBehaviour
 {
     public PanelController CallPanelController;
     public bool isInitialized = false;
-    [SerializeField]GameObject GraphScrollPanel;
-    [SerializeField]GameObject GraphCarrier;
-    [SerializeField]GameObject ElectricityGraphCarrier;
-    [SerializeField]GameObject LaborForceGraphCarrier;
-    [SerializeField]GameObject ProcessGraphCarrier;
-    [SerializeField]GameObject ProcessGraphIndexCarrier;
+    public GameObject GraphScrollPanel;
+    public GameObject GraphCarrier;
+    public GameObject ElectricityGraphCarrier;
+    public GameObject LaborForceGraphCarrier;
+    public GameObject ProcessGraphCarrier;
+    public GameObject ProcessGraphIndexCarrier;
     GameObject ElectricityGraphPanelCarrier, LaborForceGraphPanelCarrier, ProcessGraphPanelCarrier, ProcessGraphIndexPanel;
     TimeManager CallTimeManager;
     CompanyManager CallCompanyManager;
@@ -346,7 +346,7 @@ public class ProcessingPanelController : MonoBehaviour
         Color[] ColorList;
 
         ColorList = new Color[3];
-        ColorList[0] = new Color(1f,0.2f,0.2f,1f);
+        ColorList[0] = new Color(1f,0.4f,0.4f,1f);
         ColorList[1] = new Color(1f,1f,0.2f,1f);
         ColorList[2] = new Color(0,0,0,0);
 
@@ -354,7 +354,7 @@ public class ProcessingPanelController : MonoBehaviour
 
         ColorList = new Color[5];
         ColorList[0] = new Color(1f,0.5f,0,1f);
-        ColorList[1] = new Color(1f,0.2f,0.2f,1f);
+        ColorList[1] = new Color(1f,0.4f,0.4f,1f);
         ColorList[2] = new Color(0.2f,0.2f,1f,1f);
         ColorList[3] = new Color(0.2f,1f,0.2f,1f);
         ColorList[4] = new Color(0,0,0,0);

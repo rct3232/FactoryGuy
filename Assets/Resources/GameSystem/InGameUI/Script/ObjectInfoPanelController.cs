@@ -8,11 +8,11 @@ public class ObjectInfoPanelController : MonoBehaviour
     public PanelController CallPanelController;
     public bool isInitialized = false;
     FloatingPanelController CallFloatingPanelController;
-    [SerializeField]GameObject MainPanel;
-    [SerializeField]GameObject InfoPanelCarrier;
-    [SerializeField]GameObject AdditionalInfoPanel;
-    [SerializeField]GameObject FunctionPanel;
-    [SerializeField]GameObject ButtonCarrier;
+    public GameObject MainPanel;
+    public GameObject InfoPanelCarrier;
+    public GameObject AdditionalInfoPanel;
+    public GameObject FunctionPanel;
+    public GameObject ButtonCarrier;
     public GameObject TargetObject;
     TimeManager CallTimeManager;
     public Vector2 PanelPosition;
@@ -103,18 +103,21 @@ public class ObjectInfoPanelController : MonoBehaviour
 
         switch(TargetInfo.Type)
         {
-            case "GoodsCreator" :
+            case "Door" :
                 InfoPanelCarrier.transform.GetChild(3).GetChild(1).gameObject.GetComponent<Text>().text = (TargetBasicInfo.WorkSpeed).ToString() + " item/sec";
 
-                if(TargetObject.GetComponent<GoodsCreater>().TargetGoodsName != "None")
+                if(TargetObject.GetComponent<DoorAct>().TargetGoodsName != "None")
                 {
                     AdditionalInfoPanel.SetActive(true);
-                    AdditionalInfoPanel.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + CallGoodsRecipe.GetRecipe(TargetObject.GetComponent<GoodsCreater>().TargetGoodsName).GoodsObject.name);
-                    AdditionalInfoPanel.transform.GetChild(1).gameObject.GetComponent<Text>().text = TargetObject.GetComponent<GoodsCreater>().TargetGoodsName;
+                    AdditionalInfoPanel.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + CallGoodsRecipe.GetRecipe(TargetObject.GetComponent<DoorAct>().TargetGoodsName).GoodsObject.name);
+                    AdditionalInfoPanel.transform.GetChild(1).gameObject.GetComponent<Text>().text = TargetObject.GetComponent<DoorAct>().TargetGoodsName;
                 }
 
-                FunctionPanel.SetActive(true);
-                ButtonCarrier.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = "Select Item";
+                if(TargetObject.GetComponent<DoorAct>().DoorMode == "Ejector")
+                {
+                    FunctionPanel.SetActive(true);
+                    ButtonCarrier.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text = "Select Item";
+                }
                 break;
             case "Processor" :
                 InfoPanelCarrier.transform.GetChild(1).GetChild(1).gameObject.GetComponent<Text>().text += " " + TargetObject.GetComponent<ProcessorAct>().ProcessorActorName;
@@ -193,7 +196,7 @@ public class ObjectInfoPanelController : MonoBehaviour
 
         switch(TargetInfo.Type)
         {
-            case "GoodsCreator" :
+            case "Door" :
                 CallPanelController.DisplaySidePanel("GoodsCreatorPanel");
                 break;
             case "Processor" :

@@ -95,12 +95,7 @@ public class InstallableObjectAct : MonoBehaviour
     {
         if (!isInstall)
         {
-            if(ValueCall.AttachedOnMouse != gameObject)
-            {
-                ValueCall.AttachedOnMouse = gameObject;
-            }
-
-            if(Info.Type != "Belt" && Info.Type != "VerticalBelt")
+            if(Info.Type != "Belt" && Info.Type != "VerticalBelt" && Info.Type != "Door")
             {
                 if (Input.GetKeyDown(KeyCode.Delete))
                 {
@@ -213,7 +208,7 @@ public class InstallableObjectAct : MonoBehaviour
         
         Value = CompanyValueCall.GetFacilityValue().GetComponent<FacilityValue>().AddFacilityInfo(gameObject);
 
-        if(Info.Type != "Belt" && Info.Type != "VerticalBelt") GameObject.Find("ObjectInstaller").GetComponent<ObjInstantiater>().InstantiateNewObject(Info.Name);
+        if(Info.Type != "Belt" && Info.Type != "VerticalBelt" && Info.Type != "Door") GameObject.Find("ObjectInstaller").GetComponent<ObjInstantiater>().InstantiateNewObject(Info.Name);
 
         return true;
     }
@@ -311,7 +306,7 @@ public class InstallableObjectAct : MonoBehaviour
         switch (StructObject.layer)
         {
             case 11: //GoodsCreator
-                CanDelete = this.GetComponent<GoodsCreater>().DeleteObject();
+                CanDelete = this.GetComponent<DoorAct>().DeleteObject();
                 break;
             case 23: //Belt
                 CanDelete = transform.GetChild(1).GetChild(0).GetComponent<BeltAct>().DeteleBelt();
@@ -321,9 +316,6 @@ public class InstallableObjectAct : MonoBehaviour
                 break;
             case 17: //Warehouse
                 CanDelete = this.GetComponent<WarehouseObjectAct>().DeleteObject();
-                break;
-            case 18: //GoodsLoader
-                CanDelete = this.GetComponent<GoodsLoaderAct>().DeleteObject();
                 break;
             case 19: //Distributor
                 CanDelete = this.GetComponent<DistributorAct>().DeleteObject();

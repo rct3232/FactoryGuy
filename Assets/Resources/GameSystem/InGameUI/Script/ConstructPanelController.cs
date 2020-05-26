@@ -7,11 +7,11 @@ public class ConstructPanelController : MonoBehaviour
 {
     public PanelController CallPanelController;
     public bool isInitialized = false;
-    [SerializeField]GameObject SearchPanel;
-    [SerializeField]GameObject CategoryPanel;
-    [SerializeField]GameObject ListPanel;
-    [SerializeField]GameObject ItemCarrier;
-    [SerializeField]GameObject BulldozeImageObject;
+    public GameObject SearchPanel;
+    public GameObject CategoryPanel;
+    public GameObject ListPanel;
+    public GameObject ItemCarrier;
+    public GameObject BulldozeImageObject;
     string CurrentCategory = "";
     InGameValue CallValue;
     TechValue CallTechValue;
@@ -75,7 +75,7 @@ public class ConstructPanelController : MonoBehaviour
                 }
                 foreach(var Object in CallTechValue.FacilityList)
                 {
-                    if(Object.Type == "Storage" || Object.Type == "Door" || Object.Type == "Belt" || Object.Type == "Divider")
+                    if(Object.Type == "Storage" || Object.Type == "Belt" || Object.Type == "Divider")
                     {
                         ObjectList.Add(Object.Name);
                     }

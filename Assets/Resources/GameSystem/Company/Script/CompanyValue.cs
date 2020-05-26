@@ -36,6 +36,7 @@ public class CompanyValue : MonoBehaviour
     void CalculateCompanyValue()
     {
         float result = 0f;
+        float difference = 0f;
 
         foreach(var Facility in GetFacilityValue().GetComponent<FacilityValue>().FacilityList)
         {
@@ -70,10 +71,18 @@ public class CompanyValue : MonoBehaviour
         }
 
         // Add Technology point
-        
-        if(CompanyName == CompanyManagerCall.PlayerCompanyName) PanelControllerCall.UpdateFactoryInfo("CompanyValue", result, TotalValue);
 
+        difference = TotalValue - result;
         TotalValue = result;
+        
+        if(CompanyName == CompanyManagerCall.PlayerCompanyName)
+        {
+            PanelControllerCall.UpdateFactoryInfo("CompanyValue", result, TotalValue + difference);
+            if(PanelControllerCall.CurrentSidePanel != null)
+            {
+                if(PanelControllerCall.CurrentSidePanel.name == "EconomyPanel") PanelControllerCall.CurrentSidePanel.GetComponent<EconomyPanelController>().UpdateBankList();
+            }
+        }
 
     }
 

@@ -58,34 +58,34 @@ public class TimeManager : MonoBehaviour
         return Mathf.FloorToInt((Time % Day) / Hour);
     }
 
-    public int GetNextDay(int Time)
+    public int GetNextDay(int Time, int Multiple=1)
     {
         if(Time == 0)
         {
             Time = TimeValue;
         }
 
-        return (Time % Day) + Day;
+        return (Time % Day) + (Day * Multiple);
     }
 
-    public int GetNextMonth(int Time)
+    public int GetNextMonth(int Time, int Multiple=1)
     {
         if(Time == 0)
         {
             Time = TimeValue;
         }
         
-        return (Time % Month) + Month;
+        return (Time % Month) + (Month * Multiple);
     }
 
-    public int GetNextYear(int Time)
+    public int GetNextYear(int Time, int Multiple=1)
     {
         if(Time == 0)
         {
             Time = TimeValue;
         }
         
-        return (Time % Year) + Year;
+        return (Time % Year) + (Year * Multiple);
     }
 
     public string ConvertMonthToString(int Month)

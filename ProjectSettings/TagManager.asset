@@ -26,7 +26,7 @@ TagManager:
   - Processor
   - Warehouse
   - GoodsLoader
-  - Distributor
+  - Divider
   - QCU
   - Destroyer
   - Labatory

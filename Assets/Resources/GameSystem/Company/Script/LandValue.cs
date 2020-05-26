@@ -18,7 +18,7 @@ public class LandValue : MonoBehaviour
     public int ActivatedLandCount = 0;
     public int FactoryAffectLandIndex = -1;
     public bool AllLandBought = false;
-    [SerializeField] int ValueModificationRef = 2;
+    public int ValueModificationRef = 2;
     int LandValueStandard = 4000;
 
     void Awake()
@@ -40,7 +40,7 @@ public class LandValue : MonoBehaviour
         EconomyValueCall = CompanyValueCall.GetEconomyValue().GetComponent<EconomyValue>();
         TimeManagerCall = GameObject.Find("TimeManager").GetComponent<TimeManager>();
 
-        EconomyValueCall.AddPersistHistory(TimeManagerCall.TimeValue, TimeManagerCall.Month, "Real Estate", "Land Tax", "Land Tax", 0);
+        EconomyValueCall.AddPersistHistory(TimeManagerCall.GetNextMonth(0), TimeManagerCall.Month, "Real Estate", "Land Tax", "Land Tax", 0);
         // EconomyValueCall.AddHistory(TimeManagerCall.TimeValue, "Real Estate", "Land Tax", "Land Tax", 0, true);
     }
 

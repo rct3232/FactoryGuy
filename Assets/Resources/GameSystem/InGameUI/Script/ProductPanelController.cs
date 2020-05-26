@@ -7,17 +7,17 @@ public class ProductPanelController : MonoBehaviour
 {
     public PanelController CallPanelController;
     public bool isInitialized = false;
-    [SerializeField]GameObject SearchPanel;
-    [SerializeField]GameObject FunctionPanel;
-    [SerializeField]GameObject BasicInfoPanel;
-    [SerializeField]GameObject StatInfoPanel;
-    [SerializeField]GameObject RequirementProductInfoPanel;
-    [SerializeField]GameObject RequirementProcessorInfoPanel;
-    [SerializeField]GameObject ListPanel;
-    [SerializeField]GameObject CategoryListPanel;
-    [SerializeField]GameObject CategoryCarrier;
-    [SerializeField]GameObject ItemListPanel;
-    [SerializeField]GameObject ItemCarrier;
+    public GameObject SearchPanel;
+    public GameObject FunctionPanel;
+    public GameObject BasicInfoPanel;
+    public GameObject StatInfoPanel;
+    public GameObject RequirementProductInfoPanel;
+    public GameObject RequirementProcessorInfoPanel;
+    public GameObject ListPanel;
+    public GameObject CategoryListPanel;
+    public GameObject CategoryCarrier;
+    public GameObject ItemListPanel;
+    public GameObject ItemCarrier;
     string CurrentCategory = "";
     string CurrentItem = "";
     string PlayerCompanyName;

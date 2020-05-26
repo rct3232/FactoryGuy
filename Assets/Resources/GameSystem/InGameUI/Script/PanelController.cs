@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 public class PanelController : MonoBehaviour
 {
-    [SerializeField]GameObject BottomPanel;
-    [SerializeField]GameObject MenuButton;
-    [SerializeField]GameObject RightPanel;
-    [SerializeField]GameObject LeftPanel;
-    [SerializeField]GameObject LandManageButton;
-    [SerializeField]GameObject BolldozeImageObject;
-    [SerializeField]GameObject SidePanelCarrier;
-    [SerializeField]GameObject FloatingPanelCarrier;
+    public GameObject BottomPanel;
+    public GameObject MenuButton;
+    public GameObject RightPanel;
+    public GameObject LeftPanel;
+    public GameObject LandManageButton;
+    public GameObject BolldozeImageObject;
+    public GameObject SidePanelCarrier;
+    public GameObject FloatingPanelCarrier;
     public GameObject NewsPanel;
     public GameObject AlertPopUpPanel;
     public GameObject NoteToolTipPanel;
@@ -255,13 +255,11 @@ public class PanelController : MonoBehaviour
                 }
                 CurrentSidePanel.GetComponent<WorkerPanelController>().Initializing();
                 break;
-            case "PromotionPanel" :
-                break;
-            case "EventPanel" :
+            case "ManagePanel" :
                 break;
             case "EconomyPanel" :
                 SidePanelCarrier.GetComponent<RectTransform>().sizeDelta = new Vector2(CurrentUIsize * 16, Screen.height - CurrentUIsize);
-                CurrentSidePanel = SidePanelList[7];
+                CurrentSidePanel = SidePanelList[6];
                 CurrentSidePanel.GetComponent<EconomyPanelController>().CallPanelController = gameObject.GetComponent<PanelController>();
                 CurrentSidePanel.SetActive(true);
                 if(!CurrentSidePanel.GetComponent<EconomyPanelController>().isInitialized) 
@@ -273,7 +271,7 @@ public class PanelController : MonoBehaviour
                 break;
             case "GoodsCreatorPanel" :
                 SidePanelCarrier.GetComponent<RectTransform>().sizeDelta = new Vector2(CurrentUIsize * 12, Screen.height - CurrentUIsize);
-                CurrentSidePanel = SidePanelList[8];
+                CurrentSidePanel = SidePanelList[7];
                 CurrentSidePanel.GetComponent<GoodsCreatorPanelController>().CallPanelController = gameObject.GetComponent<PanelController>();
                 CurrentSidePanel.SetActive(true);
                 if(!CurrentSidePanel.GetComponent<GoodsCreatorPanelController>().isInitialized) 
@@ -285,7 +283,7 @@ public class PanelController : MonoBehaviour
                 break;
             case "ProcessorPanel" :
                 SidePanelCarrier.GetComponent<RectTransform>().sizeDelta = new Vector2(CurrentUIsize * 12, Screen.height - CurrentUIsize);
-                CurrentSidePanel = SidePanelList[9];
+                CurrentSidePanel = SidePanelList[8];
                 CurrentSidePanel.GetComponent<ProcessorPanelController>().CallPanelController = gameObject.GetComponent<PanelController>();
                 CurrentSidePanel.SetActive(true);
                 if(!CurrentSidePanel.GetComponent<ProcessorPanelController>().isInitialized) 
@@ -297,7 +295,7 @@ public class PanelController : MonoBehaviour
                 break;
             case "LabatoryResearchPanel" :
                 SidePanelCarrier.GetComponent<RectTransform>().sizeDelta = new Vector2(CurrentUIsize * 12, Screen.height - CurrentUIsize);
-                CurrentSidePanel = SidePanelList[10];
+                CurrentSidePanel = SidePanelList[9];
                 CurrentSidePanel.GetComponent<LabatoryResearchPanelController>().CallPanelController = gameObject.GetComponent<PanelController>();
                 CurrentSidePanel.SetActive(true);
                 if(!CurrentSidePanel.GetComponent<LabatoryResearchPanelController>().isInitialized) 
@@ -309,7 +307,7 @@ public class PanelController : MonoBehaviour
                 break;
             case "LabatoryDevelopPanel" :
                 SidePanelCarrier.GetComponent<RectTransform>().sizeDelta = new Vector2(CurrentUIsize * 12, Screen.height - CurrentUIsize);
-                CurrentSidePanel = SidePanelList[11];
+                CurrentSidePanel = SidePanelList[10];
                 CurrentSidePanel.GetComponent<LabatoryDevelopPanelController>().CallPanelController = gameObject.GetComponent<PanelController>();
                 CurrentSidePanel.SetActive(true);
                 if(!CurrentSidePanel.GetComponent<LabatoryDevelopPanelController>().isInitialized) 
@@ -343,9 +341,7 @@ public class PanelController : MonoBehaviour
             case "WorkerPanel" :
                 CurrentSidePanel.GetComponent<WorkerPanelController>().ClosePanel();
                 break;
-            case "PromotionPanel" :
-                break;
-            case "EventPanel" :
+            case "ManagePanel" :
                 break;
             case "EconomyPanel" :
                 CurrentSidePanel.GetComponent<EconomyPanelController>().ClosePanel();
@@ -442,7 +438,14 @@ public class PanelController : MonoBehaviour
         else if(Income < 0) RealTimeIncomeText.color = new Color(1f, 0, 0, 1f);
         else RealTimeIncomeText.color = new Color(1f, 1f, 1f, 1f);
 
-        if(CurrentSidePanel != null) if(CurrentSidePanel.name == "EconomyPanel") CurrentSidePanel.GetComponent<EconomyPanelController>().DisplayDetailCurrentReport();
+        if(CurrentSidePanel != null)
+        {
+            if(CurrentSidePanel.name == "EconomyPanel")
+            {
+                CurrentSidePanel.GetComponent<EconomyPanelController>().DisplayDetailCurrentReport();
+                CurrentSidePanel.GetComponent<EconomyPanelController>().DiplaySummary();
+            }
+        }
     }
 
     public void UpdateFactoryInfo(string Category, float Value, float StandardValue)
@@ -464,6 +467,7 @@ public class PanelController : MonoBehaviour
             int CurrentValue = Mathf.CeilToInt(Value);
             if(PreviousValue == CurrentValue)
             {
+                CompanyValueText.text = CurrentValue.ToString();
                 CompanyValueStateImage.sprite = Resources.Load<Sprite>("GameSystem/InGameUI/Sprite/FixedValue");
             }
             else

@@ -7,10 +7,10 @@ public class ProcessorAct : MonoBehaviour
     public string ProcessorActorName = "";
     public GoodsRecipe.Recipe TargetGoodsRecipe;
     GameObject[] Mover;
-    GameObject[] PrevBeltDetector;
     GameObject[] MoverDetector;
-    GameObject[] NextBeltDetector;
     GameObject[] PrevBelt;
+    GameObject NextBelt;
+    int MainBeltIndex = -1;
     GoodsValue GoodsValueCall;
     GoodsRecipe GoodsRecipeCall;
     InstallableObjectAct ObjectActCall;
@@ -41,16 +41,12 @@ public class ProcessorAct : MonoBehaviour
 
         Mover = new GameObject[InputNumber];
         PrevBelt = new GameObject[InputNumber];
-        PrevBeltDetector = new GameObject[InputNumber];
-        NextBeltDetector = new GameObject[InputNumber];
         MoverDetector = new GameObject[InputNumber];
 
         Transform DetectorCarrier = transform.GetChild(2);
         for (int i = 0; i < InputNumber; i++)
         {
             MoverDetector[i] = DetectorCarrier.GetChild(0).GetChild(i).gameObject;
-            PrevBeltDetector[i] = DetectorCarrier.GetChild(1).GetChild(i).gameObject;
-            NextBeltDetector[i] = DetectorCarrier.GetChild(2).GetChild(i).gameObject;
         }
 
         RegisteredInput = new int[InputNumber];
@@ -79,24 +75,6 @@ public class ProcessorAct : MonoBehaviour
             if(TargetGoodsRecipe != null)
             {
                 isInitialized = true;
-
-                for(int i = 0; i < InputNumber; i++)
-                {
-                    if(Mover[i] == null)
-                    {
-                        isInitialized = false;
-                        break;
-                    }
-                }
-
-                for(int i = 0; i < InputNumber; i++)
-                {
-                    if(PrevBelt[i] == null)
-                    {
-                        isInitialized = false;
-                        break;
-                    }
-                }
             }
             else
             {
@@ -152,146 +130,81 @@ public class ProcessorAct : MonoBehaviour
 
     bool CheckInstallCondition()
     {
-        bool result = true;
-
+        bool Result = true;
         CheckDirection();
 
+        int NextBeltCount = 0;
         for (int i = 0; i < InputNumber; i++)
         {
             if(MoverDetector[i].GetComponent<ObjectAttachmentDetector>().DetectedObject != null)
             {
-                BeltAct BeltActCall = MoverDetector[i].GetComponent<ObjectAttachmentDetector>().DetectedObject.GetComponent<BeltAct>();
-                if(BeltActCall.BeltDirection != ProcessorDirection)
+                BeltAct TargetBeltAct = MoverDetector[i].GetComponent<ObjectAttachmentDetector>().DetectedObject.GetComponent<BeltAct>();
+                if(TargetBeltAct.BeltDirection != ProcessorDirection)
                 {
-                    result = false;
+                    Result = false;
                     break;
                 }
 
-                if(BeltActCall.PrevBelt != null)
+                if(TargetBeltAct.PrevBelt != null)
                 {
-                    if(BeltActCall.PrevBelt.GetComponent<BeltAct>().BeltDirection != ProcessorDirection)
+                    if(TargetBeltAct.PrevBelt.GetComponent<BeltAct>().BeltDirection != ProcessorDirection)
                     {
-                        result = false;
+                        Result = false;
                         break;
                     }
                 }
             }
-        }
-
-        return result;
-    }
-
-    void GetBelt()
-    {
-        bool GetAllMover = true;
-        for (int i = 0; i < InputNumber; i++)
-        {
-            if (Mover[i] != MoverDetector[i].GetComponent<ObjectAttachmentDetector>().DetectedObject)
+            else
             {
-                // If mover has been attached (or changed) and mover's direction is same as processor's
-                // Initialize the belt info and stop the belt
-                if (MoverDetector[i].GetComponent<ObjectAttachmentDetector>().DetectedObject != null)
-                {
-                    BeltAct BeltActCall = MoverDetector[i].GetComponent<ObjectAttachmentDetector>().DetectedObject.GetComponent<BeltAct>();
-                    if(!BeltActCall.ParentObject.GetComponent<InstallableObjectAct>().isInstall)
-                    {
-                        // If detected belt is not installed
-                        // Processor will not work
-                        Mover[i] = null;
-                        if (BeltActCall.BeltDirection == ProcessorDirection)
-                        {
-                            BeltActCall.ModuleCondtion = true;   
-                        }
-                        else
-                        {
-                            // If detected mover's direction is not same as Processor
-                            // Cannot install mover
-                            BeltActCall.ModuleCondtion = false;
-                        }
-                    }
-                    else
-                    {
-                        if (BeltActCall.BeltDirection == ProcessorDirection)
-                        {
-                            Mover[i] = MoverDetector[i].GetComponent<ObjectAttachmentDetector>().DetectedObject;
-                            BeltActCall.ChangeNeedStop(true, gameObject);
-                        }
-                        else
-                        {
-                            // If detected mover's direction is not same as Processor
-                            // Processor will not work
-                            Mover[i] = null;
-                        }
-                    }
-                }
-                else
-                {
-                    // If there is no mover
-                    // Processor will not work
-                    Mover[i] = null;
-                }
-            }
-        }
-
-        for (int i = 0; i < InputNumber; i++)
-        {
-            if(Mover[i] == null)
-            {
-                GetAllMover = false;
+                Result = false;
                 break;
             }
         }
 
-        if(GetAllMover)
-        {
-            GetPrevBelt();
-        }
+        if(NextBeltCount > InputNumber) Result = false;
+
+        return Result;
     }
 
-    void GetPrevBelt()
+    void GetBelt()
     {
-        for (int i = 0; i < InputNumber; i++)
+        bool CanInitialize = true;
+
+        NextBelt = null;
+        for(int i = 0; i < InputNumber; i++)
         {
-            if (PrevBelt[i] != PrevBeltDetector[i].GetComponent<ObjectAttachmentDetector>().DetectedObject)
+            if(MoverDetector[i].GetComponent<ObjectAttachmentDetector>().DetectedObject != null)
             {
-                // If previous belt has been attached (or changed) and prev belt's direction is same as processor's
-                // Initialize the belt info and stop the belt
-                if (PrevBeltDetector[i].GetComponent<ObjectAttachmentDetector>().DetectedObject != null)
+                if(MoverDetector[i].GetComponent<ObjectAttachmentDetector>().DetectedObject.GetComponent<BeltAct>().ObjectActCall.isInstall)
                 {
-                    BeltAct BeltActCall = PrevBeltDetector[i].GetComponent<ObjectAttachmentDetector>().DetectedObject.GetComponent<BeltAct>();
-                    if(!BeltActCall.ParentObject.GetComponent<InstallableObjectAct>().isInstall)
+                    Mover[i] = MoverDetector[i].GetComponent<ObjectAttachmentDetector>().DetectedObject;
+                    BeltAct TargetBeltAct = Mover[i].GetComponent<BeltAct>();
+                    TargetBeltAct.ModuleObject = gameObject;
+
+                    PrevBelt[i] = TargetBeltAct.PrevBelt;
+                    if(PrevBelt[i] == null) CanInitialize = false;
+
+                    if(TargetBeltAct.NextBelt != null)
                     {
-                        // If detected belt is not installed
-                        // Processor will not work
-                        PrevBelt[i] = null;
-                        Mover[i].GetComponent<BeltAct>().ChangeNeedStop(true, gameObject);
+                        NextBelt = TargetBeltAct.NextBelt;
+                        MainBeltIndex = i;
                     }
-                    else
-                    {
-                        if (BeltActCall.BeltDirection == Mover[0].GetComponent<BeltAct>().BeltDirection)
-                        {
-                            PrevBelt[i] = PrevBeltDetector[i].GetComponent<ObjectAttachmentDetector>().DetectedObject;
-                            Mover[i].GetComponent<BeltAct>().ChangeNeedStop(true, gameObject);
-                            PrevBelt[i].GetComponent<BeltAct>().ChangeNeedStop(false, gameObject);
-                        }
-                        else
-                        {
-                            // If detected belt's direction is not same as Mover
-                            // Processor will not work
-                            PrevBelt[i] = null;
-                            Mover[i].GetComponent<BeltAct>().ChangeNeedStop(true, gameObject);
-                        }
-                    }
-                }
-                else
-                {
-                    // If there is no previous belt
-                    // Processor will not work
-                    PrevBelt[i] = null;
-                    Mover[i].GetComponent<BeltAct>().ChangeNeedStop(true, gameObject);
-                }
+                }   
             }
         }
+
+        for(int i = 0; i < InputNumber; i++)
+        {
+            Mover[i].GetComponent<BeltAct>().ChangeNextBelt(NextBelt);
+            if(NextBelt != null) Mover[i].GetComponent<BeltAct>().isEnd = false;
+        }
+
+        if(NextBelt == null)
+        {
+            CanInitialize = false;
+        }
+
+        isInitialized = CanInitialize;
     }
 
     public void ChangeProcessorActor(string Name)
@@ -436,12 +349,14 @@ public class ProcessorAct : MonoBehaviour
 
     void ChangingGoods()
     {
-        CurGoods = Mover[0].GetComponent<BeltAct>().GoodsOnBelt;
+        CurGoods = Mover[MainBeltIndex].GetComponent<BeltAct>().GoodsOnBelt;
         ProcessedGoods = Goods.GetComponent<GoodsInstantiater>().ChangeGoods(CurGoods, TargetGoodsRecipe.OutputName);
         GoodsValueCall.ChangeQuality(int.Parse(ProcessedGoods.name), Random.Range(0.1f, 0.75f));
-        for(int i = 1; i < InputNumber; i++)
+        for(int i = 0; i < InputNumber; i++)
         {
-            // Destroy all Input except Belt[0]'s
+            if(i == MainBeltIndex) continue;
+
+            // Destroy all Input except Mainbelt
             GoodsValueCall.DeleteGoodsArray(Mover[i].GetComponent<BeltAct>().GoodsOnBelt);
             Destroy(Mover[i].GetComponent<BeltAct>().GoodsOnBelt);
             Mover[i].GetComponent<BeltAct>().GoodsOnBelt = null;
@@ -458,10 +373,16 @@ public class ProcessorAct : MonoBehaviour
     {
         for(int i = 0; i < InputNumber; i++)
         {
-            if(Mover[i] != null)
-                Mover[i].GetComponent<BeltAct>().ChangeNeedStop(false, gameObject);
-            if(PrevBelt[i] != null)
-                PrevBelt[i].GetComponent<BeltAct>().ChangeNeedStop(false, gameObject);
+            if(i != MainBeltIndex)
+            {
+                Mover[i].GetComponent<BeltAct>().NextBelt = null;
+                Mover[i].GetComponent<BeltAct>().isEnd = true;
+            }
+
+            Mover[i].GetComponent<BeltAct>().ChangeNeedStop(false, gameObject);
+            Mover[i].GetComponent<BeltAct>().ModuleObject = null;
+
+            if(PrevBelt[i] != null) PrevBelt[i].GetComponent<BeltAct>().ChangeNeedStop(false, gameObject);
         }
         return true;
     }

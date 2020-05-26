@@ -7,23 +7,23 @@ public class GoodsCreatorPanelController : MonoBehaviour
 {
     public PanelController CallPanelController;
     public bool isInitialized = false;
-    [SerializeField]GameObject SearchPanel;
-    [SerializeField]GameObject FunctionPanel;
-    [SerializeField]GameObject ImageHolder;
-    [SerializeField]GameObject InfoPanel;
-    [SerializeField]GameObject FunctionButtonPanel;
-    [SerializeField]GameObject ListPanel;
-    [SerializeField]GameObject CategoryListPanel;
-    [SerializeField]GameObject CategoryCarrier;
-    [SerializeField]GameObject ItemListPanel;
-    [SerializeField]GameObject ItemCarrier;
+    public GameObject SearchPanel;
+    public GameObject FunctionPanel;
+    public GameObject ImageHolder;
+    public GameObject InfoPanel;
+    public GameObject FunctionButtonPanel;
+    public GameObject ListPanel;
+    public GameObject CategoryListPanel;
+    public GameObject CategoryCarrier;
+    public GameObject ItemListPanel;
+    public GameObject ItemCarrier;
     public string CurrentCategory = "";
     public string CurrentItem = "";
     public GameObject TargetObject;
     string PlayerCompanyName;
     GoodsValue CallGoodsValue;
     GoodsRecipe CallGoodsRecipe;
-    public GoodsCreater CallTargetGoodsCreator;
+    public DoorAct CallTargetGoodsCreator;
     GameObject ImageObject, RemainQuantityTextObject, NameTextObject, TypeTextObject, CompanyTextObject, MaterialPointTextObject, TechPointTextObject, LookPointTextObject, TotalPointTextObject, MainFunctionButton;
     
     void Awake()
@@ -127,7 +127,7 @@ public class GoodsCreatorPanelController : MonoBehaviour
     {
         TargetObject = CallPanelController.CurrentFloatingPanel.GetComponent<ObjectInfoPanelController>().TargetObject;
 
-        CallTargetGoodsCreator = TargetObject.GetComponent<GoodsCreater>();
+        CallTargetGoodsCreator = TargetObject.GetComponent<DoorAct>();
     }
 
     public void Initializing()

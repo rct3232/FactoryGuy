@@ -8,7 +8,7 @@ public class DayRoomAct : MonoBehaviour
     CompanyValue CompanyValueCall;
     EmployeeValue EmployeeValueCall;
     public List<EmployeeValue.EmployeeInfo> RestingEmployeeList = new List<EmployeeValue.EmployeeInfo>();
-    [SerializeField]float Performance;
+    public float Performance;
     public float CurrentPerformance;
     public float EmployeeCapacity;
     public bool OnUsing = false;

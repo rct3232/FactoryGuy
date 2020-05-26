@@ -27,7 +27,7 @@ public class ElectricityValue : MonoBehaviour
     public int StoreObjectCount;
     public bool Lack;
     int BlackOutTimer;
-    [SerializeField] float UsedElectricityAmount = 0f;
+    public float UsedElectricityAmount = 0f;
     List<UsageInfo> UsageList = new List<UsageInfo>();
     List<StoreObject> StoreList = new List<StoreObject>();
     TimeManager TimeManagerCall;

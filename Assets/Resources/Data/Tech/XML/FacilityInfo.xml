@@ -20,7 +20,7 @@
     </Facility>
     <Facility>
         <Type>Door</Type>
-        <Name>Storage Door</Name>
+        <Name>Conveyor Belt Door</Name>
         <Price>100</Price>
         <UpkeepPrice>5</UpkeepPrice>
         <UpkeepMonthTerm>2</UpkeepMonthTerm>
@@ -92,7 +92,7 @@
     </Facility>
     <Facility>
         <Type>VerticalBelt</Type>
-        <Name>Elevator</Name>
+        <Name>Conveyor Belt Elevator</Name>
         <Price>200</Price>
         <UpkeepPrice>5</UpkeepPrice>
         <UpkeepMonthTerm>3</UpkeepMonthTerm>

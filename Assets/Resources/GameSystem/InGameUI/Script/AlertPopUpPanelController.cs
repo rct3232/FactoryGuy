@@ -7,8 +7,8 @@ public class AlertPopUpPanelController : MonoBehaviour
 {
     public PanelController CallPanelController;
     public bool isInitialized = false;
-    [SerializeField]GameObject MainPanel;
-    [SerializeField]GameObject FunctionPanel;
+    public GameObject MainPanel;
+    public GameObject FunctionPanel;
     List<NotificationManager.Alert> AlertList = new List<NotificationManager.Alert>();
     NotificationManager.Alert TargetAlert;
     NotificationManager CallNotificationManager;

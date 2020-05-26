@@ -8,14 +8,14 @@ public class LabatoryResearchPanelController : MonoBehaviour
     public PanelController CallPanelController;
     public bool isInitialized = false;
     public GameObject TechTreePrefab;
-    [SerializeField]GameObject FunctionPanel;
-    [SerializeField]GameObject BasicInfoPanel;
-    [SerializeField]GameObject ProgressInfoPanel;
-    [SerializeField]GameObject MainFunctionPanel;
-    [SerializeField]GameObject ConfirmPanel;
-    [SerializeField]GameObject ListPanel;
-    [SerializeField]GameObject TechTreeScrollPanel;
-    [SerializeField]GameObject TechTreeScrollCarrier;
+    public GameObject FunctionPanel;
+    public GameObject BasicInfoPanel;
+    public GameObject ProgressInfoPanel;
+    public GameObject MainFunctionPanel;
+    public GameObject ConfirmPanel;
+    public GameObject ListPanel;
+    public GameObject TechTreeScrollPanel;
+    public GameObject TechTreeScrollCarrier;
     GameObject TitleImageObject, NameTextObject, ResultObjectFirstRowPanel, ResultObjectSecondRowPanel, ResultValuePanel,
     ProgressBarImageObject, ProgressPercentageTextObject, PassedTimeTextObject, RemainTimeTextObject, CompletedPointTextObject, GainingPointTextObject, RemainPointTextObject,
     ConfirmButtonObject, ConfirmButtonTextObject;
@@ -219,7 +219,7 @@ public class LabatoryResearchPanelController : MonoBehaviour
                 // ProgressBarImageObject.GetComponent<Image>().fillAmount = 
 
                 ConfirmButtonTextObject.GetComponent<Text>().text = "Cancel";
-                ConfirmButtonObject.GetComponent<Image>().color = new Color(1f,0.2f,0.2f,1f);
+                ConfirmButtonObject.GetComponent<Image>().color = new Color(1f,0.4f,0.4f,1f);
             }
             else
             {

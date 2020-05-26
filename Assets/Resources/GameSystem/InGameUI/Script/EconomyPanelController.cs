@@ -7,22 +7,27 @@ public class EconomyPanelController : MonoBehaviour
 {
     public PanelController CallPanelController;
     public bool isInitialized = false;
-    [SerializeField]GameObject SummaryPanel;
-    [SerializeField]GameObject DetailScrollPanel;
-    [SerializeField]GameObject DetailLineGraphPanel;
-    [SerializeField]GameObject DetailReportPanel;
-    GameObject IncomePieGraphPanel, IncomePieGraphCarrier, ExpensePieGraphPanel, ExpensePieGraphCarrier, SummaryReportPanel, SummaryReportCarrier, DetailLineGraphCategoryPanel
-    , DetailLineGraphInnerPanel, DetailLineGraphCategoryDropdown, DetailLineGraphCarrier, DetailReportCategoryPanel, DetailReportInnerPanel, DetailReportPanelCategoryDropdown, DetailReportCarrier;
-    CompanyManager CallCompanyManager;
+    public GameObject SummaryPanel;
+    public GameObject DetailScrollPanel;
+    public GameObject DetailReportPanel;
+    public GameObject LoanPanel;
+    GameObject IncomePieGraphPanel, IncomePieGraphCarrier, ExpensePieGraphPanel, ExpensePieGraphCarrier, SummaryReportPanel, SummaryReportCarrier
+    , DetailReportCategoryPanel, DetailReportInnerPanel, DetailReportPanelCategoryDropdown, DetailReportCarrier, BankListPanel, LoanFunctionPanel;
+    CompanyValue CallCompanyValue;
     EconomyValue CallEconomyValue;
+    BankValue CallBankValue;
     TimeManager CallTimeManager;
+    NotificationManager CallNotificationManager;
+    string CurrentBank = "";
     bool Updated = false;
 
     void Awake()
     {
-        CallCompanyManager = GameObject.Find("CompanyManager").GetComponent<CompanyManager>();
-        CallEconomyValue = CallCompanyManager.GetPlayerCompanyValue().GetEconomyValue().GetComponent<EconomyValue>();
+        CallCompanyValue = GameObject.Find("CompanyManager").GetComponent<CompanyManager>().GetPlayerCompanyValue();
+        CallEconomyValue = CallCompanyValue.GetEconomyValue().GetComponent<EconomyValue>();
+        CallBankValue = GameObject.Find("BaseSystem").GetComponent<BankValue>();
         CallTimeManager = GameObject.Find("TimeManager").GetComponent<TimeManager>();
+        CallNotificationManager = GameObject.Find("NotificationManager").GetComponent<NotificationManager>();
 
         IncomePieGraphPanel = SummaryPanel.transform.GetChild(0).gameObject;
         IncomePieGraphCarrier = IncomePieGraphPanel.transform.GetChild(1).gameObject;
@@ -30,14 +35,12 @@ public class EconomyPanelController : MonoBehaviour
         ExpensePieGraphCarrier = ExpensePieGraphPanel.transform.GetChild(1).gameObject;
         SummaryReportPanel = SummaryPanel.transform.GetChild(2).gameObject;
         SummaryReportCarrier = SummaryReportPanel.transform.GetChild(0).gameObject;
-        DetailLineGraphCategoryPanel = DetailLineGraphPanel.transform.GetChild(0).gameObject;
-        DetailLineGraphInnerPanel = DetailLineGraphPanel.transform.GetChild(1).gameObject;
-        DetailLineGraphCategoryDropdown = DetailLineGraphCategoryPanel.transform.GetChild(1).gameObject;
-        DetailLineGraphCarrier = DetailLineGraphInnerPanel.transform.GetChild(0).gameObject;
         DetailReportCategoryPanel = DetailReportPanel.transform.GetChild(0).gameObject;
         DetailReportInnerPanel = DetailReportPanel.transform.GetChild(1).gameObject;
         DetailReportPanelCategoryDropdown = DetailReportCategoryPanel.transform.GetChild(1).gameObject;
-        DetailReportCarrier = DetailReportInnerPanel.transform.GetChild(1).gameObject;
+        DetailReportCarrier = DetailReportInnerPanel.transform.GetChild(0).gameObject;
+        BankListPanel = LoanPanel.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0).gameObject;
+        LoanFunctionPanel = LoanPanel.transform.GetChild(1).GetChild(1).GetChild(0).gameObject;
     }
 
     // Start is called before the first frame update
@@ -105,26 +108,10 @@ public class EconomyPanelController : MonoBehaviour
         DetailScrollPanel.transform.GetChild(1).gameObject.GetComponent<RectTransform>().offsetMin = new Vector2(- CallPanelController.CurrentEdgePadding, 0);
         DetailScrollPanel.transform.GetChild(1).gameObject.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0);
 
-        DetailLineGraphPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(0, DetailPanelBasicSize);
-        DetailLineGraphCategoryPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(0, CallPanelController.CurrentUIsize);
-        DetailLineGraphCategoryPanel.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0, DetailPanelCategoryObjectSize);
-        DetailLineGraphCategoryPanel.transform.GetChild(0).gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(CallPanelController.CurrentUIsize,  - (CallPanelController.CurrentEdgePadding * 0.5f));
-        DetailLineGraphCategoryPanel.transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(CallPanelController.CurrentUIsize * 3f, DetailPanelCategoryObjectSize);
-        DetailLineGraphCategoryPanel.transform.GetChild(1).gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,  - (CallPanelController.CurrentEdgePadding * 0.5f));
-        DetailLineGraphInnerPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(0, DetailPanelCarrierBasicSize);
-        DetailLineGraphCarrier.GetComponent<RectTransform>().offsetMin = new Vector2(CallPanelController.CurrentEdgePadding, 0);
-        DetailLineGraphCarrier.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0);
-        DetailLineGraphCarrier.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(CallPanelController.CurrentUIsize * 14.2f, DetailPanelCarrierBasicSize - CallPanelController.CurrentEdgePadding);
-        DetailLineGraphCarrier.transform.GetChild(0).gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(CallPanelController.CurrentUIsize, 0);
-        DetailLineGraphCarrier.transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(CallPanelController.CurrentUIsize * 14.2f, CallPanelController.CurrentEdgePadding);
-        DetailLineGraphCarrier.transform.GetChild(1).gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(CallPanelController.CurrentUIsize, 0);
-        DetailLineGraphCarrier.transform.GetChild(2).gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(CallPanelController.CurrentUIsize, CallPanelController.CurrentUIsize * 4.2f);
-        DetailLineGraphCarrier.transform.GetChild(2).gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-
         DetailReportCategoryPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(0, CallPanelController.CurrentUIsize);
         DetailReportCategoryPanel.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0, DetailPanelCategoryObjectSize);
         DetailReportCategoryPanel.transform.GetChild(0).gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(CallPanelController.CurrentUIsize,  - (CallPanelController.CurrentEdgePadding * 0.5f));
-        DetailReportCategoryPanel.transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(CallPanelController.CurrentUIsize * 3f, DetailPanelCategoryObjectSize);
+        DetailReportCategoryPanel.transform.GetChild(1).gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(CallPanelController.CurrentUIsize * 4f, DetailPanelCategoryObjectSize);
         DetailReportCategoryPanel.transform.GetChild(1).gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,  - (CallPanelController.CurrentEdgePadding * 0.5f));
         DetailReportInnerPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(0, DetailPanelCarrierBasicSize + CallPanelController.CurrentEdgePadding);
         DetailReportInnerPanel.transform.GetChild(0).gameObject.GetComponent<RectTransform>().offsetMin = new Vector2(CallPanelController.CurrentEdgePadding, CallPanelController.CurrentEdgePadding);
@@ -152,11 +139,10 @@ public class EconomyPanelController : MonoBehaviour
 
     public void Initializing()
     {
-        // StartCoroutine("DisplayDetailLineGraph", "Income and Expense");
-        DisplayDetailLineGraph("Income and Expense");
         DiplaySummary();
         DisplayDetailCurrentReport();
         DisplayDetailReportCategory();
+        DisplayBankList();
 
         if(DetailReportPanelCategoryDropdown.GetComponent<Dropdown>().options.Count == 0) ClearDetailReportPanel(false);
         else DisplayDetailPastReport(0);
@@ -171,13 +157,15 @@ public class EconomyPanelController : MonoBehaviour
         }
     }
 
-    void DiplaySummary()
+    public void DiplaySummary()
     {
+        ClearSummaryPanel();
+
         List<EconomyValue.History> HistoryList = new List<EconomyValue.History>();
 
         SummaryReportCarrier.transform.GetChild(0).GetChild(1).gameObject.GetComponent<Text>().text = "TEST";
         string[] ExpenseCategoryList = new string[] {"Buy", "Install", "Upkeep", "Research", "Employee Pay", "Real Estate"};
-        string[] IncomeCategoryList = new string[] {"Sell", "Subsidy", "Royalty"};
+        string[] IncomeCategoryList = new string[] {"Sell", "Milestone", "Loan"};
 
         List<int> ExpenseAmountList = new List<int>();
         List<int> IncomeAmountList = new List<int>();
@@ -215,259 +203,17 @@ public class EconomyPanelController : MonoBehaviour
         ExpensePieGraphCarrier.GetComponent<GraphDrawer>().DrawPieGraph(PieGraphIndex, PieGraphData, null);
     }
 
-    public void DetailLineGraphCategoryValueChange()
+    void ClearSummaryPanel()
     {
-        int Dropdownvalue = DetailLineGraphCategoryDropdown.GetComponent<Dropdown>().value;
+        IncomePieGraphCarrier.GetComponent<GraphDrawer>().PieGraphClear();
+        ExpensePieGraphCarrier.GetComponent<GraphDrawer>().PieGraphClear();
 
-        DetailLineGraphCarrier.GetComponent<GraphDrawer>().LineGraphClear();
-        // StartCoroutine("DisplayDetailLineGraph", DetailLineGraphCategoryDropdown.GetComponent<Dropdown>().options[Dropdownvalue].text);
-        DisplayDetailLineGraph(DetailLineGraphCategoryDropdown.GetComponent<Dropdown>().options[Dropdownvalue].text);
-    }
-
-    void DisplayDetailLineGraph(string Category)
-    {
-        float[] MinMaxValue = new float[2];
-        MinMaxValue[0] = 0;
-        MinMaxValue[1] = 0;
-        float StandardValue;
-        List<string> DateIndex = new List<string>();
-        float YaxisIndexGap;
-        List<float>[] DataList;
-        Color[] GraphColor;
-        
-        int CeilMonth = Mathf.FloorToInt((CallTimeManager.TimeValue % CallTimeManager.Year) / CallTimeManager.Month);
-        int FloorMonth = CeilMonth - 12;
-        if(FloorMonth < 0) FloorMonth = 0;
-
-        for(int i = FloorMonth; i < FloorMonth + 12; i++)
+        for(int i = 0; i < SummaryReportCarrier.transform.childCount; i++)
         {
-            DateIndex.Add(CallTimeManager.ConvertMonthToString(i % 12 + 1));
+            if(i == 1 || i == 8 || i == 12) continue;
+
+            SummaryReportCarrier.transform.GetChild(i).GetChild(1).gameObject.GetComponent<Text>().text = "0";
         }
-
-        if(Category == "Income and Expense")
-        {
-            DataList = new List<float>[3];
-            for(int i = 0; i < 3; i++) DataList[i] = new List<float>();
-
-            int ExpenseValue;
-            int IncomeValue;
-            int NetProfitValue;
-
-            for(int i = FloorMonth; i < CeilMonth; i++)
-            {
-                ExpenseValue = CallEconomyValue.GetHistoryExpenseSub(i);
-                if(MinMaxValue[0] > ExpenseValue) MinMaxValue[0] = ExpenseValue;
-                IncomeValue = CallEconomyValue.GetHistoryIncomeSub(i);
-                if(MinMaxValue[1] < IncomeValue) MinMaxValue[1] = IncomeValue;
-                NetProfitValue = IncomeValue + ExpenseValue;
-                if(MinMaxValue[0] > NetProfitValue) MinMaxValue[0] = NetProfitValue;
-                if(MinMaxValue[1] < NetProfitValue) MinMaxValue[1] = NetProfitValue;
-
-                DataList[0].Add(IncomeValue);
-                DataList[1].Add(ExpenseValue);
-                DataList[2].Add(NetProfitValue);
-            }
-            
-
-            StandardValue = 0;
-            YaxisIndexGap = float.NaN;
-
-            GraphColor = new Color[3];
-            GraphColor[0] = new Color(0,1f,0,1f);
-            GraphColor[1] = new Color(1f,0,0,1f);
-            GraphColor[2] = new Color(0,0,1f,1f);
-        }
-        else if(Category == "Balance")
-        {
-            GameObject CompanyObjectCarrier = GameObject.Find("CompanyManager");
-            int CompanyCount = 0;
-            for(int i = 0; i < CompanyObjectCarrier.transform.childCount; i++)
-            {
-                CompanyValue CallTargetCompanyValue = CompanyObjectCarrier.transform.GetChild(i).gameObject.GetComponent<CompanyValue>();
-                if(!CallTargetCompanyValue.Unevaluable) CompanyCount++;
-            }
-
-            DataList = new List<float>[CompanyCount];
-            int CurrentIndex = 0;
-            
-
-            for(int i = 0; i < CompanyObjectCarrier.transform.childCount; i++)
-            {
-                CompanyValue CallTargetCompanyValue = CompanyObjectCarrier.transform.GetChild(i).gameObject.GetComponent<CompanyValue>();
-                EconomyValue CallTargetCompanyEconomyValue = CallTargetCompanyValue.GetEconomyValue().GetComponent<EconomyValue>();
-                if(!CallTargetCompanyValue.Unevaluable)
-                {
-                    List<float> BalanceList = new List<float>();
-                    int Balance;
-
-                    for(int j = FloorMonth; j < CeilMonth; j++)
-                    {
-                        Balance = CallTargetCompanyEconomyValue.GetHistoryBalance(j);
-
-                        if(MinMaxValue[0] > Balance) MinMaxValue[0] = Balance;
-                        if(MinMaxValue[1] < Balance) MinMaxValue[1] = Balance;
-
-                        BalanceList.Add(Balance);
-
-                        if(CurrentIndex == 0 && j == FloorMonth)
-                        {
-                            MinMaxValue[0] = Balance;
-                            MinMaxValue[1] = Balance;
-                        }
-                    }
-
-                    DataList[CurrentIndex++] = BalanceList;
-                }
-            }
-
-            StandardValue = float.NaN;
-            YaxisIndexGap = float.NaN;
-            GraphColor = null;
-        }
-        else if(Category == "Company Value")
-        {
-            GameObject CompanyObjectCarrier = GameObject.Find("CompanyManager");
-            int CompanyCount = 0;
-            for(int i = 0; i < CompanyObjectCarrier.transform.childCount; i++)
-            {
-                CompanyValue CallTargetCompanyValue = CompanyObjectCarrier.transform.GetChild(i).gameObject.GetComponent<CompanyValue>();
-                if(!CallTargetCompanyValue.Unevaluable) CompanyCount++;
-            }
-
-            DataList = new List<float>[CompanyCount];
-            int CurrentIndex = 0;
-            for(int i = 0; i < CompanyObjectCarrier.transform.childCount; i++)
-            {
-                CompanyValue CallTargetCompanyValue = CompanyObjectCarrier.transform.GetChild(i).gameObject.GetComponent<CompanyValue>();
-                if(!CallTargetCompanyValue.Unevaluable)
-                {
-                    List<float> CompanyValueList = new List<float>();
-                    if(CallTargetCompanyValue.CompanyValueHistory.Count > 1)
-                    {
-                        for(int j = FloorMonth; j < CeilMonth; j++)
-                        {
-                            float Value = CallTargetCompanyValue.CompanyValueHistory[j];
-                            CompanyValueList.Add(Value);
-
-                            if(CurrentIndex == 0 && j == FloorMonth)
-                            {
-                                MinMaxValue[0] = Value;
-                                MinMaxValue[1] = Value;
-                            }
-                        }
-                    }
-                    
-                    DataList[CurrentIndex++] = CompanyValueList;
-                }
-            }
-
-            StandardValue = float.NaN;
-            YaxisIndexGap = float.NaN;
-            GraphColor = null;
-        }
-        else if(Category == "Market Share")
-        {
-            SalesValue CallSalesValue = GameObject.Find("SalesManager").GetComponent<SalesValue>();
-            int SalesCount = 0;
-            foreach(var Sales in CallSalesValue.SalesItemArray)
-            {
-                if(Sales.RecipeInfo.Owner == CallCompanyManager.PlayerCompanyName) SalesCount++;
-            }
-
-            DataList = new List<float>[SalesCount];
-            int CurrentIndex = 0;
-            foreach(var Sales in CallSalesValue.SalesItemArray)
-            {
-                if(Sales.RecipeInfo.Owner == CallCompanyManager.PlayerCompanyName)
-                {
-                    List<float> MarketShareList = new List<float>();
-                    if(Sales.SoldCountList.Count > 1)
-                    {
-                        for(int j = FloorMonth; j < CeilMonth; j++)
-                        {
-                            int MonthlyTotalSoldCount = 0;
-                            float MarketSharePoint = 0f;
-                            foreach(var Target in CallSalesValue.SalesItemArray)
-                            {
-                                if(Target.RecipeInfo.Recipe.GoodsObject.name == Sales.RecipeInfo.Recipe.GoodsObject.name)
-                                {
-                                    MonthlyTotalSoldCount += Target.SoldCountList[j];
-                                }
-                            }
-
-                            if(MonthlyTotalSoldCount > 0)
-                            {
-                                MarketSharePoint = Mathf.FloorToInt(MonthlyTotalSoldCount / Sales.SoldCountList[j] * 1000f) * 0.1f;
-                            }
-
-                            MarketShareList.Add(MarketSharePoint);
-                        }
-                    }
-                    DataList[CurrentIndex++] = MarketShareList;
-                }
-            }
-            
-            StandardValue = float.NaN;
-            YaxisIndexGap = float.NaN;
-            MinMaxValue[0] = 0f;
-            MinMaxValue[1] = 100f;
-            GraphColor = null;
-        }
-        else if(Category == "Sales")
-        {
-            SalesValue CallSalesValue = GameObject.Find("SalesManager").GetComponent<SalesValue>();
-            int SalesCount = 0;
-            foreach(var Sales in CallSalesValue.SalesItemArray)
-            {
-                if(Sales.RecipeInfo.Owner == CallCompanyManager.PlayerCompanyName) SalesCount++;
-            }
-
-            DataList = new List<float>[SalesCount];
-            int CurrentIndex = 0;
-            foreach(var Sales in CallSalesValue.SalesItemArray)
-            {
-                if(Sales.RecipeInfo.Owner == CallCompanyManager.PlayerCompanyName)
-                {
-                    List<float> SalesCountList = new List<float>();
-                    if(CurrentIndex == 0)
-                    {
-                        MinMaxValue[0] = Sales.SoldCount;
-                        MinMaxValue[1] = Sales.SoldCount;
-                    }
-                    if(Sales.SoldCountList.Count > 1)
-                    {
-                        for(int j = FloorMonth; j < CeilMonth; j++)
-                        {
-                            float Value = Sales.SoldCountList[j];
-                            SalesCountList.Add(Value);
-
-                            if(CurrentIndex == 0 && j == FloorMonth)
-                            {
-                                MinMaxValue[0] = Value;
-                                MinMaxValue[1] = Value;
-                            }
-                        }
-                    }
-                    
-                    DataList[CurrentIndex++] = SalesCountList;
-                }
-            }
-            
-            StandardValue = float.NaN;
-            YaxisIndexGap = float.NaN;
-            GraphColor = null;
-        }
-        else
-        {
-            DataList = new List<float>[1];
-            DataList[0] = new List<float>();
-
-            StandardValue = float.NaN;
-            YaxisIndexGap = float.NaN;
-            GraphColor = null;
-        }
-
-        DetailLineGraphCarrier.GetComponent<GraphDrawer>().DrawLineGraph(MinMaxValue, StandardValue, DateIndex, YaxisIndexGap, DataList, GraphColor);
     }
 
     void DisplayDetailReportCategory()
@@ -667,14 +413,178 @@ public class EconomyPanelController : MonoBehaviour
         CallPanelController.ContentSizeFitterReseter(DetailReportCarrier);
     }
 
+    void DisplayBankList()
+    {
+        List<string> BankList = CallBankValue.GetBankList();
+
+        for(int i = BankList.Count - 1; i >= 0; i--)
+        {
+            if(CallBankValue.EvaluateCostomer(BankList[i], CallCompanyValue) == null) BankList.Remove(BankList[i]);
+        }
+        
+        int Limit = BankList.Count;
+
+        if(Limit > BankListPanel.transform.childCount)
+        {
+            for(int i = BankListPanel.transform.childCount; i < BankList.Count; i++)
+            {
+                GameObject.Instantiate(BankListPanel.transform.GetChild(0).gameObject, BankListPanel.transform).name = "BankButton";
+            }
+        }
+        else if(Limit < BankListPanel.transform.childCount)
+        {
+            if(Limit == 0) Limit = 1;
+            for(int i = BankListPanel.transform.childCount - 1; i >= Limit; i--)
+            {
+                Destroy(BankListPanel.transform.GetChild(i).gameObject);
+            }
+        }
+
+        for(int i = 0; i < Limit; i++)
+        {
+            GameObject NewBankButton = BankListPanel.transform.GetChild(i).gameObject;
+            NewBankButton.SetActive(true);
+
+            if(BankList.Count > 0)
+            {
+                float[] Evaluated = CallBankValue.EvaluateCostomer(BankList[i], CallCompanyValue);
+                if (Evaluated == null) continue;
+                if(CallBankValue.GetBankLevel(BankList[i]) == 1) NewBankButton.transform.GetChild(1).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/InGameUI/Sprite/BankLevel1Icon");
+                else if(CallBankValue.GetBankLevel(BankList[i]) == 2) NewBankButton.transform.GetChild(1).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/InGameUI/Sprite/BankLevel2Icon");
+                else NewBankButton.transform.GetChild(1).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/InGameUI/Sprite/BankLevel3Icon");
+
+                NewBankButton.transform.GetChild(2).gameObject.GetComponent<Text>().text = BankList[i];
+                string MaxLoanValueString = "";
+                if(Evaluated[1] > 1000000f) MaxLoanValueString = Mathf.FloorToInt(Evaluated[1] * 0.000001f).ToString() + "M";
+                else if (Evaluated[1] > 1000f) MaxLoanValueString = Mathf.FloorToInt(Evaluated[1] * 0.001f).ToString() + "K";
+                else MaxLoanValueString = Evaluated[1].ToString();
+                NewBankButton.transform.GetChild(3).gameObject.GetComponent<Text>().text = "Max: $" + MaxLoanValueString + " / " + (Mathf.Ceil(Evaluated[0] * 100f) * 0.01f).ToString() + "%";
+
+                if(Evaluated[1] > 0) NewBankButton.GetComponent<Button>().interactable = true;
+                else NewBankButton.GetComponent<Button>().interactable = false;
+            }
+            else
+            {
+                NewBankButton.transform.GetChild(1).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/InGameUI/Sprite/ImojiBad");
+                NewBankButton.transform.GetChild(2).gameObject.GetComponent<Text>().text = "There is no bank";
+                NewBankButton.transform.GetChild(3).gameObject.GetComponent<Text>().text = "How about upgrade yourself";
+                NewBankButton.GetComponent<Button>().interactable = false;
+            }
+        }
+
+        if(BankListPanel.transform.childCount == 0) ClearBankList();
+    }
+
+    public void UpdateBankList()
+    {
+        DisplayBankList();
+
+        if(CurrentBank != "")
+        {
+            List<string> CurrentBankList = new List<string>();
+
+            for(int i = 0; i < BankListPanel.transform.childCount; i++)
+            {
+                CurrentBankList.Add(BankListPanel.transform.GetChild(i).GetChild(2).gameObject.GetComponent<Text>().text);
+            }
+
+            if(!CurrentBankList.Contains(CurrentBank))
+            {
+                ClearDealFunction();
+            }
+        }
+    }
+
+    public void SelectBank(GameObject TargetObject)
+    {
+        string TargetBankName = TargetObject.transform.GetChild(2).gameObject.GetComponent<Text>().text;
+        if(TargetBankName != CurrentBank)
+        {
+            CurrentBank = TargetBankName;
+            TargetObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+            ActivateDealFunction();
+        }
+    }
+
+    public void BalanceValueCheck()
+    {
+        if(CurrentBank != "")
+        {
+            int InputValue = int.Parse(LoanFunctionPanel.transform.GetChild(1).gameObject.GetComponent<InputField>().text);
+            if(InputValue < 0)
+            {
+                LoanFunctionPanel.transform.GetChild(1).gameObject.GetComponent<InputField>().text = "0";
+            }
+            else
+            {
+                int MaxLoanValue = Mathf.FloorToInt(CallBankValue.EvaluateCostomer(CurrentBank, CallCompanyValue)[1]);
+                if(MaxLoanValue < InputValue)
+                {
+                    CallNotificationManager.AddAlert("You cannot loan over $" + MaxLoanValue, 1, "");
+                }
+            }
+        }
+        else ClearDealFunction();
+    }
+
+    public void SelectDealFunction()
+    {
+        if(CurrentBank != "")
+        {
+            int Balance = int.Parse(LoanFunctionPanel.transform.GetChild(1).gameObject.GetComponent<InputField>().text);
+            if(Balance <= 0)
+            {
+                CallNotificationManager.AddAlert("You cannot loan under $0", 1, "");
+                return;
+            }
+
+            CallBankValue.StartNewDeal(CallCompanyValue, CurrentBank, Balance);
+            DisplayBankList();
+            ClearDealFunction();
+        }
+        else ClearDealFunction();
+    }
+
+    void ActivateDealFunction()
+    {
+        LoanFunctionPanel.transform.GetChild(1).gameObject.GetComponent<InputField>().interactable = true;
+        LoanFunctionPanel.transform.GetChild(2).gameObject.GetComponent<Button>().interactable = true;
+    }
+
+    void ClearDealFunction()
+    {
+        CurrentBank = "";
+
+        for(int i = 0; i < BankListPanel.transform.childCount; i++)
+        {
+            BankListPanel.transform.GetChild(i).GetChild(0).GetChild(0).gameObject.SetActive(false);
+        }
+
+        LoanFunctionPanel.transform.GetChild(1).gameObject.GetComponent<InputField>().interactable = false;
+        LoanFunctionPanel.transform.GetChild(2).gameObject.GetComponent<Button>().interactable = false;
+    }
+
+    void ClearBankList()
+    {
+        for(int i = 0; i < BankListPanel.transform.childCount; i++)
+        {
+            BankListPanel.transform.GetChild(i).gameObject.SetActive(false);
+
+            BankListPanel.transform.GetChild(i).GetChild(0).GetChild(0).gameObject.SetActive(false);
+            BankListPanel.transform.GetChild(i).GetChild(1).GetChild(0).gameObject.GetComponent<Image>().sprite = null;
+            BankListPanel.transform.GetChild(i).GetChild(2).gameObject.GetComponent<Text>().text = "";
+            BankListPanel.transform.GetChild(i).GetChild(3).gameObject.GetComponent<Text>().text = "";
+            BankListPanel.transform.GetChild(i).gameObject.GetComponent<Button>().interactable = false;
+        }
+    }
+
     void ClearPanel()
     {
-        IncomePieGraphCarrier.GetComponent<GraphDrawer>().PieGraphClear();
-        ExpensePieGraphCarrier.GetComponent<GraphDrawer>().PieGraphClear();
-        DetailLineGraphCarrier.GetComponent<GraphDrawer>().LineGraphClear();
-
+        ClearSummaryPanel();
         ClearDetailReportPanel(true);
         ClearDetailReportPanel(false);
+        ClearBankList();
+        ClearDealFunction();
     }
 
     public void ClosePanel()

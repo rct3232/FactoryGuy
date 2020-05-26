@@ -56,7 +56,7 @@ public class LabatoryAct : MonoBehaviour
 
     public int Budget;
     public float ResearchPower;
-    [SerializeField]float ResearchPowerLimit;
+    public float ResearchPowerLimit;
     
     // Start is called before the first frame update
     void Start()

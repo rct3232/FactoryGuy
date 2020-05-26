@@ -100,26 +100,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ObjectActCall: {fileID: 0}
+  ParentObject: {fileID: 0}
   isEnd: 1
   BeltInstallList: []
+  ActivatedBeltList: []
   VerticalBelt: {fileID: 0}
+  DoorBelt: {fileID: 0}
+  DoorObject: {fileID: 0}
   BeltInstallFirstPos: 0000000000000000
   DirectionSign: 0
   Amount: 0
+  VerticalDistance: 0
   GoodsOnBelt: {fileID: 0}
   GoodsOnExit: {fileID: 0}
   NextBelt: {fileID: 0}
   PrevBelt: {fileID: 0}
-  ModuleDetector: {fileID: 8261438658284547633}
+  ModuleObject: {fileID: 0}
   BeltDirection: -1
   NeedStop: 0
   isStop: 0
   isDummyBelt: 1
-  BeltIndex: 0
-  NextBeltDirection: 0
   BeltSpeed: 1
   ModuleCondtion: 0
-  ParentObject: {fileID: 0}
 --- !u!65 &2651730720432570623
 BoxCollider:
   m_ObjectHideFlags: 0

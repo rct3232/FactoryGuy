@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class GraphDrawer : MonoBehaviour
 {
     PanelController CallPanelController;
-    GameObject GraphCarrier;
+    GameObject GraphCarrier = null;
     GameObject xAxisIndexCarrier;
     GameObject yAxisIndexCarrier;
     float GraphHeight;
@@ -367,6 +367,8 @@ public class GraphDrawer : MonoBehaviour
 
     public void LineGraphClear()
     {
+        if(GraphCarrier == null) return;
+
         for(int i = GraphCarrier.transform.childCount - 1; i >= 0; i--)
         {
             Destroy(GraphCarrier.transform.GetChild(i).gameObject);
@@ -383,6 +385,8 @@ public class GraphDrawer : MonoBehaviour
 
     public void PieGraphClear()
     {
+        if(GraphCarrier == null) return;
+
         for(int i = 0; i < GraphCarrier.transform.childCount; i++)
         {
             Destroy(GraphCarrier.transform.GetChild(i).gameObject);

@@ -50,7 +50,7 @@ public class FacilityValue : MonoBehaviour
 
         CompanyValueCall.GetEconomyValue().GetComponent<EconomyValue>().AddHistory(TimeManagerCall.TimeValue, "Install", 
             newFacility.ObjectActCall.Info.Name, "Install " + Object.name, -newFacility.ObjectActCall.Info.Price);
-        CompanyValueCall.GetEconomyValue().GetComponent<EconomyValue>().AddPersistHistory(TimeManagerCall.TimeValue + (newFacility.ObjectActCall.Info.UpkeepMonthTerm * TimeManagerCall.Month), 
+        CompanyValueCall.GetEconomyValue().GetComponent<EconomyValue>().AddPersistHistory(TimeManagerCall.GetNextMonth(0, newFacility.ObjectActCall.Info.UpkeepMonthTerm) + (TimeManagerCall.TimeValue % TimeManagerCall.Month), 
             newFacility.ObjectActCall.Info.UpkeepMonthTerm * TimeManagerCall.Month, "Upkeep", newFacility.ObjectActCall.Info.Name, 
             Object.name + "'s Upkeep Price", -newFacility.ObjectActCall.Info.UpkeepPrice);
 

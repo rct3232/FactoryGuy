@@ -6,10 +6,10 @@ using UnityEngine.UI;
 public class NewsPanelController : MonoBehaviour
 {
     public PanelController CallPanelController;
-    [SerializeField]GameObject NewsScrollPanel;
-    [SerializeField]GameObject NewsCarrier;
-    [SerializeField]GameObject FunctionItem;
-    [SerializeField]GameObject NewsItem;
+    public GameObject NewsScrollPanel;
+    public GameObject NewsCarrier;
+    public GameObject FunctionItem;
+    public GameObject NewsItem;
     TimeManager CallTimeManager;
     NotificationManager CallNotificationManager;
     List<NotificationManager.News> NewsList = new List<NotificationManager.News>();

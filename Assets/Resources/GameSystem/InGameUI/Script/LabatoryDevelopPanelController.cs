@@ -7,20 +7,20 @@ public class LabatoryDevelopPanelController : MonoBehaviour
 {
     public PanelController CallPanelController;
     public bool isInitialized = false;
-    [SerializeField]GameObject SearchPanel;
-    [SerializeField]GameObject FunctionPanel;
-    [SerializeField]GameObject InputPanel;
-    [SerializeField]GameObject InputNamePanel;
-    [SerializeField]GameObject ResultArrowHolder;
-    [SerializeField]GameObject ResultItemInfoPanel;
-    [SerializeField]GameObject StatInfoPanel;
-    [SerializeField]GameObject ProgressInfoPanel;
-    [SerializeField]GameObject ConfirmPanel;
-    [SerializeField]GameObject ListPanel;
-    [SerializeField]GameObject CategoryListPanel;
-    [SerializeField]GameObject CategoryCarrier;
-    [SerializeField]GameObject ItemListPanel;
-    [SerializeField]GameObject ItemCarrier;
+    public GameObject SearchPanel;
+    public GameObject FunctionPanel;
+    public GameObject InputPanel;
+    public GameObject InputNamePanel;
+    public GameObject ResultArrowHolder;
+    public GameObject ResultItemInfoPanel;
+    public GameObject StatInfoPanel;
+    public GameObject ProgressInfoPanel;
+    public GameObject ConfirmPanel;
+    public GameObject ListPanel;
+    public GameObject CategoryListPanel;
+    public GameObject CategoryCarrier;
+    public GameObject ItemListPanel;
+    public GameObject ItemCarrier;
     string CurrentFisrtItem;
     string CurrentSecondItem;
     string CurrentProcessor;
@@ -287,7 +287,7 @@ public class LabatoryDevelopPanelController : MonoBehaviour
 
             ResultItemNameInputFieldObject.GetComponent<InputField>().interactable = false;
             ConfirmPanel.transform.GetChild(1).GetChild(0).gameObject.GetComponent<Text>().text = "Cancel";
-            ConfirmPanel.transform.GetChild(1).gameObject.GetComponent<Image>().color = new Color(1f,0.2f,0.2f,1f);
+            ConfirmPanel.transform.GetChild(1).gameObject.GetComponent<Image>().color = new Color(1f,0.4f,0.4f,1f);
             ConfirmPanel.transform.GetChild(1).gameObject.GetComponent<Button>().interactable = true;
 
             FirstItemImageObject.transform.parent.gameObject.GetComponent<Button>().interactable = false;
@@ -792,7 +792,7 @@ public class LabatoryDevelopPanelController : MonoBehaviour
         {
             ResultItemNameInputFieldObject.GetComponent<InputField>().interactable = false;
             MainFunctionButton.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Cancel";
-            MainFunctionButton.gameObject.GetComponent<Image>().color = new Color(1f,0.2f,0.2f,1f);
+            MainFunctionButton.gameObject.GetComponent<Image>().color = new Color(1f,0.4f,0.4f,1f);
 
             FirstItemImageObject.transform.parent.gameObject.GetComponent<Button>().interactable = false;
             SecondItemImageObject.transform.parent.gameObject.GetComponent<Button>().interactable = false;

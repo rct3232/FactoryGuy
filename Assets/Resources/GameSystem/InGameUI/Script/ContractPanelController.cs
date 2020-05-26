@@ -7,17 +7,17 @@ public class ContractPanelController : MonoBehaviour
 {
     public PanelController CallPanelController;
     public bool isInitialized = false;
-    [SerializeField]GameObject SearchPanel;
-    [SerializeField]GameObject FunctionPanel;
-    [SerializeField]GameObject ImageHolder;
-    [SerializeField]GameObject UpperInfoPanel;
-    [SerializeField]GameObject LowerInfoPanel;
-    [SerializeField]GameObject FunctionButtonPanel;
-    [SerializeField]GameObject ListPanel;
-    [SerializeField]GameObject CategoryListPanel;
-    [SerializeField]GameObject CategoryCarrier;
-    [SerializeField]GameObject ItemListPanel;
-    [SerializeField]GameObject ItemCarrier;
+    public GameObject SearchPanel;
+    public GameObject FunctionPanel;
+    public GameObject ImageHolder;
+    public GameObject UpperInfoPanel;
+    public GameObject LowerInfoPanel;
+    public GameObject FunctionButtonPanel;
+    public GameObject ListPanel;
+    public GameObject CategoryListPanel;
+    public GameObject CategoryCarrier;
+    public GameObject ItemListPanel;
+    public GameObject ItemCarrier;
     public string CurrentCategory = "";
     public string CurrentItem = "";
     string PlayerCompanyName;

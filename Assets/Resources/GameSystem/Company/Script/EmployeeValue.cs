@@ -99,7 +99,7 @@ public class EmployeeValue : MonoBehaviour
 
         if(EmployeeList.Count != 1)
         {
-            EconomyValueCall.AddPersistHistory(TimeManagerCall.TimeValue - (TimeManagerCall.TimeValue % TimeManagerCall.Month), TimeManagerCall.Month, "Employee Pay", "#" + newEmployee.Index + " " + newEmployee.BaseInfo.Name, "Employee #" + newEmployee.Index + " Pay", - newEmployee.BaseInfo.Salary);
+            EconomyValueCall.AddPersistHistory(TimeManagerCall.GetNextMonth(0), TimeManagerCall.Month, "Employee Pay", "#" + newEmployee.Index + " " + newEmployee.BaseInfo.Name, "Employee #" + newEmployee.Index + " Pay", - newEmployee.BaseInfo.Salary);
             CompanyValueCall.GetLandValue().GetComponent<LandValue>().ChangeLandValue(200);
 
             if(CompanyValueCall.CompanyName == CompanyManagerCall.PlayerCompanyName) 
