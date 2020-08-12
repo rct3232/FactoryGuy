@@ -46,6 +46,7 @@ public class TechRecipe : MonoBehaviour
     {
         public ProcessActorInfo() {}
         public string Name;
+        public float TechPoint;
         public int Cost;
     }
     public List<ProcessActorInfo> ActorList = new List<ProcessActorInfo>();
@@ -196,7 +197,7 @@ public class TechRecipe : MonoBehaviour
         }
 
         ActorList = new List<ProcessActorInfo>();
-        FieldName = new string[] {"Name", "Cost"};
+        FieldName = new string[] {"Name", "TechPoint", "Cost"};
         DataList = new List<string[]>();
 
         xmlReader.xmlReaderAccess.ReadXml("Data/Tech/XML/ActorInfo", "ActorInfo/Actor", FieldName, DataList);
@@ -205,7 +206,8 @@ public class TechRecipe : MonoBehaviour
         {
             ProcessActorInfo newActor = new ProcessActorInfo();
             newActor.Name = Data[0];
-            newActor.Cost = System.Convert.ToInt32(Data[1]);
+            newActor.TechPoint = System.Convert.ToSingle(Data[1]);
+            newActor.Cost = System.Convert.ToInt32(Data[2]);
 
             ActorList.Add(newActor);
         }

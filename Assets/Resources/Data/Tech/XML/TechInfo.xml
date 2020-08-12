@@ -203,7 +203,7 @@
     <Tech>
         <Name>Heavy industry</Name>
         <UnlockFacility>Destroyer</UnlockFacility>
-        <UnlockActor>Press machine,Chemical sprayer</UnlockActor>
+        <UnlockActor>Press machine,Chemical sprayer,Chemical mixer</UnlockActor>
         <UpgradeType>None</UpgradeType>
         <UpgradeAmount>0</UpgradeAmount>
         <RequiredIndex>11,16</RequiredIndex>

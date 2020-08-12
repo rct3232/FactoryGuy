@@ -111,14 +111,14 @@ public class InGameValue : MonoBehaviour
          newCompany.GetComponent<CompanyValue>().Unevaluable = true;
          newCompany.GetComponent<CompanyValue>().TotalValue = 0f;
 
-         SupplierAI = GameObject.Instantiate(Resources.Load<GameObject>("GameSystem/AI/Object/RawMaterialSupplyAI"));
-         SupplierAI.transform.SetParent(newCompany.transform);
-         SupplierAI.name = "RawMaterialSupplyAI";
-         SupplierAI.GetComponent<RawMaterialSupplyAI>().Name = "Sasio";
+        //  SupplierAI = GameObject.Instantiate(Resources.Load<GameObject>("GameSystem/AI/Object/RawMaterialSupplyAI"));
+        //  SupplierAI.transform.SetParent(newCompany.transform);
+        //  SupplierAI.name = "RawMaterialSupplyAI";
+        //  SupplierAI.GetComponent<RawMaterialSupplyAI>().Name = "Sasio";
 
-         CompanyManagerCall = CompanyManagerObject.GetComponent<CompanyManager>();
-         CompanyManagerCall.AddCompany("Sasio", newCompany);
-         newCompany.name = "Sasio";
+        //  CompanyManagerCall = CompanyManagerObject.GetComponent<CompanyManager>();
+        //  CompanyManagerCall.AddCompany("Sasio", newCompany);
+        //  newCompany.name = "Sasio";
     }
 
     public void ModeSelector(int type)

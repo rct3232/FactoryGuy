@@ -42,8 +42,8 @@ public class LabatoryResearchPanelController : MonoBehaviour
 
         ProgressBarImageObject = ProgressInfoPanel.transform.GetChild(1).GetChild(0).GetChild(0).gameObject;
         ProgressPercentageTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(0).GetChild(1).gameObject;
-        PassedTimeTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(0).GetChild(0).gameObject;
-        RemainTimeTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(0).GetChild(1).gameObject;
+        PassedTimeTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(0).GetChild(0).GetChild(0).gameObject;
+        RemainTimeTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(0).GetChild(0).GetChild(1).gameObject;
         CompletedPointTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(1).GetChild(0).GetChild(0).gameObject;
         GainingPointTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(1).GetChild(0).GetChild(1).gameObject;
         RemainPointTextObject = ProgressInfoPanel.transform.GetChild(1).GetChild(1).GetChild(1).GetChild(0).GetChild(2).gameObject;
@@ -160,8 +160,9 @@ public class LabatoryResearchPanelController : MonoBehaviour
                     // Add Result Object code here
 
                     Target.transform.GetChild(2).gameObject.GetComponent<Text>().text = CallTechRecipe.TechInfoList[TechIndex].Name;
+                    Target.name = CallTechRecipe.TechInfoList[TechIndex].Name;
 
-                    Target.GetComponent<Button>().onClick.AddListener(delegate{TechTreeButtonSelect(Target);});
+                    Target.GetComponent<Button>().onClick.AddListener(()=>TechTreeButtonSelect(Target));
                 }
 
                 Target.GetComponent<Button>().interactable = CallTechValue.GetTechPossible(CallTechRecipe.TechInfoList[TechIndex].Name);
@@ -198,6 +199,8 @@ public class LabatoryResearchPanelController : MonoBehaviour
 
     public void TechTreeButtonSelect(GameObject Target)
     {
+        Debug.Log("Work");
+
         CurrnetResearchName = Target.transform.GetChild(2).gameObject.GetComponent<Text>().text;
 
         DisplayResearchInfo();

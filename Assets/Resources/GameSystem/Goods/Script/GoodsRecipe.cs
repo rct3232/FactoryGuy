@@ -15,6 +15,15 @@ public class GoodsRecipe : MonoBehaviour
         public Attractiveness Attractiveness;
     }
 
+    public class BaseRecipe
+    {
+        public BaseRecipe() {}
+        public int ObjectID;
+        public string Name;
+        public List<string[]> InputName;
+        public string RequiredProcessor;
+    }
+
     public class Attractiveness
     {
         public Attractiveness() {}
@@ -27,6 +36,7 @@ public class GoodsRecipe : MonoBehaviour
     }
 
     public List<Recipe> RecipeArray;
+    public List<BaseRecipe> BaseRecipeList;
     GameObject[] GoodsArr;
     int CurrentID;
     CompanyManager CompanyManagerCall;
@@ -45,54 +55,41 @@ public class GoodsRecipe : MonoBehaviour
     public string getNewGoodsType(List<string> SelectedObject)
     {
         string resultType = "None";
-        List<int> SlotObjectID = new List<int>();
-        List<string> OriginalType = new List<string>();
-        string CaseString = null;
+        List<string> InputType = new List<string>();
 
-        foreach(var Recipe in RecipeArray)
+        foreach(var name in SelectedObject)
         {
-            foreach(var ObjectName in SelectedObject)
+            foreach(var Recipe in RecipeArray)
             {
-                if(Recipe.OutputName == ObjectName)
+                if(Recipe.OutputName == name)
                 {
-                    OriginalType.Add(Recipe.GoodsObject.name);
-                }
-            }
-        }
-
-        foreach(var Recipe in RecipeArray)
-        {
-            foreach(var Type in OriginalType)
-            {
-                if(Recipe.OutputName == Type)
-                {
-                    SlotObjectID.Add(Recipe.ObjectID);
+                    foreach(var Base in BaseRecipeList)
+                    {
+                        if(Base.Name == Recipe.GoodsObject.name)
+                        {
+                            InputType.Add(Base.Name);
+                            break;
+                        }
+                    }
                     break;
                 }
             }
         }
 
-        SlotObjectID.Sort();
+        InputType.Sort();
 
-        foreach(var tmp in SlotObjectID)
+        foreach(var Base in BaseRecipeList)
         {
-            foreach(var _tmp in RecipeArray)
+            foreach(var Inputs in Base.InputName)
             {
-                if(tmp == _tmp.ObjectID)
+                List<string> InputList = new List<string>();
+                InputList.AddRange(Inputs);
+
+                if(InputList == InputType)
                 {
-                    CaseString += _tmp.GoodsObject.name + ".";
-                    break;
+                    resultType = Base.Name;
                 }
             }
-        }
-
-        // caseOfObject = int.Parse(tmpString);
-        switch(CaseString)
-        {
-            case "Wafer.Plastic Panel." : resultType = "Transister"; break;
-            case "Mother Board.Transister." : resultType = "Calculating Circuit"; break;
-            case "Plastic Panel.Calculating Circuit." : resultType = "Calculator"; break;
-            case "Box.Calculator." : resultType = "Packaged Calculator"; break;
         }
 
         return resultType;
@@ -100,18 +97,28 @@ public class GoodsRecipe : MonoBehaviour
 
     public Attractiveness CalculateAttractiveness(string[] SelectedObject, string requiredProcessor)
     {
+        TechRecipe CallTechRecipe = GameObject.Find("BaseSystem").GetComponent<TechRecipe>();
+
         GoodsRecipe.Attractiveness attractiveness = new GoodsRecipe.Attractiveness();
         if(requiredProcessor != null)
         {
-            string ProcessorType = requiredProcessor.Split('?')[0];
-            string ProcessorName = requiredProcessor.Split('?')[1];
-            switch(ProcessorName)
+            string ProcessorName = requiredProcessor.Split('?')[0];
+            string ActorName = requiredProcessor.Split('?')[1];
+            foreach(var Actor in CallTechRecipe.ActorList)
             {
-                case "Dummy" :
-                    attractiveness.TechPoint = 1f;
+                if(Actor.Name == ActorName)
+                {
+                    attractiveness.TechPoint = Actor.TechPoint;
                     break;
+                }
             }
-            if(ProcessorType == "Assembler") attractiveness.TechPoint += 2;
+            foreach(var Processor in CallTechRecipe.ProcessorList)
+            {
+                if(Processor.Name == ProcessorName)
+                {
+                    attractiveness.TechPoint += Processor.PerformanceQuality;
+                }
+            }
         }
 
         float sumMaterialPoints = 0f;
@@ -255,8 +262,38 @@ public class GoodsRecipe : MonoBehaviour
 
     void InitializingArray()
     {
-        Object[] ObjectArr = Resources.LoadAll<Object>("GameSystem/Goods/Object");
+        string[] FieldName;
+        List<string[]> DataList;
+
+        BaseRecipeList = new List<BaseRecipe>();
+        FieldName = new string[] {"Type", "Input", "Processor"};
+        DataList = new List<string[]>();
+
         int CurArr = 0;
+
+        xmlReader.xmlReaderAccess.ReadXml("Data/Tech/XML/Recipeinfo", "RecipeInfo/Recipe", FieldName, DataList);
+
+        foreach(string[] Data in DataList)
+        {
+            BaseRecipe newRecipe = new BaseRecipe();
+            newRecipe.ObjectID = CurArr++;
+            newRecipe.Name = Data[0];
+            newRecipe.InputName = new List<string[]>();
+            string[] InputStringArray = Data[1].Split(';');
+            foreach(var Inputs in InputStringArray)
+            {
+                List<string> InputList = new List<string>();
+                InputList.AddRange(Inputs.Split(','));
+                InputList.Sort();
+                newRecipe.InputName.Add(InputList.ToArray());
+            }
+            newRecipe.RequiredProcessor = Data[2];
+
+            BaseRecipeList.Add(newRecipe);
+        }
+
+        Object[] ObjectArr = Resources.LoadAll<Object>("GameSystem/Goods/Object");
+        CurArr = 0;
         GoodsArr = new GameObject[ObjectArr.Length];
         foreach (Object tmp in ObjectArr)
         {
@@ -272,8 +309,8 @@ public class GoodsRecipe : MonoBehaviour
         string requiredProcessor;
         Attractiveness attractiveness;
         
-        ObjectName = "Silicon Mass";
-        outputName = "Silicon Mass";
+        ObjectName = "Silicon mass";
+        outputName = "Silicon mass";
         inputName = null;
         requiredProcessor = null;
         attractiveness = new Attractiveness();
@@ -283,8 +320,8 @@ public class GoodsRecipe : MonoBehaviour
         attractiveness.TotalPoint = attractiveness.MaterialPoint * attractiveness.TechPoint + attractiveness.LookPoint;
         AddRecipeArray(ObjectName, outputName, inputName, requiredProcessor, attractiveness);
 
-        ObjectName = "Plastic Mass";
-        outputName = "Plastic Mass";
+        ObjectName = "Plastic mass";
+        outputName = "Plastic mass";
         inputName = null;
         requiredProcessor = null;
         attractiveness = new Attractiveness();
@@ -294,8 +331,8 @@ public class GoodsRecipe : MonoBehaviour
         attractiveness.TotalPoint = attractiveness.MaterialPoint * attractiveness.TechPoint + attractiveness.LookPoint;
         AddRecipeArray(ObjectName, outputName, inputName, requiredProcessor, attractiveness);
 
-        ObjectName = "Paper Roll";
-        outputName = "Paper Roll";
+        ObjectName = "Steel mass";
+        outputName = "Steel mass";
         inputName = null;
         requiredProcessor = null;
         attractiveness = new Attractiveness();
@@ -305,72 +342,37 @@ public class GoodsRecipe : MonoBehaviour
         attractiveness.TotalPoint = attractiveness.MaterialPoint * attractiveness.TechPoint + attractiveness.LookPoint;
         AddRecipeArray(ObjectName, outputName, inputName, requiredProcessor, attractiveness);
 
-        ObjectName = "Box";
-        outputName = "Box";
-        inputName = new string[1];
-        inputName[0] = "Paper Roll";
-        requiredProcessor = "Processor?Dummy";
-        attractiveness = CalculateAttractiveness(inputName, requiredProcessor);
+        ObjectName = "Copper mass";
+        outputName = "Copper mass";
+        inputName = null;
+        requiredProcessor = null;
+        attractiveness = new Attractiveness();
+        attractiveness.MaterialPoint = 0.5f;
+        attractiveness.TechPoint = 0f;
+        attractiveness.LookPoint = 0f;
+        attractiveness.TotalPoint = attractiveness.MaterialPoint * attractiveness.TechPoint + attractiveness.LookPoint;
         AddRecipeArray(ObjectName, outputName, inputName, requiredProcessor, attractiveness);
 
-        ObjectName = "Wafer";
-        outputName = "Wafer";
-        inputName = new string[1];
-        inputName[0] = "Silicon Mass";
-        requiredProcessor = "Processor?Dummy";
-        attractiveness = CalculateAttractiveness(inputName, requiredProcessor);
+        ObjectName = "Paper roll";
+        outputName = "Paper roll";
+        inputName = null;
+        requiredProcessor = null;
+        attractiveness = new Attractiveness();
+        attractiveness.MaterialPoint = 0.5f;
+        attractiveness.TechPoint = 0f;
+        attractiveness.LookPoint = 0f;
+        attractiveness.TotalPoint = attractiveness.MaterialPoint * attractiveness.TechPoint + attractiveness.LookPoint;
         AddRecipeArray(ObjectName, outputName, inputName, requiredProcessor, attractiveness);
 
-        ObjectName = "Plastic Panel";
-        outputName = "Plastic Panel";
-        inputName = new string[1];
-        inputName[0] = "Plastic Mass";
-        requiredProcessor = "Processor?Dummy";
-        attractiveness = CalculateAttractiveness(inputName, requiredProcessor);
-        AddRecipeArray(ObjectName, outputName, inputName, requiredProcessor, attractiveness);
-
-        ObjectName = "Mother Board";
-        outputName = "Mother Board";
-        inputName = new string[1];
-        inputName[0] = "Plastic Mass";
-        requiredProcessor = "Processor?Dummy";
-        attractiveness = CalculateAttractiveness(inputName, requiredProcessor);
-        AddRecipeArray(ObjectName, outputName, inputName, requiredProcessor, attractiveness);
-
-        ObjectName = "Transister";
-        outputName = "Transister";
-        inputName = new string[2];
-        inputName[0] = "Wafer";
-        inputName[1] = "Plastic Panel";
-        requiredProcessor = "Assembler?Dummy";
-        attractiveness = CalculateAttractiveness(inputName, requiredProcessor);
-        AddRecipeArray(ObjectName, outputName, inputName, requiredProcessor, attractiveness);
-
-        ObjectName = "Calculating Circuit";
-        outputName = "Calculating Circuit";
-        inputName = new string[2];
-        inputName[0] = "Transister";
-        inputName[1] = "Mother Board";
-        requiredProcessor = "Assembler?Dummy";
-        attractiveness = CalculateAttractiveness(inputName, requiredProcessor);
-        AddRecipeArray(ObjectName, outputName, inputName, requiredProcessor, attractiveness);
-
-        ObjectName = "Calculator";
-        outputName = "Calculator";
-        inputName = new string[2];
-        inputName[0] = "Calculating Circuit";
-        inputName[1] = "Plastic Panel";
-        requiredProcessor = "Assembler?Dummy";
-        attractiveness = CalculateAttractiveness(inputName, requiredProcessor);
-        AddRecipeArray(ObjectName, outputName, inputName, requiredProcessor, attractiveness);
-
-        ObjectName = "Packaged Calculator";
-        outputName = "Packaged Calculator";
-        inputName = new string[2];
-        inputName[0] = "Box";
-        inputName[1] = "Calculator";
-        requiredProcessor = "Assembler?Dummy";
-        attractiveness = CalculateAttractiveness(inputName, requiredProcessor);
+        ObjectName = "Chemical mix";
+        outputName = "Chemical mix";
+        inputName = null;
+        requiredProcessor = null;
+        attractiveness = new Attractiveness();
+        attractiveness.MaterialPoint = 0.5f;
+        attractiveness.TechPoint = 0f;
+        attractiveness.LookPoint = 0f;
+        attractiveness.TotalPoint = attractiveness.MaterialPoint * attractiveness.TechPoint + attractiveness.LookPoint;
         AddRecipeArray(ObjectName, outputName, inputName, requiredProcessor, attractiveness);
     }
 }

@@ -5,7 +5,7 @@
         <Name>Processing machine</Name>
         <PerformanceQuality>0.5</PerformanceQuality>
         <PerformanceSpeed>1</PerformanceSpeed>
-        <ActorList>Pulp processer,Panel processer,Press machine</ActorList>
+        <ActorList>Pulp processor,Panel processor,Press machine</ActorList>
     </Processor>
     <Processor>
         <Type>Assembler</Type>
@@ -26,21 +26,21 @@
         <Name>Precision process machine</Name>
         <PerformanceQuality>0.9</PerformanceQuality>
         <PerformanceSpeed>0.6</PerformanceSpeed>
-        <ActorList>Semiconductor processor,Panel processer,Press machine</ActorList>
+        <ActorList>Circuit engraver,Panel processor,Press machine</ActorList>
     </Processor>
     <Processor>
         <Type>Assembler</Type>
         <Name>Assembly machine</Name>
         <PerformanceQuality>0.7</PerformanceQuality>
         <PerformanceSpeed>0.7</PerformanceSpeed>
-        <ActorList>Circuit assembler,Circuit engraver,Part attacher</ActorList>
+        <ActorList>Circuit assembler,Part attacher,Chemical mixer</ActorList>
     </Processor>
     <Processor>
         <Type>Assembler</Type>
         <Name>Precision assembly machine</Name>
         <PerformanceQuality>0.9</PerformanceQuality>
         <PerformanceSpeed>0.5</PerformanceSpeed>
-        <ActorList>Electron assembler,Electron controller,Chemical sprayer</ActorList>
+        <ActorList>Electron assembler,Semiconductor processor,Chemical sprayer</ActorList>
     </Processor>
     <Processor>
         <Type>Assembler</Type>

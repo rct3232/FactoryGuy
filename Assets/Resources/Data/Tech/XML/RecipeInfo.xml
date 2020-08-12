@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<RecipeInfo>
+    <Recipe>
+        <Type>Silicon mass</Type>
+        <Input>None</Input>
+        <Processor>None</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Plastic mass</Type>
+        <Input>None</Input>
+        <Processor>None</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Steel mass</Type>
+        <Input>None</Input>
+        <Processor>None</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Copper mass</Type>
+        <Input>None</Input>
+        <Processor>None</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Paper mass</Type>
+        <Input>None</Input>
+        <Processor>None</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Chemical mix</Type>
+        <Input>None</Input>
+        <Processor>None</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Box</Type>
+        <Input>Paper roll</Input>
+        <Processor>Pulp processor</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Plastic panel</Type>
+        <Input>Plastic mass</Input>
+        <Processor>Panel processor</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Steel panel</Type>
+        <Input>Steel mass</Input>
+        <Processor>Press machine</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Semiconductor chunck</Type>
+        <Input>Silicon mass</Input>
+        <Processor>Silicon mixer</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Copper wire</Type>
+        <Input>copper mass;copper panel</Input>
+        <Processor>Wire extractor</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Magnetic</Type>
+        <Input>Steel mass;Steel panel</Input>
+        <Processor>Magnetic analyzer</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Antenna</Type>
+        <Input>Copper wire,Plastic panel</Input>
+        <Processor>Part attacher</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Diode</Type>
+        <Input>Semiconductor chunck,Copper wire</Input>
+        <Processor>Part attacher</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Circuit</Type>
+        <Input>Copper wire,Plastic panel</Input>
+        <Processor>Circuit assembler</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Calculator circuit</Type>
+        <Input>Circuit,Diode</Input>
+        <Processor>Circuit assembler</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Monochrome display</Type>
+        <Input>Diode,Plastic panel;Diode,Steel panel</Input>
+        <Processor>Part attacher</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Calculator module</Type>
+        <Input>Calculator circuit,Monochrome display</Input>
+        <Processor>Circuit assembler</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Ionized chemical</Type>
+        <Input>Chemical mix,Chemical mix</Input>
+        <Processor>Chemical mixer</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Light sensitive chemical</Type>
+        <Input>Ionized chemical,Ionized chemical</Input>
+        <Processor>Chemical mixer</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Wafer</Type>
+        <Input>Silicon mass,Ionized chemical</Input>
+        <Processor>Chemical sprayer</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Transister</Type>
+        <Input>Semiconductor chunck,Diode</Input>
+        <Processor>Electron controller</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Audio component</Type>
+        <Input>Magnetic,Plastic panel</Input>
+        <Processor>Part attacher</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Battery</Type>
+        <Input>Steel panel,Ionized chemical</Input>
+        <Processor>Chemical sprayer</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Telephone module</Type>
+        <Input>Calculator module,Audio component</Input>
+        <Processor>Circuit assembler</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Cellphone module</Type>
+        <Input>Telephone module,Antenna</Input>
+        <Processor>Circuit assembler</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Image sensor</Type>
+        <Input>Transister,Light sensitive chemical</Input>
+        <Processor>Chemical sprayer</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Lense module</Type>
+        <Input>Image sensor,Plastic panel</Input>
+        <Processor>Part attacher</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Micro circuit</Type>
+        <Input>Wafer</Input>
+        <Processor>Circuit engraver</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Micro processor</Type>
+        <Input>Micro circuit,Transister</Input>
+        <Processor>Semiconductor processor</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Advanced processor</Type>
+        <Input>Micro circuit,Chemical mix</Input>
+        <Processor>Quantum manipulator</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Computing circuit</Type>
+        <Input>Calculator circuit,Micro processor</Input>
+        <Processor>Electron assembler</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Camera module</Type>
+        <Input>Computer circuit,Lense module</Input>
+        <Processor>Electron assembler</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Advanced Calculator module</Type>
+        <Input>Computing circuit,Monochrome display</Input>
+        <Processor>Circuit assembler</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Complex computing circuit</Type>
+        <Input>Computing circuit,Computing circuit</Input>
+        <Processor>Electron assembler</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Advanced computing circuit</Type>
+        <Input>Complex computing circuit,Advanced processor</Input>
+        <Processor>Electron assembler</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Network module</Type>
+        <Input>Computing circuit,Antenna</Input>
+        <Processor>Circuit assembler</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>LCD display panel</Type>
+        <Input>Diode,Plastic panel</Input>
+        <Processor>Part attacher</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>OLED display panel</Type>
+        <Input>Diode,Ionized chemical</Input>
+        <Processor>chemical sprayer</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Multimedia module</Type>
+        <Input>Audio component,LCD display panel;Audio component,OLED display panel</Input>
+        <Processor>Part attacher</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Computing module</Type>
+        <Input>Complex computing circuit,Multimedia module;Advanced computing circuit,Multimedia module</Input>
+        <Processor>Electron assembler</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Carriable computer module</Type>
+        <Input>Computing module,Battery</Input>
+        <Processor>Electron assembler</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Portable computer module</Type>
+        <Input>Carriable computer module,Network module</Input>
+        <Processor>Electron assembler</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Smartphone module</Type>
+        <Input>Cellphone module,Portable computer module</Input>
+        <Processor>Electron assembler</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Calculator</Type>
+        <Input>Calculator module,Plastic panel;Calculator module,Steel panel;Advanced calculator module,Plastic panel;Advanced calculator module,Steel panel</Input>
+        <Processor>Housing molder</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Telephone</Type>
+        <Input>Telephone module,Plastic panel;Telephone module,Steel panel</Input>
+        <Processor>Housing molder</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Cellphone</Type>
+        <Input>Cellphone module,Plastic panel;Cellphone module,Steel panel</Input>
+        <Processor>Housing molder</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Camera</Type>
+        <Input>Camera module,Plastic panel;Camera module,Steel panel</Input>
+        <Processor>Housing molder</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Monitor</Type>
+        <Input>LCD display panel,Plastic panel;OLED display panel,Plastic panel;LCD display panel,Steel panel;OLED display panel,Steel panel</Input>
+        <Processor>Housing molder</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Computer</Type>
+        <Input>Complex computing circuit,Plastic panel;Complex computing circuit,Steel panel;Advanced computing circuit,Plastic panel;Advanced computing circuit,Steel panel</Input>
+        <Processor>Housing molder</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>All-In-One computer</Type>
+        <Input>Complex computing module,Plastic panel;Complex computing module,Steel panel</Input>
+        <Processor>Housing molder</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Carriable computer</Type>
+        <Input>Carriable computing module,Plastic panel;Carriable computing module,Steel panel</Input>
+        <Processor>Housing molder</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Portable computer</Type>
+        <Input>Portable computing module,Plastic panel;Portable computing module,Steel panel</Input>
+        <Processor>Housing molder</Processor>
+    </Recipe>
+    <Recipe>
+        <Type>Smartphone</Type>
+        <Input>Smartphone module,Plastic panel;Smartphone module,Steel panel</Input>
+        <Processor>Housing molder</Processor>
+    </Recipe>
+</RecipeInfo>
