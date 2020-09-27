@@ -180,7 +180,7 @@ public class SalesValue : MonoBehaviour
             if(PanelControllerCall.CurrentSidePanel.name == "ContractPanel")
             {
                 ContractPanelController PanelComponent = PanelControllerCall.CurrentSidePanel.GetComponent<ContractPanelController>();
-                if(PanelComponent.CurrentCategory == newContent.RecipeInfo.Recipe.GoodsObject.name) PanelComponent.UpdateList(true);
+                if(PanelComponent.CurrentCategory == newContent.RecipeInfo.Recipe.Type) PanelComponent.UpdateList(true);
                 else PanelComponent.UpdateList(false);
             }
         }
@@ -210,7 +210,7 @@ public class SalesValue : MonoBehaviour
             if(PanelControllerCall.CurrentSidePanel.name == "ContractPanel")
             {
                 ContractPanelController PanelComponent = PanelControllerCall.CurrentSidePanel.GetComponent<ContractPanelController>();
-                if(PanelComponent.CurrentCategory == SalesItemArray[Index].RecipeInfo.Recipe.GoodsObject.name) 
+                if(PanelComponent.CurrentCategory == SalesItemArray[Index].RecipeInfo.Recipe.Type) 
                 {
                     PanelComponent.UpdateList(true);
                     if(PanelComponent.CurrentItem == SalesItemArray[Index].RecipeInfo.Recipe.OutputName) PanelComponent.ClearInfoPanel();
@@ -228,7 +228,7 @@ public class SalesValue : MonoBehaviour
         int Index = getSalesIndex(Name);
 
         if(Index != -1)
-            return SalesItemArray[Index].RecipeInfo.Recipe.GoodsObject.name;
+            return SalesItemArray[Index].RecipeInfo.Recipe.Type;
         else
             return null;
     }
@@ -586,7 +586,7 @@ public class SalesValue : MonoBehaviour
 
         foreach(var Item in SalesItemArray)
         {
-            if(Item.RecipeInfo.Recipe.GoodsObject.name == Type)
+            if(Item.RecipeInfo.Recipe.Type == Type)
             {
                 WholeSalesCount += Item.SoldCount;
                 if(Item.Seller == Company)
@@ -609,7 +609,7 @@ public class SalesValue : MonoBehaviour
 
         foreach(var Item in SalesItemArray)
         {
-            if(Item.RecipeInfo.Recipe.GoodsObject.name == Type)
+            if(Item.RecipeInfo.Recipe.Type == Type)
             {
                 WholeSalesCount += Item.SoldCount;
             }
@@ -627,7 +627,7 @@ public class SalesValue : MonoBehaviour
 
         foreach(var Item in SalesItemArray)
         {
-            if(Item.RecipeInfo.Recipe.GoodsObject.name == Type)
+            if(Item.RecipeInfo.Recipe.Type == Type)
             {
                 result += Item.SoldCount;
             }
@@ -642,7 +642,7 @@ public class SalesValue : MonoBehaviour
 
         foreach(var Item in SalesItemArray)
         {
-            if(Item.RecipeInfo.Recipe.GoodsObject.name == Type && Item.Seller == Company)
+            if(Item.RecipeInfo.Recipe.Type == Type && Item.Seller == Company)
             {
                 result += Item.SoldCount;
             }
@@ -668,7 +668,7 @@ public class SalesValue : MonoBehaviour
             {
                 foreach(var Type in TypeList)
                 {
-                    if(Type == Item.RecipeInfo.Recipe.GoodsObject.name)
+                    if(Type == Item.RecipeInfo.Recipe.Type)
                     {
                         isDuplicate = true;
                         break;
@@ -678,7 +678,7 @@ public class SalesValue : MonoBehaviour
 
             if(!isDuplicate)
             {
-                TypeList.Add(Item.RecipeInfo.Recipe.GoodsObject.name);
+                TypeList.Add(Item.RecipeInfo.Recipe.Type);
             }
         }
 

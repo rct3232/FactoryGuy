@@ -173,7 +173,7 @@ public class GoodsCreatorPanelController : MonoBehaviour
                 bool isDuplicate = false;
                 foreach(var Item in CategoryList)
                 {
-                    if(Item == TargetRecipe.GoodsObject.name)
+                    if(Item == TargetRecipe.Type)
                     {
                         isDuplicate = true;
 
@@ -181,7 +181,7 @@ public class GoodsCreatorPanelController : MonoBehaviour
                     }
                 }
                 
-                if(!isDuplicate) CategoryList.Add(TargetRecipe.GoodsObject.name);
+                if(!isDuplicate) CategoryList.Add(TargetRecipe.Type);
             }
         }
 
@@ -232,7 +232,7 @@ public class GoodsCreatorPanelController : MonoBehaviour
         {
             foreach(var Item in StoredList)
             {
-                if(CallGoodsRecipe.GetRecipe(Item).GoodsObject.name == Category)
+                if(CallGoodsRecipe.GetRecipe(Item).Type == Category)
                 {
                     ItemList.Add(Item);
                 }
@@ -240,7 +240,7 @@ public class GoodsCreatorPanelController : MonoBehaviour
 
             if(CallTargetGoodsCreator.TargetGoodsName != "None")
             {
-                if(CallGoodsRecipe.GetRecipe(CallTargetGoodsCreator.TargetGoodsName).GoodsObject.name == Category)
+                if(CallGoodsRecipe.GetRecipe(CallTargetGoodsCreator.TargetGoodsName).Type == Category)
                 {
                     if(CallGoodsValue.GetStoredGoods(CallTargetGoodsCreator.TargetGoodsName).Count == 0)
                     {
@@ -303,7 +303,7 @@ public class GoodsCreatorPanelController : MonoBehaviour
                 ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).gameObject.SetActive(true);
 
                 if(ItemList[i * 3 + j] == "None") ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/InGameUI/Sprite/InsideEmptyCircle");
-                else ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + CallGoodsRecipe.GetRecipe(ItemList[i * 3 + j]).GoodsObject.name);
+                else ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + CallGoodsRecipe.GetRecipe(ItemList[i * 3 + j]).Type);
                 
                 ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(1).gameObject.GetComponent<Text>().text = ItemList[i * 3 + j];
                 if(CallTargetGoodsCreator.TargetGoodsName == ItemList[i * 3 + j]) ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
@@ -325,10 +325,10 @@ public class GoodsCreatorPanelController : MonoBehaviour
         {
             GoodsRecipe.Recipe TargetItemRecipe = CallGoodsRecipe.GetRecipe(Name);
 
-            ImageObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + TargetItemRecipe.GoodsObject.name);
+            ImageObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + TargetItemRecipe.Type);
             ImageObject.GetComponent<Image>().color = new Color(1f,1f,1f,1f);
             NameTextObject.GetComponent<Text>().text = TargetItemRecipe.OutputName;
-            TypeTextObject.GetComponent<Text>().text = TargetItemRecipe.GoodsObject.name;
+            TypeTextObject.GetComponent<Text>().text = TargetItemRecipe.Type;
 
             MaterialPointTextObject.GetComponent<Text>().text = " x " + (Mathf.RoundToInt(TargetItemRecipe.Attractiveness.MaterialPoint * 10) * 0.1).ToString();
             TechPointTextObject.GetComponent<Text>().text = " x " + (Mathf.RoundToInt(TargetItemRecipe.Attractiveness.TechPoint * 10) * 0.1).ToString();

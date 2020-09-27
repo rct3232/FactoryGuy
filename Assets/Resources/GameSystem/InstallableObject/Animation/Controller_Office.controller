@@ -7,7 +7,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Take 001
+  m_Name: Office Animation
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -21,8 +21,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 1827226128182048838, guid: dd0a11ca3ac56334d8b168971e42d76e,
-    type: 3}
+  m_Motion: {fileID: 7400000, guid: 74f7956d340a990439c54081adbd2d29, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

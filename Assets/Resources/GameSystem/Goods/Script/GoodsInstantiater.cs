@@ -36,16 +36,13 @@ public class GoodsInstantiater : MonoBehaviour
 
         foreach(var tmp in GoodsRecipeCall.RecipeArray)
         {
-            if (tmp.OutputName == name)
-            {
-                GameObject newGoods = GameObject.Instantiate(GoodsPrefab);
-                GameObject GoodsStruct = GameObject.Instantiate(tmp.GoodsObject, newGoods.transform);
-                GoodsStruct.name = name;
-                newGoods.transform.SetParent(transform);
-                newGoods.transform.name = ID.ToString();
-                GoodsValueCall.ChangeInMapState(ID, true, newGoods);
-                return newGoods;
-            }
+            GameObject newGoods = GameObject.Instantiate(GoodsPrefab);
+            GameObject GoodsStruct = GameObject.Instantiate(Resources.Load<GameObject>("GameSystem/Goods/Object/" + name), newGoods.transform);
+            GoodsStruct.name = name;
+            newGoods.transform.SetParent(transform);
+            newGoods.transform.name = ID.ToString();
+            GoodsValueCall.ChangeInMapState(ID, true, newGoods);
+            return newGoods;
         }
         Debug.Log("There is no " + name);
         return null;
@@ -53,18 +50,20 @@ public class GoodsInstantiater : MonoBehaviour
 
     public GameObject ChangeGoods(GameObject CurGoods, string name)
     {
-        foreach (var tmp in GoodsRecipeCall.RecipeArray)
+        string ObjectType = GoodsRecipeCall.getObjectType(name);
+
+        if (ObjectType == "None")
         {
-            if (tmp.OutputName == name)
-            {
-                Destroy(CurGoods.transform.GetChild(0).gameObject);
-                GameObject GoodsStruct = GameObject.Instantiate(tmp.GoodsObject, CurGoods.transform);
-                GoodsStruct.name = name;
-                GoodsValueCall.ChangeGoodsInfo(int.Parse(CurGoods.name), name);
-                return CurGoods;
-            }
+            Debug.Log("There is no " + name);
+            return null;
         }
-        Debug.Log("There is no " + name);
-        return null;
+        else
+        {
+            Destroy(CurGoods.transform.GetChild(0).gameObject);
+            GameObject GoodsStruct = GameObject.Instantiate(Resources.Load<GameObject>("GameSystem/Goods/Object/" + ObjectType), CurGoods.transform);
+            GoodsStruct.name = name;
+            GoodsValueCall.ChangeGoodsInfo(int.Parse(CurGoods.name), name);
+            return CurGoods;
+        }
     }
 }

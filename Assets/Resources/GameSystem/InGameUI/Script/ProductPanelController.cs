@@ -207,7 +207,7 @@ public class ProductPanelController : MonoBehaviour
             bool isDuplicate = false;
             foreach(var Item in CategoryList)
             {
-                if(Recipe.Recipe.GoodsObject.name == Item)
+                if(Recipe.Recipe.Type == Item)
                 {
                     isDuplicate = true;
                     break;
@@ -216,7 +216,7 @@ public class ProductPanelController : MonoBehaviour
 
             if(!isDuplicate)
             {
-                CategoryList.Add(Recipe.Recipe.GoodsObject.name);
+                CategoryList.Add(Recipe.Recipe.Type);
             }
         }
 
@@ -259,7 +259,7 @@ public class ProductPanelController : MonoBehaviour
         {
             foreach(var Item in CallTechValue.AvailableRecipe)
             {
-                if(Item.Recipe.GoodsObject.name == Category)
+                if(Item.Recipe.Type == Category)
                 {
                     ItemList.Add(Item);
                 }
@@ -305,7 +305,7 @@ public class ProductPanelController : MonoBehaviour
                         break;
                     }
                     ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite 
-                        = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + ItemList[i * 3 + j].Recipe.GoodsObject.name);
+                        = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + ItemList[i * 3 + j].Recipe.Type);
                     ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(1).gameObject.GetComponent<Text>().text = ItemList[i * 3 + j].Recipe.OutputName;
                 }
             }
@@ -341,10 +341,10 @@ public class ProductPanelController : MonoBehaviour
     {
         TechValue.RecipeInfo TargetItemRecipe = CallTechValue.GetRecipe(Name);
 
-        ImageObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + TargetItemRecipe.Recipe.GoodsObject.name);
+        ImageObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + TargetItemRecipe.Recipe.Type);
         ImageObject.GetComponent<Image>().color = new Color(1f,1f,1f,1f);
         NameTextObject.GetComponent<Text>().text = TargetItemRecipe.Recipe.OutputName;
-        TypeTextObject.GetComponent<Text>().text = TargetItemRecipe.Recipe.GoodsObject.name;
+        TypeTextObject.GetComponent<Text>().text = TargetItemRecipe.Recipe.Type;
         CompanyTextObject.GetComponent<Text>().text = TargetItemRecipe.Owner;
         CostTextObject.GetComponent<Text>().text = "TEST";
 
@@ -374,9 +374,9 @@ public class ProductPanelController : MonoBehaviour
                 }
                 GoodsRecipe.Recipe InputItem = CallGoodsRecipe.GetRecipe(TargetItemRecipe.Recipe.InputName[i]);
                 RequirementProductInfoPanel.transform.GetChild(i + 1).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().color = new Color(1f,1f,1f,1f);
-                RequirementProductInfoPanel.transform.GetChild(i + 1).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + InputItem.GoodsObject.name);
+                RequirementProductInfoPanel.transform.GetChild(i + 1).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + InputItem.Type);
                 RequirementProductInfoPanel.transform.GetChild(i + 1).GetChild(2).GetChild(0).gameObject.GetComponent<Text>().text = InputItem.OutputName;
-                RequirementProductInfoPanel.transform.GetChild(i + 1).GetChild(2).GetChild(1).gameObject.GetComponent<Text>().text = InputItem.GoodsObject.name;
+                RequirementProductInfoPanel.transform.GetChild(i + 1).GetChild(2).GetChild(1).gameObject.GetComponent<Text>().text = InputItem.Type;
                 if(TargetItemRecipe.Owner == PlayerCompanyName) RequirementProductInfoPanel.transform.GetChild(i + 1).gameObject.GetComponent<Button>().interactable = true;
                 else RequirementProductInfoPanel.transform.GetChild(i + 1).gameObject.GetComponent<Button>().interactable = false;
             }

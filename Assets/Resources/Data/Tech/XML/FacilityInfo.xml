@@ -11,8 +11,26 @@
     </Facility>
     <Facility>
         <Type>Labatory</Type>
-        <Name>Labatory</Name>
+        <Name>Office Room</Name>
         <Price>3000</Price>
+        <UpkeepPrice>50</UpkeepPrice>
+        <UpkeepMonthTerm>1</UpkeepMonthTerm>
+        <ElectricConsum>10</ElectricConsum>
+        <LaborRequirement>15</LaborRequirement>
+    </Facility>
+    <Facility>
+        <Type>Labatory</Type>
+        <Name>Labatory</Name>
+        <Price>8000</Price>
+        <UpkeepPrice>50</UpkeepPrice>
+        <UpkeepMonthTerm>1</UpkeepMonthTerm>
+        <ElectricConsum>10</ElectricConsum>
+        <LaborRequirement>15</LaborRequirement>
+    </Facility>
+    <Facility>
+        <Type>Labatory</Type>
+        <Name>Super-Computer Room</Name>
+        <Price>20000</Price>
         <UpkeepPrice>50</UpkeepPrice>
         <UpkeepMonthTerm>1</UpkeepMonthTerm>
         <ElectricConsum>10</ElectricConsum>
@@ -173,7 +191,7 @@
     </Facility>
     <Facility>
         <Type>EnergyStorage</Type>
-        <Name>UPS room</Name>
+        <Name>UPS Room</Name>
         <Price>5500</Price>
         <UpkeepPrice>100</UpkeepPrice>
         <UpkeepMonthTerm>1</UpkeepMonthTerm>

@@ -78,6 +78,33 @@ public class TechValue : MonoBehaviour
         CheckTechPossible();
     }
 
+    void ResearchPanelUpdate(ResearchState TargetResearch)
+    {
+        if(CompanyValueCall.CompanyName == CompanyManagerCall.PlayerCompanyName)
+        {
+            if(PanelControllerCall.CurrentSidePanel != null)
+            {
+                if(PanelControllerCall.CurrentSidePanel.name == "LabatoryResearchPanel")
+                {
+                    bool Exist = false;
+                    GameObject PanelTargetObject = PanelControllerCall.CurrentSidePanel.GetComponent<LabatoryResearchPanelController>().TargetObject;
+                    foreach(var Labatory in TargetResearch.LabatoryList)
+                    {
+                        if (Labatory == PanelTargetObject)
+                        {
+                            Exist = true;
+                            break;
+                        }
+                    }
+                    if(Exist)
+                    {
+                        PanelControllerCall.CurrentSidePanel.GetComponent<LabatoryResearchPanelController>().UpdateProgressInfo();
+                    }
+                }
+            }
+        }
+    }
+
     public void StartResearch(string Name, GameObject TargetLabatory)
     {
         ResearchState TargetResearch = GetResearchState(Name);
@@ -100,6 +127,8 @@ public class TechValue : MonoBehaviour
         }
 
         TargetResearch.LabatoryList.Add(TargetLabatory);
+
+        SetResearchState(TargetResearch);
     }
 
     public void ContributeResearchWork(string Name, float Amount)
@@ -115,31 +144,14 @@ public class TechValue : MonoBehaviour
 
         if(TargetResearch.GainedWorkLoad >= TargetResearch.TargetState.Info.RequiredWorkLoad) CompleteResearch(TargetResearch);
 
-        if(CompanyValueCall.CompanyName == CompanyManagerCall.PlayerCompanyName)
-        {
-            if(PanelControllerCall.CurrentSidePanel != null)
-            {
-                if(PanelControllerCall.CurrentSidePanel.name == "LabatoryResearchPanel")
-                {
-                    if(PanelControllerCall.CurrentSidePanel.GetComponent<LabatoryResearchPanelController>().TargetObject == gameObject)
-                    {
-                        PanelControllerCall.CurrentSidePanel.GetComponent<LabatoryResearchPanelController>().UpdateProgressInfo();
-                    }
-                }
-            }
-        }
+        ResearchPanelUpdate(TargetResearch);
     }
 
     public bool CompleteResearch(ResearchState TargetResearch)
     {
-        foreach(var Labatory in TargetResearch.LabatoryList)
-        {
-            LabatoryAct TargetLabatoryAct = Labatory.GetComponent<LabatoryAct>();
-
-            TargetLabatoryAct.StopResearch();
-        }
-
         TargetResearch.TargetState.Completed = true;
+        
+        CheckTechPossible();
 
         foreach(var FacilityName in TargetResearch.TargetState.Info.UnlockFacility)
         {
@@ -168,12 +180,18 @@ public class TechValue : MonoBehaviour
             break;
         }
 
-        TargetResearch.TargetState.Completed = true;
+        ResearchPanelUpdate(TargetResearch);
+
+        int limit = TargetResearch.LabatoryList.Count;
+        for(int i = 0; i < limit; i++)
+        {
+            LabatoryAct TargetLabatoryAct = TargetResearch.LabatoryList[0].GetComponent<LabatoryAct>();
+
+            TargetLabatoryAct.StopResearch();
+        }
 
         ResearchStateList.Remove(TargetResearch);
         TargetResearch = null;
-
-        CheckTechPossible();
 
         return true;
     }
@@ -230,6 +248,11 @@ public class TechValue : MonoBehaviour
         }
 
         return null;
+    }
+
+    public void SetResearchState(ResearchState targetResearch)
+    {
+        ResearchStateList.Add(targetResearch);
     }
 
     public bool GetActorPossible(string Name)

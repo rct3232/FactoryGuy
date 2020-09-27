@@ -131,13 +131,21 @@ public class LabatoryResearchPanelController : MonoBehaviour
 
     void TechTreeInitializing(bool OnlyStateRefresh)
     {
-        GameObject TechTreeObject = GameObject.Instantiate(TechTreePrefab, TechTreeScrollCarrier.transform);
+        GameObject TechTreeObject = null;
+        if(!OnlyStateRefresh)
+        {
+            TechTreeObject = GameObject.Instantiate(TechTreePrefab, TechTreeScrollCarrier.transform);
 
-        TechTreeSizeRatio[0] = TechTreeObject.GetComponent<RectTransform>().sizeDelta.x;
-        TechTreeSizeRatio[1] = TechTreeObject.GetComponent<RectTransform>().sizeDelta.y;
-        TechTreeObject.transform.SetSiblingIndex(1);
+            TechTreeSizeRatio[0] = TechTreeObject.GetComponent<RectTransform>().sizeDelta.x;
+            TechTreeSizeRatio[1] = TechTreeObject.GetComponent<RectTransform>().sizeDelta.y;
+            TechTreeObject.transform.SetSiblingIndex(1);
 
-        TechTreeSizing();
+            TechTreeSizing();
+        }
+        else
+        {
+            TechTreeObject = TechTreeScrollCarrier.transform.GetChild(1).gameObject;
+        }
 
         int TechIndex = 0;
         for(int i = 0; i < TechTreeObject.transform.childCount; i++)
@@ -199,8 +207,6 @@ public class LabatoryResearchPanelController : MonoBehaviour
 
     public void TechTreeButtonSelect(GameObject Target)
     {
-        Debug.Log("Work");
-
         CurrnetResearchName = Target.transform.GetChild(2).gameObject.GetComponent<Text>().text;
 
         DisplayResearchInfo();
@@ -292,7 +298,7 @@ public class LabatoryResearchPanelController : MonoBehaviour
         ProgressBarImageObject.GetComponent<Image>().fillAmount = CompletePercentage;
         if(CompletePercentage >= 1)
         {
-            DisplayResearchInfo();
+            UpdateCompleteState();
         }
         else
         {
@@ -306,6 +312,16 @@ public class LabatoryResearchPanelController : MonoBehaviour
         CompletedPointTextObject.GetComponent<Text>().text = (Mathf.CeilToInt(TargetResearchState.GainedWorkLoad)).ToString();
         GainingPointTextObject.GetComponent<Text>().text = "(+"+(Mathf.CeilToInt(CurrentGainingPoint)).ToString() + ")";
         RemainPointTextObject.GetComponent<Text>().text = " / " + TargetResearchState.TargetState.Info.RequiredWorkLoad.ToString();
+    }
+
+    void UpdateCompleteState()
+    {
+        ConfirmButtonTextObject.GetComponent<Text>().text = "Completed";
+        ConfirmButtonObject.GetComponent<Button>().interactable = false;
+        
+        ConfirmButtonObject.GetComponent<Image>().color = new Color(1f,1f,1f,1f);
+
+        TechTreeInitializing(true);
     }
 
     void ClearInfoPanel()

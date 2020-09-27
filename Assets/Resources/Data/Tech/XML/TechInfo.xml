@@ -2,8 +2,8 @@
 <TechInfo>
     <Tech>
         <Name>Hand Made</Name>
-        <UnlockFacility>Storage Room,Labatory,Conveyor Belt Door,Conveyor Belt,Conveyor Belt Elevator,Processing machine</UnlockFacility>
-        <UnlockActor>Pulp processer,Panel processer</UnlockActor>
+        <UnlockFacility>Storage Room,Office Room,Conveyor Belt Door,Conveyor Belt,Conveyor Belt Elevator,Processing machine</UnlockFacility>
+        <UnlockActor>Pulp processor,Panel processor</UnlockActor>
         <UpgradeType>None</UpgradeType>
         <UpgradeAmount>0</UpgradeAmount>
         <RequiredIndex>-1</RequiredIndex>
@@ -12,7 +12,7 @@
     </Tech>
     <Tech>
         <Name>Ready for sale</Name>
-        <UnlockFacility>Packing machine</UnlockFacility>
+        <UnlockFacility>Packaging machine</UnlockFacility>
         <UnlockActor>Box packer</UnlockActor>
         <UpgradeType>None</UpgradeType>
         <UpgradeAmount>0</UpgradeAmount>
@@ -72,7 +72,7 @@
     </Tech>
     <Tech>
         <Name>Organizing</Name>
-        <UnlockFacility>Elevator</UnlockFacility>
+        <UnlockFacility>None</UnlockFacility>
         <UnlockActor>None</UnlockActor>
         <UpgradeType>Origanize</UpgradeType>
         <UpgradeAmount>0.7</UpgradeAmount>

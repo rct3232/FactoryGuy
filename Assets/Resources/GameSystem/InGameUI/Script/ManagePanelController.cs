@@ -196,7 +196,7 @@ public class ManagePanelController : MonoBehaviour
     //                         float MarketSharePoint = 0f;
     //                         foreach(var Target in CallSalesValue.SalesItemArray)
     //                         {
-    //                             if(Target.RecipeInfo.Recipe.GoodsObject.name == Sales.RecipeInfo.Recipe.GoodsObject.name)
+    //                             if(Target.RecipeInfo.Recipe.Type == Sales.RecipeInfo.Recipe.Type)
     //                             {
     //                                 MonthlyTotalSoldCount += Target.SoldCountList[j];
     //                             }

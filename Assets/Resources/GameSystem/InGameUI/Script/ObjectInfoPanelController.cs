@@ -109,7 +109,7 @@ public class ObjectInfoPanelController : MonoBehaviour
                 if(TargetObject.GetComponent<DoorAct>().TargetGoodsName != "None")
                 {
                     AdditionalInfoPanel.SetActive(true);
-                    AdditionalInfoPanel.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + CallGoodsRecipe.GetRecipe(TargetObject.GetComponent<DoorAct>().TargetGoodsName).GoodsObject.name);
+                    AdditionalInfoPanel.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + CallGoodsRecipe.GetRecipe(TargetObject.GetComponent<DoorAct>().TargetGoodsName).Type);
                     AdditionalInfoPanel.transform.GetChild(1).gameObject.GetComponent<Text>().text = TargetObject.GetComponent<DoorAct>().TargetGoodsName;
                 }
 
@@ -126,7 +126,7 @@ public class ObjectInfoPanelController : MonoBehaviour
                 if(TargetObject.GetComponent<ProcessorAct>().TargetGoodsRecipe != null)
                 {
                     AdditionalInfoPanel.SetActive(true);
-                    AdditionalInfoPanel.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + TargetObject.GetComponent<ProcessorAct>().TargetGoodsRecipe.GoodsObject.name);
+                    AdditionalInfoPanel.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + TargetObject.GetComponent<ProcessorAct>().TargetGoodsRecipe.Type);
                     AdditionalInfoPanel.transform.GetChild(1).gameObject.GetComponent<Text>().text = TargetObject.GetComponent<ProcessorAct>().TargetGoodsRecipe.OutputName;
                 }
 

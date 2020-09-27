@@ -127,7 +127,7 @@ public class ConsumerAI : MonoBehaviour
                 bool Exist = false;
                 foreach(var Type in Result)
                 {
-                    if(Type == Sale.RecipeInfo.Recipe.GoodsObject.name)
+                    if(Type == Sale.RecipeInfo.Recipe.Type)
                     {
                         Exist = true;
                         break;
@@ -136,7 +136,7 @@ public class ConsumerAI : MonoBehaviour
 
                 if(!Exist)
                 {
-                    Result.Add(Sale.RecipeInfo.Recipe.GoodsObject.name);
+                    Result.Add(Sale.RecipeInfo.Recipe.Type);
                 }
             }
         }
@@ -150,7 +150,7 @@ public class ConsumerAI : MonoBehaviour
 
         foreach(var Sale in SalesValueCall.SalesItemArray)
         {
-            if(Sale.RecipeInfo.Recipe.GoodsObject.name == Type)
+            if(Sale.RecipeInfo.Recipe.Type == Type)
             {
                 InfoList.Add(Sale);
             }
