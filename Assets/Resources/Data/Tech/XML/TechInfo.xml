@@ -2,7 +2,7 @@
 <TechInfo>
     <Tech>
         <Name>Hand Made</Name>
-        <UnlockFacility>Storage Room,Labatory,Conveyor Belt Door,Conveyor Belt,Conveyor Belt Elevator,Processing machine</UnlockFacility>
+        <UnlockFacility>Storage Room,Labatory,Conveyor Belt Door,Conveyor Belt,Conveyor Belt Elevator,Processing machine,Divider</UnlockFacility>
         <UnlockActor>Pulp processer,Panel processer</UnlockActor>
         <UpgradeType>None</UpgradeType>
         <UpgradeAmount>0</UpgradeAmount>
