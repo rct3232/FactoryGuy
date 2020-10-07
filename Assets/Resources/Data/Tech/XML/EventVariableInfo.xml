@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<EventVariableInfo>
+    <Variable>
+        <index>0</index>
+        <Name>FactoryReliability</Name>
+        <direction>0</direction>
+    </Variable>
+    <Variable>
+        <index>1</index>
+        <Name>MarketShare</Name>
+        <direction>0</direction>
+    </Variable>
+    <Variable>
+        <index>2</index>
+        <Name>ConsumerEvaluation</Name>
+        <direction>0</direction>
+    </Variable>
+    <Variable>
+        <index>3</index>
+        <Name>InstallationValue</Name>
+        <direction>0</direction>
+    </Variable>
+    <Variable>
+        <index>4</index>
+        <Name>RealEstateValue</Name>
+        <direction>0</direction>
+    </Variable>
+    <Variable>
+        <index>5</index>
+        <Name>MaxLoanableAmount</Name>
+        <direction>0</direction>
+    </Variable>
+    <Variable>
+        <index>6</index>
+        <Name>InterestRate</Name>
+        <direction>1</direction>
+    </Variable>
+</EventVariableInfo>
