@@ -586,7 +586,7 @@ GameObject:
   - component: {fileID: 4745045135654555737}
   - component: {fileID: 6691100432729620888}
   - component: {fileID: 838793859725181675}
-  - component: {fileID: 4494181690626231777}
+  - component: {fileID: 8158795801724500506}
   m_Layer: 15
   m_Name: Joiner
   m_TagString: Untagged
@@ -694,7 +694,7 @@ MonoBehaviour:
   HeightLevel: 0
   WorkSpeed: 0
   IsWorking: 0
---- !u!114 &4494181690626231777
+--- !u!114 &8158795801724500506
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -703,16 +703,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 9168732194093184100}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57873017dc29f974aacd6dc3540cc695, type: 3}
+  m_Script: {fileID: 11500000, guid: 6ca6ac072ac535147a336d23367eaae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OutputNumber: 2
-  DistributorDirection: 0
-  Mover: []
-  AddonObject: {fileID: 0}
-  PrevBelt: {fileID: 0}
-  NextBelt: []
-  GetIndex: 0
+  InputNumber: 0
+  JoinerDirection: -1
   CanProceed: 0
-  DistributeIndex: 0
-  MainBeltIndex: 0
+  AddonObject: {fileID: 0}
+  MoveDetectedObject: []
+  PrevBelt: {fileID: 0}
+  PrevBelt2: []
+  NextBelt: []
+  NextBelt2: {fileID: 0}
+  CurrentJoinIndex: 0
+  NoNeedCheckCurrentIndex: 0
+  MainBeltIndex: -1
