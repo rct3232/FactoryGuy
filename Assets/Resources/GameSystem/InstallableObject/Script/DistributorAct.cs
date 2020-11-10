@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DistributorAct : MonoBehaviour
 {
-    public int OutputNumber;
+    public int OutputNumber;    
     public int DistributorDirection = -1;
     public GameObject[] Mover;
     public GameObject AddonObject;
@@ -370,14 +370,14 @@ public class DistributorAct : MonoBehaviour
         }
     }
 
-    public bool DeleteObject()
+    public bool DeleteObject()      //오브젝트 삭제
     {
-        if(AddonObject != null)
+        if(AddonObject != null)     //애드온 먼저 삭제
         {
             Destroy(AddonObject);
         }
         
-        for(int i = 0; i < OutputNumber; i++)
+        for(int i = 0; i < OutputNumber; i++)       
         {
             if(i != MainBeltIndex) Mover[i].GetComponent<BeltAct>().PrevBelt = null;
 

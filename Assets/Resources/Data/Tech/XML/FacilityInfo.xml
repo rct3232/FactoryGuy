@@ -99,6 +99,15 @@
         <ElectricConsum>1.5</ElectricConsum>
         <LaborRequirement>3</LaborRequirement>
     </Facility>
+	<Facility>
+		<Type>Divider</Type>
+		<Name>Joiner</Name>
+		<Price>0</Price>
+		<UpkeepPrice>0</UpkeepPrice>
+		<UpkeepMonthTerm>1</UpkeepMonthTerm>
+		<ElectricConsum>1</ElectricConsum>
+		<LaborRequirement>1</LaborRequirement>
+	</Facility>
     <Facility>
         <Type>EnergyStorage</Type>
         <Name>Battery shelf</Name>
