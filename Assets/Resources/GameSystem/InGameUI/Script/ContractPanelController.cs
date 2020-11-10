@@ -237,7 +237,7 @@ public class ContractPanelController : MonoBehaviour
             bool isDuplicated = false;
             foreach(var Category in CategoryList)
             {
-                if(Category == SalesItem.RecipeInfo.Recipe.GoodsObject.name)
+                if(Category == SalesItem.RecipeInfo.Recipe.Type)
                 {
                     isDuplicated = true;
                     break;
@@ -246,7 +246,7 @@ public class ContractPanelController : MonoBehaviour
 
             if(!isDuplicated)
             {
-                CategoryList.Add(SalesItem.RecipeInfo.Recipe.GoodsObject.name);
+                CategoryList.Add(SalesItem.RecipeInfo.Recipe.Type);
             }
         }
 
@@ -295,7 +295,7 @@ public class ContractPanelController : MonoBehaviour
         {
             foreach(var Item in CallSalesValue.SalesItemArray)
             {
-                if(Item.RecipeInfo.Recipe.GoodsObject.name == Category)
+                if(Item.RecipeInfo.Recipe.Type == Category)
                 {
                     ItemList.Add(Item);
                 }
@@ -342,7 +342,7 @@ public class ContractPanelController : MonoBehaviour
 
                 ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).gameObject.SetActive(true);
 
-                ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + ItemList[i * 3 + j].RecipeInfo.Recipe.GoodsObject.name);
+                ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + ItemList[i * 3 + j].RecipeInfo.Recipe.Type);
                 ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(1).gameObject.GetComponent<Text>().text = ItemList[i * 3 + j].RecipeInfo.Recipe.OutputName;
             }
         }
@@ -418,7 +418,7 @@ public class ContractPanelController : MonoBehaviour
 
                 ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).gameObject.SetActive(true);
 
-                string ItemType = CallGoodsRecipe.GetRecipe(ItemList[i * 3 + j]).GoodsObject.name;
+                string ItemType = CallGoodsRecipe.GetRecipe(ItemList[i * 3 + j]).Type;
                 ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + ItemType);
                 ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(1).gameObject.GetComponent<Text>().text = ItemList[i * 3 + j];
             }
@@ -437,10 +437,10 @@ public class ContractPanelController : MonoBehaviour
         GoodsRecipe.Recipe TargetItemRecipe = CallGoodsRecipe.GetRecipe(Name);
         TargetItemSalesInfo = CallSalesValue.GetSalesInfo(Name);
 
-        ImageObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + TargetItemRecipe.GoodsObject.name);
+        ImageObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + TargetItemRecipe.Type);
         ImageObject.GetComponent<Image>().color = new Color(1f,1f,1f,1f);
         NameTextObject.GetComponent<Text>().text = TargetItemRecipe.OutputName;
-        TypeTextObject.GetComponent<Text>().text = TargetItemRecipe.GoodsObject.name;
+        TypeTextObject.GetComponent<Text>().text = TargetItemRecipe.Type;
 
         MaterialPointTextObject.GetComponent<Text>().text = " x " + (Mathf.RoundToInt(TargetItemRecipe.Attractiveness.MaterialPoint * 10) * 0.1).ToString();
         TechPointTextObject.GetComponent<Text>().text = " x " + (Mathf.RoundToInt(TargetItemRecipe.Attractiveness.TechPoint * 10) * 0.1).ToString();

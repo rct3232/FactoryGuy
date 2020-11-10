@@ -50,7 +50,7 @@ public class LabatoryDevelopPanelController : MonoBehaviour
         CallGoodsRecipe = GameObject.Find("BaseSystem").GetComponent<GoodsRecipe>();
         CallGoodsValue = GameObject.Find("CompanyManager").GetComponent<CompanyManager>().GetPlayerCompanyValue().GetGoodsValue().GetComponent<GoodsValue>();
         CallTechRecipe = GameObject.Find("BaseSystem").GetComponent<TechRecipe>();
-        CallTechValue = GameObject.Find("CompanyManager").GetComponent<CompanyManager>().GetPlayerCompanyValue().GetGoodsValue().GetComponent<TechValue>();
+        CallTechValue = GameObject.Find("CompanyManager").GetComponent<CompanyManager>().GetPlayerCompanyValue().GetTechValue().GetComponent<TechValue>();
         CallTimeManager = GameObject.Find("TimeManager").GetComponent<TimeManager>();
         CallObjInstantiater = GameObject.Find("ObjectInstaller").GetComponent<ObjInstantiater>();
         
@@ -275,9 +275,12 @@ public class LabatoryDevelopPanelController : MonoBehaviour
             CurrentSelector = "FirstItem";
             DisplayInputInfo();
 
-            CurrentSecondItem = CallTargetLabatoryAct.CurrentDevelopingProduct.ObjectInfo.Input[1];
-            CurrentSelector = "SecondItem";
-            DisplayInputInfo();
+            if(CallTargetLabatoryAct.CurrentDevelopingProduct.ObjectInfo.Input.Count > 1)
+            {
+                CurrentSecondItem = CallTargetLabatoryAct.CurrentDevelopingProduct.ObjectInfo.Input[1];
+                CurrentSelector = "SecondItem";
+                DisplayInputInfo();
+            }
 
             CurrentProcessor = CallTargetLabatoryAct.CurrentDevelopingProduct.ObjectInfo.RequiredProcessor;
             CurrentSelector = "Processor";
@@ -407,7 +410,7 @@ public class LabatoryDevelopPanelController : MonoBehaviour
             foreach(var Item in StoredList)
             {
                 GoodsRecipe.Recipe TargetItemRecipe = CallGoodsRecipe.GetRecipe(Item);
-                if(TargetItemRecipe.GoodsObject.name == Category)
+                if(TargetItemRecipe.Type == Category)
                 {
                     ItemList.Add(Item);
                 }
@@ -458,7 +461,7 @@ public class LabatoryDevelopPanelController : MonoBehaviour
                 ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).gameObject.SetActive(true);
 
                 if(ItemList[i * 3 + j] == "None") ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/InGameUI/Sprite/InsideEmptyCircle");
-                else ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + CallGoodsRecipe.GetRecipe(ItemList[i * 3 + j]).GoodsObject.name);
+                else ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + CallGoodsRecipe.GetRecipe(ItemList[i * 3 + j]).Type);
                 
                 ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(1).gameObject.GetComponent<Text>().text = ItemList[i * 3 + j];
             }
@@ -485,12 +488,20 @@ public class LabatoryDevelopPanelController : MonoBehaviour
         {
             Destroy(ItemCarrier.transform.GetChild(i).gameObject);
         }
-
+        
         foreach(var Facility in CallTechValue.FacilityList)
         {
-            if(Facility.Type != "Processor" && Facility.Type == "Assembler") continue;
+            if(Facility.Type != "Processor" && Facility.Type != "Assembler") continue;
 
-            foreach(var ActorName in CallTechRecipe.GetProcessorRecipe(Facility.Name).ActorList)
+            TechRecipe.ProcessorInfo TargetProcessorRecipe = CallTechRecipe.GetProcessorRecipe(Facility.Name);
+
+            if(TargetProcessorRecipe == null)
+            {
+                Debug.Log("There is no " + Facility.Name + " in System");
+                return;
+            }
+
+            foreach(var ActorName in TargetProcessorRecipe.ActorList)
             {
                 if(!CallTechValue.GetActorPossible(ActorName)) continue;
 
@@ -637,7 +648,7 @@ public class LabatoryDevelopPanelController : MonoBehaviour
             {
                 GoodsRecipe.Recipe TargetRecipe = CallGoodsRecipe.GetRecipe(CurrentFisrtItem);
 
-                FirstItemImageObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + TargetRecipe.GoodsObject.name);
+                FirstItemImageObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + TargetRecipe.Type);
                 FirstItemNameTextObject.GetComponent<Text>().text = CurrentFisrtItem;
                 FirstItemImageObject.GetComponent<Image>().color = new Color(1f,1f,1f,1f);
 
@@ -655,7 +666,7 @@ public class LabatoryDevelopPanelController : MonoBehaviour
             {
                 GoodsRecipe.Recipe TargetRecipe = CallGoodsRecipe.GetRecipe(CurrentSecondItem);
 
-                SecondItemImageObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + TargetRecipe.GoodsObject.name);
+                SecondItemImageObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + TargetRecipe.Type);
                 SecondItemNameTextObject.GetComponent<Text>().text = CurrentSecondItem;
                 SecondItemImageObject.GetComponent<Image>().color = new Color(1f,1f,1f,1f);
             }
@@ -705,7 +716,7 @@ public class LabatoryDevelopPanelController : MonoBehaviour
     {
         if(ResultItemNameInputFieldObject.GetComponent<InputField>().text != "")
         {
-            if(CallTargetLabatoryAct.CurrentDevelopingProduct == null)
+            if(CallTargetLabatoryAct.CurrentDevelopingProduct == null && CallTargetLabatoryAct.resultObject.Type != "")
             {
                 MainFunctionButton.gameObject.GetComponent<Button>().interactable = true;
                 MainFunctionButton.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Start";

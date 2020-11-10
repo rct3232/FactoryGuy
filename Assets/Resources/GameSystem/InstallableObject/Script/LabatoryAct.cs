@@ -211,9 +211,8 @@ public class LabatoryAct : MonoBehaviour
         {
             CurrentDevelopingProduct.ObjectInfo.Attractiveness.TotalPoint += CurrentDevelopingProduct.ObjectInfo.Attractiveness.PerfectionPoint;
 
-            GoodsRecipeCall.MakeCustomRecipe(CurrentDevelopingProduct.ObjectInfo.Type, CurrentDevelopingProduct.Name, CurrentDevelopingProduct.ObjectInfo.Input.ToArray(),
-                CurrentDevelopingProduct.ObjectInfo.Attractiveness, CompanyValueCall.CompanyName);
-        }        
+            GoodsRecipeCall.MakeCustomRecipe(CurrentDevelopingProduct, CompanyValueCall.CompanyName);
+        }
 
         CurrentDevelopingProduct = null;
     }

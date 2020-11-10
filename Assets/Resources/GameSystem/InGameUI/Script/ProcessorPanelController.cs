@@ -291,7 +291,7 @@ public class ProcessorPanelController : MonoBehaviour
                 string ProcessorType = Item.Recipe.RequiredProcessor.Split('?')[0];
                 string ProcessorName = Item.Recipe.RequiredProcessor.Split('?')[1];
 
-                if(ProcessorType == TargetProcessorInfo.Type && ProcessorName == Category)
+                if(ProcessorType == TargetProcessorInfo.Name && ProcessorName == Category)
                 {
                     ItemList.Add(Item);
                 }
@@ -341,7 +341,7 @@ public class ProcessorPanelController : MonoBehaviour
 
                     ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).gameObject.SetActive(true);
 
-                    ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + ItemList[i * 3 + j - 1].Recipe.GoodsObject.name);
+                    ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + ItemList[i * 3 + j - 1].Recipe.Type);
                     ItemCarrier.transform.GetChild(i).GetChild(j).GetChild(0).GetChild(1).gameObject.GetComponent<Text>().text = ItemList[i * 3 + j - 1].Recipe.OutputName;
                 }
             }
@@ -399,10 +399,10 @@ public class ProcessorPanelController : MonoBehaviour
             TechValue.RecipeInfo TargetItemRecipe = CallTechValue.GetRecipe(Name);
             TechRecipe.ProcessActorInfo TargetActorInfo = CallTechRecipe.GetProcessActorInfo(CurrentCategory);
 
-            ImageObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + TargetItemRecipe.Recipe.GoodsObject.name);
+            ImageObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + TargetItemRecipe.Recipe.Type);
             ImageObject.GetComponent<Image>().color = new Color(1f,1f,1f,1f);
             NameTextObject.GetComponent<Text>().text = TargetItemRecipe.Recipe.OutputName;
-            TypeTextObject.GetComponent<Text>().text = TargetItemRecipe.Recipe.GoodsObject.name;
+            TypeTextObject.GetComponent<Text>().text = TargetItemRecipe.Recipe.Type;
             CompanyTextObject.GetComponent<Text>().text = TargetItemRecipe.Owner;
             ExpectQualityTextObject.GetComponent<Text>().text = "TEST";
 
@@ -432,9 +432,9 @@ public class ProcessorPanelController : MonoBehaviour
                     }
                     GoodsRecipe.Recipe InputItem = CallGoodsRecipe.GetRecipe(TargetItemRecipe.Recipe.InputName[i]);
                     RequirementProductInfoPanel.transform.GetChild(i + 1).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().color = new Color(1f,1f,1f,1f);
-                    RequirementProductInfoPanel.transform.GetChild(i + 1).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + InputItem.GoodsObject.name);
+                    RequirementProductInfoPanel.transform.GetChild(i + 1).GetChild(0).GetChild(0).gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("GameSystem/Goods/Sprite/" + InputItem.Type);
                     RequirementProductInfoPanel.transform.GetChild(i + 1).GetChild(2).GetChild(0).gameObject.GetComponent<Text>().text = InputItem.OutputName;
-                    RequirementProductInfoPanel.transform.GetChild(i + 1).GetChild(2).GetChild(1).gameObject.GetComponent<Text>().text = InputItem.GoodsObject.name;
+                    RequirementProductInfoPanel.transform.GetChild(i + 1).GetChild(2).GetChild(1).gameObject.GetComponent<Text>().text = InputItem.Type;
                     if(TargetItemRecipe.Owner == PlayerCompanyName) RequirementProductInfoPanel.transform.GetChild(i + 1).gameObject.GetComponent<Button>().interactable = true;
                     else RequirementProductInfoPanel.transform.GetChild(i + 1).gameObject.GetComponent<Button>().interactable = false;
                 }

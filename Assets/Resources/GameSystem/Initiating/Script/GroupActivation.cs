@@ -322,8 +322,8 @@ public class GroupActivation : MonoBehaviour
             {
                 if(EulerAngel.y == 0 || EulerAngel.y == 90)
                 {
-                    mZ = (xSize / 2) - 1;
-                    pZ = xSize / 2;
+                    mZ = (zSize / 2) - 1;
+                    pZ = zSize / 2;
                 }
                 else
                 {

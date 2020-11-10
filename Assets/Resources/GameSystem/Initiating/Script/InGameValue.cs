@@ -64,7 +64,7 @@ public class InGameValue : MonoBehaviour
         newCompany.name = CompanyName;
 
         EconomyValue EconomyValueCall = CompanyManagerCall.GetPlayerCompanyValue().GetEconomyValue().GetComponent<EconomyValue>();
-        EconomyValueCall.Balance = 20000;
+        EconomyValueCall.Balance = 40000;
         WorkerSelector.Worker CEO = WorkerSelectorCall.AddCustomWorker(null, 3, 0, 0, 0, 0, 0);
         CompanyManagerCall.GetPlayerCompanyValue().GetEmployeeValue().GetComponent<EmployeeValue>().HireEmployee(CEO);
         WorkerSelectorCall.UnHiredList.Remove(CEO);

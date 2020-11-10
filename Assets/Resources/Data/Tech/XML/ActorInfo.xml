@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <ActorInfo>
     <Actor>
-        <Name>Pulp processer</Name>
+        <Name>Pulp processor</Name>
         <TechPoint>1</TechPoint>
         <Cost>50</Cost>
     </Actor>
     <Actor>
-        <Name>Panel processer</Name>
+        <Name>Panel processor</Name>
         <TechPoint>1.2</TechPoint>
         <Cost>80</Cost>
     </Actor>

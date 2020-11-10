@@ -8,7 +8,7 @@ public class GoodsRecipe : MonoBehaviour
     {
         public Recipe() {}
         public int ObjectID;
-        public GameObject GoodsObject;
+        public string Type;
         public string OutputName;
         public string[] InputName;
         public string RequiredProcessor;
@@ -37,7 +37,6 @@ public class GoodsRecipe : MonoBehaviour
 
     public List<Recipe> RecipeArray;
     public List<BaseRecipe> BaseRecipeList;
-    GameObject[] GoodsArr;
     int CurrentID;
     CompanyManager CompanyManagerCall;
 
@@ -53,8 +52,9 @@ public class GoodsRecipe : MonoBehaviour
     }
 
     public string getNewGoodsType(List<string> SelectedObject)
-    {
-        string resultType = "None";
+    {        
+        if (SelectedObject.Count == 0) return "";
+
         List<string> InputType = new List<string>();
 
         foreach(var name in SelectedObject)
@@ -65,7 +65,7 @@ public class GoodsRecipe : MonoBehaviour
                 {
                     foreach(var Base in BaseRecipeList)
                     {
-                        if(Base.Name == Recipe.GoodsObject.name)
+                        if(Base.Name == Recipe.Type)
                         {
                             InputType.Add(Base.Name);
                             break;
@@ -82,17 +82,28 @@ public class GoodsRecipe : MonoBehaviour
         {
             foreach(var Inputs in Base.InputName)
             {
+                if (Inputs[0] == "None") continue;
+
                 List<string> InputList = new List<string>();
                 InputList.AddRange(Inputs);
 
-                if(InputList == InputType)
+                bool Equal = true;
+                for(int i = 0; i < InputType.Count; i++)
                 {
-                    resultType = Base.Name;
+                    if (i >= InputList.Count) break;
+
+                    if (InputType[i] != InputList[i])
+                    {
+                        Equal = false;
+                        break;
+                    }
                 }
+
+                if (Equal) return Base.Name;
             }
         }
 
-        return resultType;
+        return "";
     }
 
     public Attractiveness CalculateAttractiveness(string[] SelectedObject, string requiredProcessor)
@@ -130,7 +141,7 @@ public class GoodsRecipe : MonoBehaviour
             {
                 if(ExistRecipe.OutputName == ObjectName)
                 {
-                    if(ExistRecipe.GoodsObject.name != "Box")
+                    if(ExistRecipe.Type != "Box")
                         sumMaterialPoints += ((ExistRecipe.Attractiveness.MaterialPoint + ExistRecipe.Attractiveness.TechPoint) / 2f);
                     else
                         isPackaged = true;
@@ -156,22 +167,11 @@ public class GoodsRecipe : MonoBehaviour
         return attractiveness;
     }
 
-    public void AddRecipeArray(string objectName, string Name, string[] inputName, string requiredProcessor, Attractiveness attractiveness)
+    public void AddRecipeArray(string Type, string Name, string[] inputName, string requiredProcessor, Attractiveness attractiveness)
     {
         Recipe newRecipe = new Recipe();
-
-        foreach(var tmp in GoodsArr)
-        {
-            if(tmp.name == objectName)
-            {
-                newRecipe.GoodsObject = tmp;
-            }
-        }
-        if(newRecipe.GoodsObject == null)
-        {
-            Debug.Log("Fail to Find " + objectName + " in Prefab List");
-            newRecipe.GoodsObject = GoodsArr[0];
-        }
+        
+        newRecipe.Type = Type;
 
         newRecipe.OutputName = Name;
         if(inputName == null)
@@ -194,33 +194,20 @@ public class GoodsRecipe : MonoBehaviour
         CurrentID++;
     }
 
-    public void MakeCustomRecipe(string Type, string Name, string[] Input, Attractiveness attractiveness, string CompanyName)
+    public void MakeCustomRecipe(LabatoryAct.DevelopingProduct ResultObject, string CompanyName)
     {
         Recipe newRecipe = new Recipe();
+        
+        newRecipe.Type = ResultObject.ObjectInfo.Type;
+        newRecipe.OutputName = ResultObject.Name;
+        newRecipe.InputName = ResultObject.ObjectInfo.Input.ToArray();
+        newRecipe.RequiredProcessor = ResultObject.ObjectInfo.RequiredProcessor;
+        newRecipe.Attractiveness = ResultObject.ObjectInfo.Attractiveness;
 
-        foreach(var Recipe in RecipeArray)
-        {
-            if(Recipe.OutputName == Recipe.GoodsObject.name)
-            {
-                if(Recipe.OutputName == Type)
-                {
-                    newRecipe.GoodsObject = Recipe.GoodsObject;
-                    newRecipe.OutputName = Name;
-                    newRecipe.InputName = Input;
-                    newRecipe.RequiredProcessor = Recipe.RequiredProcessor;
-                    if(attractiveness != null)
-                        newRecipe.Attractiveness = attractiveness;
-                    else
-                        newRecipe.Attractiveness = Recipe.Attractiveness;
-                    newRecipe.ObjectID = CurrentID;
+        newRecipe.ObjectID = CurrentID;
 
-                    RecipeArray.Add(newRecipe);
-                    CurrentID++;
-
-                    break;
-                }
-            }
-        }
+        RecipeArray.Add(newRecipe);
+        CurrentID++;
         
         if(newRecipe != null)
         {
@@ -236,7 +223,7 @@ public class GoodsRecipe : MonoBehaviour
         {
             if(Recipe.OutputName == OutputName)
             {
-                Result = Recipe.GoodsObject.name;
+                Result = Recipe.Type;
                 break;
             }
         }
@@ -290,15 +277,6 @@ public class GoodsRecipe : MonoBehaviour
             newRecipe.RequiredProcessor = Data[2];
 
             BaseRecipeList.Add(newRecipe);
-        }
-
-        Object[] ObjectArr = Resources.LoadAll<Object>("GameSystem/Goods/Object");
-        CurArr = 0;
-        GoodsArr = new GameObject[ObjectArr.Length];
-        foreach (Object tmp in ObjectArr)
-        {
-            GoodsArr[CurArr] = tmp as GameObject;
-            CurArr++;
         }
 
         RecipeArray = new List<Recipe>();

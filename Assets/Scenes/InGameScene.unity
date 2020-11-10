@@ -4388,11 +4388,11 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 4
+    m_Alignment: 7
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: Button
 --- !u!222 &76277317
@@ -13193,7 +13193,7 @@ PrefabInstance:
         type: 3}
       propertyPath: GoodsPrefab
       value: 
-      objectReference: {fileID: 2970070961156052087, guid: 2d20ad8a299bdcd4b84f55077605462d,
+      objectReference: {fileID: 5558512251616565424, guid: d36be74ccbd02994ca2883e3883f75d5,
         type: 3}
     - target: {fileID: 9082942452291560912, guid: 647a1b40108194d4aba1cce05475c7a5,
         type: 3}
@@ -18726,7 +18726,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 357286138}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 501770626}
+        m_TargetAssemblyTypeName: LabatoryResearchPanelController, Assembly-CSharp
+        m_MethodName: ConfirmButtonSelect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &357286138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108189,11 +108201,11 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 4
+    m_Alignment: 7
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: Button
 --- !u!222 &2068690920
@@ -112372,11 +112384,11 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 40
-    m_Alignment: 4
+    m_Alignment: 7
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: Button
 --- !u!222 &2134104038
